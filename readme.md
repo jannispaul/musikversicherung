@@ -2,8 +2,20 @@
 
 Uses [vite](https://vitejs.dev/) to run dev server and to minify output.
 
+## Setup
+
+- Clone
+- Rename
+- Open: `code .`
+- `pnpm install`
+- `git init`
+- Push
+
+## Usage
+
+### Run locally
+
 `pnpm run dev`: http://localhost:5173`
-`pnpm run build`
 
 Local dev script can be added in Weblfow:
 
@@ -20,3 +32,7 @@ ele.setAttribute("src",scriptPath);
 document.head.appendChild(ele)
 
 ```
+
+### Minify and copy to webflow
+
+`pnpm run build`
