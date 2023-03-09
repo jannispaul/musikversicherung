@@ -107,107 +107,80 @@ function nextStep() {
   showActiveStep();
 }
 
+function addInstrumentsToFormData(formData) {
+  let instrumentNodes = document.querySelectorAll("[data-repeat='item']");
+  //   let instrumentData = [];
+  let instrumentsString = "";
+  //   var materials = $("input[name*=material]");
+  instrumentNodes.forEach((el, index) => {
+    const name = el.querySelector("[name*='Instrument']").value;
+    const value = el.querySelector("[name*='Instrumentenwert']").value;
+    const valueType = el.querySelector("[name*='Wertart']").value;
+    console.log(name, value, valueType);
+    // instrumentData.push([name, value, valueType]);
+    instrumentsString += name + "\n" + valueType + "\n" + value + "\n\n";
+  });
+  //   formData.append("Instruments", JSON.stringify(instrumentData));
+  formData.append("Instruments", instrumentsString);
+  return formData;
+}
+
 // Submit form
-function submitForm(params) {
+function submitForm(e) {
+  //   e.preventDefault();
+
+  let formData = new FormData(form);
+
   // Dont submit if fields are invalid
   if (!validateStep()) return;
 
-  form.submit();
-  // Clear saved formdata from localstorage
-  localStorage.removeItem(formName);
+  addInstrumentsToFormData(formData);
+
+  // Display the key/value pairs
+  for (const pair of formData.entries()) {
+    console.log(`${pair[0]}, ${pair[1]}`);
+  }
+
+  const status = document.querySelector("[data-form='submit']");
+  if (status) {
+    status.innerHTML = "Sendet...";
+    status.disabled = true; // Add form .submitting state class for styling
+  }
+
+  // Submit object as json
+  const requestOptions = {
+    method: "POST",
+    // "Content-Type": "application/json",
+    // body: JSON.stringify(formData),
+    body: formData,
+    redirect: "follow",
+  };
+
+  const redirectUrl = "/danke"; // Set request url
+  const requestUrl = form.action; // Get action url
+
+  //   formData.getAll("files").forEach((file, index) => {
+  //     if (index > 9) return;
+  //     formData.append("file-" + index, file);
+  //   });
+  console.log(formData.get("files"));
+
+  fetch(requestUrl, requestOptions)
+    .then(function (response) {
+      // If response is ok
+      if (response.ok) {
+        console.log("fetch response ok");
+        // window.location.href = redirectUrl; // Clear saved formdata from localstorage
+
+        // Clear saved formdata from localstorage
+        //   localStorage.removeItem(formName);
+      }
+    }) // If there is an error log it to console and reidrect to fehler page
+    ["catch"](function (error) {
+      console.error("Error: ", error);
+      window.location.href = "/fehler/";
+    });
 }
-
-// var submitHandler = function(e) {
-//   // Prevent default form submit
-//   e.preventDefault();
-
-//   // console.log(e);
-
-//   // Turn instrument fields into an array
-//   if (storageID === "anfrage-form") createInstrumentsArray();
-
-//   // Ignore forms that are actively being submitted
-//   if (e.target.classList.contains("submitting")) return;
-
-//   // Show submitting message
-//   var status = e.target.querySelector("[data-submit]");
-//   status.innerHTML = "Sendet...";
-//   status.disabled = true;
-
-//   // Add form .submitting state class for styling
-//   e.target.classList.add("submitting");
-
-//   // Turn FormData to object
-//   let formDataObject = {};
-//   new FormData(e.target).forEach((value, key) => {
-//     formDataObject[key] = value;
-//   });
-//   // Add instruments to formDataObject
-//   formDataObject.instruments = instruments;
-
-//   // Add language to formDataObject
-//   // var fullDomain = window.location.host;
-//   // var parts = fullDomain.split(".");
-//   // var subDomain = parts[0];
-//   // let userLanguage = subDomain === "en" ? "EN" : "DE";
-//   formDataObject.language = userLanguage;
-
-//   let requestOptions;
-
-//   // Adding language to formData
-//   let schadenFormData = new FormData(e.target);
-//   schadenFormData.append("language", userLanguage);
-
-//   // Confige either fetch with json or with FormData
-//   storageID === "anfrage-form"
-//     ? (requestOptions = {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(formDataObject),
-//         redirect: "follow",
-//       })
-//     : (requestOptions = {
-//         method: "POST",
-//         body: schadenFormData,
-//         redirect: "follow",
-//       });
-
-//   let requestUrl = "";
-//   let redirectUrl = "";
-
-//   // Set request url
-//   storageID === "anfrage-form"
-//     ? (requestUrl =
-//         "https://hook.eu1.make.com/3o81djc85d4vyzwfw3n8m5ldieelcd7m") // Anfrage Hook
-//     : (requestUrl =
-//         "https://hook.eu1.make.com/pubh1gppmby36ck2ehvng5iblzbqtrjb"); // Schaden melden Hook
-
-//   // Set redirect url
-//   storageID === "anfrage-form"
-//     ? (redirectUrl = "/danke/")
-//     : (redirectUrl = "/schaden-gemeldet/");
-
-//   // Post to Backend
-//   fetch(requestUrl, requestOptions)
-//     .then((response) => {
-//       // If response is ok
-//       if (response.ok) {
-//         // console.log("fetch response ok");
-//         // console.log(requestOptions.body);
-//         // redirect to schaden-gemeldet page
-
-//
-//         window.location.href = redirectUrl;
-//         // Clear saved formdata from localstorage
-//         localStorage.removeItem(storageID);
-//       }
-//     })
-//     // If there is an error log it to console and reidrect to fehler page
-//     .catch((error) => {
-//       console.error("Error: ", error);
-//       window.location.href = "/fehler/";
-//     });
-// }
 
 //
 // Conditional logic
@@ -351,6 +324,7 @@ function loadDataFromLocalStorage() {
 //
 // Get all
 
+let repeatableCount = 1;
 function getAllRepeatables(params) {
   return document.querySelectorAll("[data-repeat='item']");
 }
@@ -358,17 +332,21 @@ function deleteRepeatable(repeatableItem) {
   console.log("remove");
   if (getAllRepeatables().length <= 1) return;
   repeatableItem.remove();
+  repeatableCount--;
 }
 function addRepeatable(params) {
-  console.log("add");
+  repeatableCount++;
+  //   console.log("add");
   const items = document.querySelectorAll("[data-repeat='item']");
   let clone = repeatableItem.cloneNode(true);
   let inputs = clone.querySelectorAll("input");
-  inputs.forEach((input) => {
+  inputs.forEach((input, index) => {
     if (input.type === "text" || input.type === "number") {
       input.value = "";
+      input.name += repeatableCount;
     } else {
       input.removeAttribute("checked");
+      input.name += repeatableCount;
     }
   });
 
