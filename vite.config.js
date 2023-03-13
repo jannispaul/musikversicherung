@@ -14,4 +14,13 @@ export default defineConfig({
     // input https://www.npmjs.com/package/html-minifier-terser options
     ViteMinifyPlugin({}),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
+  },
 });
