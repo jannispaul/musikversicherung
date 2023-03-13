@@ -1,4 +1,10 @@
 {
+  "name": "@pixelpink/musikversicherung",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jay",
+    "url": "https://pixel-pink.de/"
+  },
   "dependencies": {
     "vite": "^4.0.4"
   },
