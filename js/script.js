@@ -5,6 +5,8 @@
 const form = document.querySelector("[data-form='multi-step'] form");
 const formName = form.dataset.name;
 const steps = document.querySelectorAll("[data-form='step']");
+const success = document.querySelector("[data-form='success']");
+const error = document.querySelector("[data-form='error']");
 const backButtons = document.querySelectorAll("[data-form='back-btn']");
 const nextButtons = document.querySelectorAll("[data-form='next-btn']");
 const submitButton = document.querySelector("[data-form='submit-btn']");
@@ -185,16 +187,25 @@ function submitForm(e) {
     .then(function (response) {
       // If response is ok
       if (response.ok) {
-        console.log("fetch response ok");
-        // window.location.href = redirectUrl; // Clear saved formdata from localstorage
+        // console.log("fetch response ok");
+        form.style.display = "none";
+        success.style.display = "block";
 
+        // Custom success
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        const lottieTrigger = document.querySelector(".lottie-trigger");
+        if (!lottieTrigger) return;
+        lottieTrigger.click(); // Trigger a click event on the Lottie trigger div
+
+        // window.location.href = redirectUrl; // Clear saved formdata from localstorage
         // Clear saved formdata from localstorage
         //   localStorage.removeItem(formName);
       }
     }) // If there is an error log it to console and reidrect to fehler page
     ["catch"](function (error) {
       console.error("Error: ", error);
-      window.location.href = "/fehler/";
+      success.style.display = "none";
+      error.style.display = "block";
     });
 }
 
@@ -202,7 +213,6 @@ function submitForm(e) {
 // Conditional logic
 //
 
-// console.log("conditionObject:", conditionArray);
 function updateConditionalElements(el) {
   let conditionElement;
   // Check if el or a child of it holds condition
@@ -210,8 +220,6 @@ function updateConditionalElements(el) {
     ? (conditionElement = el)
     : (conditionElement = el.querySelector("[data-condition-name]"));
 
-  // console.log("el", el, "conditionEl", conditionElement);
-  console.log("update in", el.dataset);
   if (!conditionElement?.dataset) return;
 
   // Get all conditional Elements
