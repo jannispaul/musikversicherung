@@ -11,8 +11,13 @@ const submitButton = document.querySelector("[data-form='submit-btn']");
 const stepIndicators = document.querySelectorAll(
   "[data-form='step-indicator']"
 );
-const conditionElements = document.querySelectorAll("[data-condition]");
-const conditionalElements = document.querySelectorAll("[data-condition-name]");
+
+// These element get evaluated
+const conditionHolderElements = document.querySelectorAll(
+  "[data-condition-name]"
+);
+// These elementes get shown / hidden
+const conditionalElements = document.querySelectorAll("[data-condition-el]");
 const repeatableItem = document.querySelector("[data-repeat='item']");
 const addRepeatableButton = document.querySelectorAll(
   "[data-repeat='add-item']"
@@ -42,7 +47,7 @@ function isOneChecked(array, name) {
 }
 // Make sure all conditional logic is displayed correctely
 function updateLogic() {
-  conditionElements.forEach((el) => {
+  conditionHolderElements.forEach((el) => {
     updateConditionalElements(el);
   });
 }
@@ -50,7 +55,6 @@ function updateLogic() {
 // Show active step and update step indicator
 function showActiveStep(params) {
   steps.forEach((el, index) => {
-    // console.log(el, index);
     index === currentStep
       ? (el.style.display = "block")
       : (el.style.display = "none");
@@ -61,6 +65,8 @@ function showActiveStep(params) {
 
   // Make sure all conditional fields are displayed correctely
   updateLogic();
+  // Validate step in the background
+  validateStepWithoutOverlays();
 }
 
 // Validate the current step
@@ -91,7 +97,7 @@ function validateStep(hideValidationOverlays = false) {
 }
 
 function validateStepWithoutOverlays(params) {
-  console.log("validate silent");
+  // console.log("validate silent");
   const hideValidationOverlays = true;
   if (!validateStep(hideValidationOverlays)) {
     nextButtons.forEach((button) => button.classList.add("disabled"));
@@ -117,7 +123,6 @@ function nextStep() {
 
   currentStep < steps.length && currentStep++;
   showActiveStep();
-  validateStepWithoutOverlays();
 }
 
 function addInstrumentsToFormData(formData) {
@@ -129,8 +134,6 @@ function addInstrumentsToFormData(formData) {
     const name = el.querySelector("[name*='Instrument']").value;
     const value = el.querySelector("[name*='Instrumentenwert']").value;
     const valueType = el.querySelector("[name*='Wertart']").value;
-    console.log(name, value, valueType);
-    // instrumentData.push([name, value, valueType]);
     instrumentsString += name + "\n" + valueType + "\n" + value + "\n\n";
   });
   //   formData.append("Instruments", JSON.stringify(instrumentData));
@@ -150,9 +153,9 @@ function submitForm(e) {
   addInstrumentsToFormData(formData);
 
   // Display the key/value pairs
-  for (const pair of formData.entries()) {
-    console.log(`${pair[0]}, ${pair[1]}`);
-  }
+  // for (const pair of formData.entries()) {
+  //   console.log(`${pair[0]}, ${pair[1]}`);
+  // }
 
   const status = document.querySelector("[data-form='submit']");
   if (status) {
@@ -176,7 +179,7 @@ function submitForm(e) {
   //     if (index > 9) return;
   //     formData.append("file-" + index, file);
   //   });
-  console.log(formData.get("files"));
+  // console.log(formData.get("files"));
 
   fetch(requestUrl, requestOptions)
     .then(function (response) {
@@ -201,54 +204,51 @@ function submitForm(e) {
 
 // console.log("conditionObject:", conditionArray);
 function updateConditionalElements(el) {
-  let conditionHolder;
+  let conditionElement;
   // Check if el or a child of it holds condition
-  el.dataset.condition
-    ? (conditionHolder = el)
-    : (conditionHolder = el.querySelector("[data-condition]"));
+  el.dataset.conditionName
+    ? (conditionElement = el)
+    : (conditionElement = el.querySelector("[data-condition-name]"));
+
+  // console.log("el", el, "conditionEl", conditionElement);
+  console.log("update in", el.dataset);
+  if (!conditionElement?.dataset) return;
+
+  // Get all conditional Elements
+  let conditionHolders = document.querySelectorAll(
+    `[data-condition-el="${conditionElement.dataset.conditionName}"]`
+  );
 
   // Get selected/checked value
   const value = el.querySelector(":checked")?.value;
 
-  // Get conditions from attribute and turn into array
-  const conditionValues = conditionHolder?.dataset.condition
-    .split(",")
-    .map((item) => item.trim());
+  // Get conditions from conditionholders
+  conditionHolders.forEach((holder) => {
+    const conditionValues = holder?.dataset?.condition
+      .split(",")
+      .map((item) => item.trim());
 
-  // Get element to be shown if condition is true
-  const elementToBeShown = document.querySelector(
-    `[data-condition-name="${conditionHolder?.dataset.show}"]`
-  );
-  // Get element to be hidden if condition is true
-  const elementToBeHidden = document.querySelector(
-    `[data-condition-name="${conditionHolder?.dataset.hide}"]`
-  );
-
-  // If there is no more element to be updated return
-  if (!elementToBeShown) return;
-
-  function meetsAnyCondition(arrayOfConditions, activeValue) {
-    return arrayOfConditions.some((condition) => condition === activeValue);
-  }
-  // Check if any condition is true
-  const conditionIsMet = meetsAnyCondition(conditionValues, value);
-
-  if (!conditionHolder) return;
-
-  // If no condtion is true or the element is not visible hide the dependant element
-  if (!conditionIsMet) {
-    elementToBeShown.style.display = "none";
-    if (elementToBeHidden) {
-      elementToBeHidden.style.display = "block";
+    // Check if any condtion is met
+    function meetsAnyCondition(arrayOfConditions, activeValue) {
+      return arrayOfConditions.some((condition) =>
+        // if the condition starts with ! its negated
+        Array.from(condition)[0] === "!"
+          ? condition.substring(1) !== activeValue
+          : condition === activeValue
+      );
     }
-  } else {
-    elementToBeShown.style.display = "block";
-    if (elementToBeHidden) {
-      elementToBeHidden.style.display = "none";
+    // Check if any condition is true
+    const conditionIsMet = meetsAnyCondition(conditionValues, value);
+
+    if (!conditionElement) return;
+
+    // If no condtion is true or the element is not visible hide the dependant element
+    if (!conditionIsMet) {
+      holder.style.display = "none";
+    } else {
+      holder.style.display = "block";
     }
-  }
-  // Call the function on the updated element to check for more conditions
-  // updateConditionalElements(elementToBeShown);
+  });
 }
 
 //
@@ -292,7 +292,7 @@ function saveDataToLocalStorage(event) {
 
 // Load saved form data from localStorage
 function loadDataFromLocalStorage() {
-  console.log("loading");
+  // console.log("loading");
   // Get data from localStorage
   let saved = localStorage.getItem(formName);
   if (!saved) return;
@@ -342,7 +342,7 @@ function getAllRepeatables(params) {
   return document.querySelectorAll("[data-repeat='item']");
 }
 function deleteRepeatable(repeatableItem) {
-  console.log("remove");
+  // console.log("remove");
   if (getAllRepeatables().length <= 1) return;
   repeatableItem.remove();
   repeatableCount--;
@@ -427,8 +427,8 @@ document.addEventListener(
   function (event) {
     validateStepWithoutOverlays();
     // Click on conditional logic element trigger
-    if (event.target.closest("[data-condition]")) {
-      updateConditionalElements(event.target.closest("[data-condition]"));
+    if (event.target.closest("[data-condition-name]")) {
+      updateConditionalElements(event.target.closest("[data-condition-name]"));
     }
   },
   true
