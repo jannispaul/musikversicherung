@@ -238,6 +238,11 @@ function updateConditionalElements(el) {
 
     // Check if any condtion is met
     function meetsAnyCondition(arrayOfConditions, activeValue) {
+      // // If there is no value set treat it as true
+      // console.log("condition", activeValue);
+      // // arrayOfConditions.forEach((condition) => {
+      // //   if (!activeValue && Array.from(condition)[0] === "!") return true;
+      // // });
       return arrayOfConditions.some((condition) =>
         // if the condition starts with ! its negated
         Array.from(condition)[0] === "!"
@@ -361,17 +366,19 @@ function addRepeatable(params) {
   const items = document.querySelectorAll("[data-repeat='item']");
   let clone = repeatableItem.cloneNode(true);
   let inputs = clone.querySelectorAll("input");
+  // Reset all inputs
   inputs.forEach((input, index) => {
     if (input.type === "text" || input.type === "number") {
       input.value = "";
       input.name += repeatableCount;
     } else {
-      input.removeAttribute("checked");
+      input.checked = false;
       input.name += repeatableCount;
     }
   });
 
   items[items.length - 1].after(clone);
+  validateStepWithoutOverlays();
   // repeatableItem.after(repeatableItem.cloneNode(true));
 }
 
