@@ -103,8 +103,10 @@ function validateStepWithoutOverlays(params) {
   const hideValidationOverlays = true;
   if (!validateStep(hideValidationOverlays)) {
     nextButtons.forEach((button) => button.classList.add("disabled"));
+    submitButton.classList.add("disabled");
   } else {
     nextButtons.forEach((button) => button.classList.remove("disabled"));
+    submitButton.classList.remove("disabled");
   }
 }
 
