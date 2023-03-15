@@ -156,4 +156,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           localPath: "./dist/assets/index.js"
-          remotePath: "./musikversicherung"
+          remotePath: "./musikversicherung/index.js"
