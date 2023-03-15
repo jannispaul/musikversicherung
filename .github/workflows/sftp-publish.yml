@@ -70,5 +70,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
-          localPath: "./dist/asssets"
-          remotePath: "/musikversicherung"
+          local-dir: "./dist/asssets"
+          server-dir: "/musikversicherung"
