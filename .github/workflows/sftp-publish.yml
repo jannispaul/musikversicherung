@@ -91,6 +91,7 @@ jobs:
           private-ssh-key: ${{ secrets.FTP_PASSWORD }}
           destination-path: ~/musikversicherung/
           source-path: "./dist/assets/"
+          rsync-options: --dry-run --archive --verbose --compress --delete-after --human-readable --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore
 #           password: ${{ secrets.FTP_PASSWORD }}
 #           port: 22
 #           server-dir: "musikversicherung/"
