@@ -71,4 +71,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
           local-dir: "./dist/asssets/"
-          server-dir: "/musikversicherung"
+          server-dir: "/musikversicherung/"
