@@ -70,6 +70,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
-          local-dir: "./dist/assets"
+          local-dir: "./dist/assets/"
           server-dir: "musikversicherung/"
           # dry-run: true
