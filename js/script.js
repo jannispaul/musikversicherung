@@ -361,6 +361,7 @@ function deleteRepeatable(repeatableItem) {
   if (getAllRepeatables().length <= 1) return;
   repeatableItem.remove();
   repeatableCount--;
+  validateStepWithoutOverlays();
 }
 function addRepeatable(params) {
   repeatableCount++;
@@ -405,13 +406,22 @@ document.addEventListener(
   "input",
   function (event) {
     validateStepWithoutOverlays();
-    saveDataToLocalStorage;
+    saveDataToLocalStorage(event);
   },
   false
 );
 
+// Event listener for enter key
+document.addEventListener("keypress", function (event) {
+  // If the user presses the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+    handleClicksAndEnter(event);
+  }
+});
 // Event listener for clicks
-document.addEventListener("click", function (event) {
+document.addEventListener("click", handleClicksAndEnter);
+
+function handleClicksAndEnter(event) {
   // Click of next button
   if (event.target.matches("[data-form='next-btn']")) {
     nextStep();
@@ -436,7 +446,7 @@ document.addEventListener("click", function (event) {
   if (event.target.matches("[data-form='submit-btn']")) {
     submitForm();
   }
-});
+}
 
 // When select choice is changed
 document.addEventListener(
