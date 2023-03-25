@@ -17,8 +17,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        index: "js/script.js",
+        anfrage: "js/anfrage.js",
         reviews: "js/reviews.js",
+        index: "js/index.js",
       },
       output: {
         entryFileNames: `assets/[name].js`,
