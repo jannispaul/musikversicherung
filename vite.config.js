@@ -16,6 +16,10 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
+      input: {
+        index: "js/script.js",
+        reviews: "js/reviews.js",
+      },
       output: {
         entryFileNames: `assets/[name].js`,
         chunkFileNames: `assets/[name].js`,
