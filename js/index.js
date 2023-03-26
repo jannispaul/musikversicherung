@@ -1,3 +1,4 @@
+import { creatJSONLD } from "./createJSONLD.js";
 const reviewContainer = document.querySelector("[data-name='reviews']");
 const averageRatingEl = document.querySelector("[data-name='average-rating']");
 const reviewCountEl = document.querySelector("[data-name='review-count']");
@@ -6,6 +7,28 @@ const reviewCountEl = document.querySelector("[data-name='review-count']");
 fetch("https://musikversicherung.com/new-reviews.json")
   .then((response) => response.json()) // parse the response as JSON
   .then((data) => {
+    // Create JSON LD
+    const aggregatedData = data[data.length - 1];
+
+    let schema = {
+      "@context": "http://schema.org",
+      "@type": "Product",
+      image: "https://musikversicherung.com/images/og-image.jpg",
+      name: "SINFONIMA / I'M SOUND Instrumentenversicherung",
+      brand: {
+        "@type": "Brand",
+        name: "Mannheimer Versicherung AG",
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: parseFloat(aggregatedData?.Average.replace(",", ".")),
+        reviewCount: aggregatedData?.Count,
+      },
+      // review: reviewsArray,
+      description: "Deine Versicherung für Instrumente und Equipment.",
+    };
+    creatJSONLD(schema);
+
     // loop through each review and append it to the DOM
     data.forEach((review) => {
       // Check if its the meta data

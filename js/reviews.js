@@ -1,3 +1,4 @@
+import { creatJSONLD } from "./createJSONLD.js";
 const reviewContainer = document.querySelector("[data-name='reviews']");
 const averageRatingEl = document.querySelector("[data-name='average-rating']");
 const reviewCountEl = document.querySelector("[data-name='review-count']");
@@ -78,18 +79,22 @@ fetch("https://musikversicherung.com/reviews.json")
       review: reviewsArray,
       description: "Deine Versicherung für Instrumente und Equipment.",
     };
-    // create a script tag
-    const script = document.createElement("script");
 
-    // set the type attribute to "application/ld+json"
-    script.setAttribute("type", "application/ld+json");
+    // Append JSONLD to head
+    creatJSONLD(schema);
 
-    script.textContent = JSON.stringify(schema);
+    // // create a script tag
+    // const script = document.createElement("script");
 
-    // get the head element
-    const head = document.querySelector("head");
+    // // set the type attribute to "application/ld+json"
+    // script.setAttribute("type", "application/ld+json");
 
-    // append the script tag to the head
-    head.appendChild(script);
+    // script.textContent = JSON.stringify(schema);
+
+    // // get the head element
+    // const head = document.querySelector("head");
+
+    // // append the script tag to the head
+    // head.appendChild(script);
   })
   .catch((error) => console.error(error)); // handle any errors
