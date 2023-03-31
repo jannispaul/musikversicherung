@@ -20,6 +20,7 @@ export default defineConfig({
         anfrage: "js/anfrage.js",
         reviews: "js/reviews.js",
         index: "js/index.js",
+        fileUpload: "js/file-upload.js",
         createJSONLD: "js/createJSONLD.js",
         "multi-step-form": "js/multi-step-form.js",
       },
