@@ -185,7 +185,7 @@
     // if (!e?.target.closest(["data-form='submit-btn'"])) {
     //   e.preventDefault();
     // }
-    e.stopPropagation();
+    // e.stopPropagation();
 
     // let formData = new FormData(form);
 
@@ -194,7 +194,7 @@
 
     const status = document.querySelector("[data-form='submit']");
     if (status) {
-      status.innerHTML = "Please wait...";
+      status.innerHTML = status.dataset.wait && "Please wait...";
       status.disabled = true; // Add form .submitting state class for styling
     }
 
