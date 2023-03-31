@@ -1,8 +1,42 @@
 <!-- Only needed to minify js files-->
-<script type="module" src="js/script.js"></script>
-<script type="module" src="js/reviews.js"></script>
+<!-- <script type="module" src="js/script.js"></script> -->
+<!-- <script type="module" src="js/reviews.js"></script> -->
+<script>
+  param1 = "bullshit";
+</script>
+<script defer type="module" src="js/multi-step-form.js"></script>
 
 <!-- Alternative: Write inline JS -->
 <script>
-  console.log("test");
+  // console.log("test");
 </script>
+
+<form
+  data-form="multi-step"
+  action="https://test.com"
+  data-name="testform"
+  data-auto-save
+>
+  <h2>
+    Step <span data-form="current-step">1</span> of
+    <span data-form="total-steps"></span>
+  </h2>
+  <div data-form="step">
+    <input type="text" name="vorname" />
+    <input type="text" name="nachname" required />
+    <input type="text" name="test" data-auto-save="exclude" />
+
+    <button type="button" data-form="next-btn">Next</button>
+  </div>
+  <div data-form="step">
+    <input type="text" name="Ort" data-auto-save="exclude" />
+    <button type="button" data-form="back-btn">Back</button>
+    <button type="button" data-form="next-btn">Next</button>
+  </div>
+  <div data-form="step">
+    <button type="button" data-form="back-btn">Back</button>
+    <button type="submit" data-form="submit">submit</button>
+  </div>
+</form>
+
+<div class="w-form-done">h1</div>

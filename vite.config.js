@@ -20,6 +20,8 @@ export default defineConfig({
         anfrage: "js/anfrage.js",
         reviews: "js/reviews.js",
         index: "js/index.js",
+        createJSONLD: "js/createJSONLD.js",
+        "multi-step-form": "js/multi-step-form.js",
       },
       output: {
         entryFileNames: `assets/[name].js`,
