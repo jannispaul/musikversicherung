@@ -181,7 +181,10 @@
    * @returns
    */
   function submitForm(e) {
-    e.preventDefault();
+    // Prevent if not submit button
+    if (!e.target.closest(["data-form='submit-btn'"])) {
+      e.preventDefault();
+    }
     e.stopPropagation();
 
     // let formData = new FormData(form);
