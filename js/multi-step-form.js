@@ -220,7 +220,7 @@
           // console.log("fetch response ok");
 
           // Clear saved formdata from localstorage
-          // localStorage.removeItem(formName);
+          localStorage.removeItem(formName);
 
           // Hide form and show success
           form.style.display = "none";
