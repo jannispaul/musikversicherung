@@ -181,13 +181,13 @@
    * @returns
    */
   function submitForm(e) {
+    // console.log(e);
+    e.preventDefault();
+
     // Prevent if not submit button
     // if (!e?.target.closest(["data-form='submit-btn'"])) {
-    //   e.preventDefault();
     // }
     // e.stopPropagation();
-
-    // let formData = new FormData(form);
 
     // Dont submit if fields are invalid
     if (!validateStep()) return;
@@ -197,16 +197,18 @@
       status.innerHTML = status.dataset.wait && "Please wait...";
       status.disabled = true; // Add form .submitting state class for styling
     }
-
     // Submitting form
-    form.submit();
+    // form.submit();
 
-    // // Submit object as json
-    // const requestOptions = {
-    //   method: "POST",
-    //   body: formData,
-    //   redirect: "follow",
-    // };
+    // Get data from Form
+    let formData = new FormData(form);
+
+    // Submit
+    const requestOptions = {
+      method: "POST",
+      body: formData,
+      redirect: "follow",
+    };
 
     // Get action url
     const requestUrl = form.action;
@@ -218,7 +220,7 @@
           // console.log("fetch response ok");
 
           // Clear saved formdata from localstorage
-          localStorage.removeItem(formName);
+          // localStorage.removeItem(formName);
 
           // Hide form and show success
           form.style.display = "none";
@@ -445,11 +447,10 @@
    */
   function handleClicksAndEnter(event) {
     // Prevent focused buttons from triggering both keypress and click event
-    event.preventDefault();
+    // event.preventDefault();
 
     // Click of next button
     if (event.target.matches("[data-form='next-btn']")) {
-      console.log("nextbtn");
       nextStep();
     }
     // Click of back button
@@ -470,7 +471,7 @@
     }
     // Click of back button
     if (event.target.matches("[data-form='submit-btn']")) {
-      submitForm();
+      submitForm(event);
     }
   }
 
@@ -502,3 +503,10 @@
     }
   }
 })();
+
+// document.addEventListener("submit", handleSubmission);
+
+// function handleSubmission(event) {
+//   // console.log("submiiting:", event);
+//   event.preventDefault();
+// }

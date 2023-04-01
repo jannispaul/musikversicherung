@@ -177,7 +177,6 @@ function submitForm(e) {
     redirect: "follow",
   };
 
-  const redirectUrl = "/danke"; // Set request url
   const requestUrl = form.action; // Get action url
 
   //   formData.getAll("files").forEach((file, index) => {
