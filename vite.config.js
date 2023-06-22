@@ -18,6 +18,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         anfrage: "js/anfrage.js",
+        calculator: "js/calculator.js",
         reviews: "js/reviews.js",
         index: "js/index.js",
         fileUpload: "js/file-upload.js",

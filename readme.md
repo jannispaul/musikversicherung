@@ -1,4 +1,4 @@
-# Minimal Webflow Developement Starter
+# Musikversicherung.com Readme
 
 Uses [vite](https://vitejs.dev/) to run dev server and to minify output.
 

@@ -1,3 +1,4 @@
+// Used on schaden-melden.html
 (() => {
   //
   // Variables

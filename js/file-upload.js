@@ -1,3 +1,4 @@
+// Used on schaden-melden.html
 window.addEventListener("LR_DATA_OUTPUT", (event) => {
   //   console.log("event", event.detail);
 

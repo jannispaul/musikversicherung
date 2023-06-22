@@ -1,3 +1,5 @@
+// Used on anfrage.html
+
 // window.addEventListener("DOMContentLoaded", (event) => {
 //
 // Variables
