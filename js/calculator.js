@@ -1,3 +1,4 @@
+// Used on anfrage.html
 function initCalculator() {
   const valueInput = document.querySelector("input[name='Gesamtwert']");
   const priceElement = document.querySelector("[data-name='price']");
@@ -165,7 +166,7 @@ function initCalculator() {
       el.classList.add("w--redirected-checked")
   );
 
-  // Run function once
-  // calculatePrice();
+  // Run calculator once to show price in case data was loaded from localStorage
+  calculatePrice();
 }
 document.addEventListener("DOMContentLoaded", initCalculator);
