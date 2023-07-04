@@ -56,7 +56,7 @@ function initCalculator() {
     value = parseInt(valueInput.value);
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
     enteredCode = discountCodeInput?.value;
-    const code = "tzouitxbq21"; // Obfuscated using obfuscateString function below
+    const code = "tzouitxbq21"; // Obfuscated using obfuscateString function below: synthswap10
 
     // Show / hide "Instrumente" vs Equipment
     if (insurance === "IM SOUND") {
@@ -113,8 +113,31 @@ function initCalculator() {
       personalOfferDisclaimer.style.display = "block";
     }
 
+    let obfuscatedCode = obfuscateString(enteredCode.toLowerCase());
+    // If the discount code is correct
+    if (obfuscatedCode === code && insurance === "IM SOUND") {
+      document.querySelector("input[value='Jaehrlich']").checked = true;
+      updateCustomRadioAppearence();
+      intervalButtons.forEach((button) => (button.disabled = true));
+      interval = "Jährlich";
+      let discountPrice = value * 0.016065;
+      // Set minimum price
+      discountPrice < 23.8 && (discountPrice = 23.8);
+      discountPriceElement.innerHTML = formatToGerman(discountPrice) + " €";
+      discountPriceElement.style.display = "block";
+      // Set price in HTML
+      priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
+      priceElement.style.textDecoration = "line-through";
+      priceElement.style.opacity = "0.5";
+    } else {
+      intervalButtons.forEach((button) => (button.disabled = false));
+      priceElement.style.textDecoration = "none";
+      priceElement.style.opacity = "1";
+      discountPriceElement.style.display = "none";
+    }
+
     // Divide to monlthy price for montly payment and add 5%
-    if (interval === "Monatlich") {
+    if (interval === "Monatlich" && !intervalButtons[0].disabled) {
       calculatedPrice = (calculatedPrice / 12) * 1.05;
     }
 
@@ -137,34 +160,23 @@ function initCalculator() {
       }
       return obfuscatedString;
     }
-    let obfuscatedCode = obfuscateString(enteredCode.toLowerCase());
 
     // Set price in HTML
     priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
-
-    // If the discount code is correct
-    if (obfuscatedCode === code && insurance === "IM SOUND") {
-      let discountPrice = calculatedPrice * 0.9;
-      discountPriceElement.innerHTML = formatToGerman(discountPrice) + " €";
-      discountPriceElement.style.display = "block";
-      priceElement.style.textDecoration = "line-through";
-      priceElement.style.opacity = "0.5";
-    } else {
-      priceElement.style.textDecoration = "none";
-      priceElement.style.opacity = "1";
-      discountPriceElement.style.display = "none";
-    }
   }
 
   // Get all custom radio buttons
   let customRadioButton = document.querySelectorAll(".w-radio-input");
 
-  // Update the checked ones with webflow classes
-  customRadioButton.forEach(
-    (el) =>
-      el.nextSibling.checked == true &&
-      el.classList.add("w--redirected-checked")
-  );
+  function updateCustomRadioAppearence() {
+    // Update the checked ones with webflow classes
+    customRadioButton.forEach((el) =>
+      el.nextSibling.checked == true
+        ? el.classList.add("w--redirected-checked")
+        : el.classList.remove("w--redirected-checked")
+    );
+  }
+  updateCustomRadioAppearence();
 
   // Run calculator once to show price in case data was loaded from localStorage
   calculatePrice();
