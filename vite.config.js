@@ -9,6 +9,14 @@ import { defineConfig } from "vite";
 import { ViteMinifyPlugin } from "vite-plugin-minify";
 
 export default defineConfig({
+  server: {
+    host: "localhost",
+    cors: "*",
+    hmr: {
+      host: "localhost",
+      protocol: "ws",
+    },
+  },
   // build: { target: "esnext" },
   plugins: [
     // input https://www.npmjs.com/package/html-minifier-terser options
