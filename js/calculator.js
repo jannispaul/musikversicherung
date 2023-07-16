@@ -31,6 +31,13 @@ function initCalculator() {
     "[data-name='discount-price']"
   );
 
+  const listDisclaimerElement = document.querySelector(
+    "[data-name='list-disclaimer']"
+  );
+  const nextDisclaimerElement = document.querySelector(
+    "[data-name='next-disclaimer']"
+  );
+
   let interval;
   let insurance;
   let value;
@@ -111,6 +118,29 @@ function initCalculator() {
       priceSection.style.display = "none";
       coverageSection.style.display = "none";
       personalOfferDisclaimer.style.display = "block";
+    }
+    // Full online process possible
+    let onlineflowItems = document.querySelectorAll("[data-flow='online']");
+    let requestflowItems = document.querySelectorAll("[data-flow='request']");
+    // Show elements and hide others
+    if (value <= 20000 && insurance === "IM SOUND") {
+      onlineflowItems.forEach((item) => (item.style.display = "block"));
+      requestflowItems.forEach((item) => (item.style.display = "none"));
+      console.log("full online");
+      if (value > 10000) {
+        listDisclaimerElement.style.display = "block";
+        nextDisclaimerElement.style.display = "none";
+      } else {
+        listDisclaimerElement.style.display = "none";
+        nextDisclaimerElement.style.display = "block";
+      }
+    } else {
+      // Hide all elements exclusive to full online funnel
+      requestflowItems.forEach((item) => (item.style.display = "block"));
+      onlineflowItems.forEach((item) => (item.style.display = "none"));
+      listDisclaimerElement.style.display = "none";
+      nextDisclaimerElement.style.display = "none";
+      // proberaumDetailsElement.style.display = "none";
     }
 
     let obfuscatedCode = obfuscateString(enteredCode.toLowerCase());

@@ -1,5 +1,5 @@
 // Used on anfrage.html
-
+// import { validIban } from "./utilities/validIban.js";
 (function () {
   // window.addEventListener("DOMContentLoaded", (event) => {
   //

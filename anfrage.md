@@ -24,3 +24,29 @@ flowchart
 ```
 
 Mermaid Flow Diagram Link: [https://www.mermaidflow.app/]
+
+Logic differentiates between 2 flows:
+
+1. Request (data-flow="request")
+2. Online (data-flow="online)
+
+Additional data points for online flow
+
+- ProberaumStrasse
+- ProberaumHausnummer
+- ProberaumPostleitzahl
+- ProberaumOrt
+- Schloss20mm
+- Schliesszylinder
+- Sicherheitsbeschlaege
+- Fenster
+- Pilzkopfverriegelung
+- Strasse
+- Hausnummer
+- Postleitzahl
+- Ort
+- Iban
+- Gelesen
+- Dateneinwilligung
+- Verzicht
+- Unverschluesselt
