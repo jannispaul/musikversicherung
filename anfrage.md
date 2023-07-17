@@ -46,7 +46,10 @@ Additional data points for online flow
 - Postleitzahl
 - Ort
 - Iban
+- Sepa
+- Beitrag
 - Gelesen
 - Dateneinwilligung
 - Verzicht
 - Unverschluesselt
+- Nachricht2

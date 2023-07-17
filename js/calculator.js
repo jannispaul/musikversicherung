@@ -42,6 +42,7 @@ function initCalculator() {
   let insurance;
   let value;
   let calculatedPrice;
+  let discountPrice;
   let coverage;
   let enteredCode;
 
@@ -119,29 +120,6 @@ function initCalculator() {
       coverageSection.style.display = "none";
       personalOfferDisclaimer.style.display = "block";
     }
-    // Full online process possible
-    let onlineflowItems = document.querySelectorAll("[data-flow='online']");
-    let requestflowItems = document.querySelectorAll("[data-flow='request']");
-    // Show elements and hide others
-    if (value <= 20000 && insurance === "IM SOUND") {
-      onlineflowItems.forEach((item) => (item.style.display = "block"));
-      requestflowItems.forEach((item) => (item.style.display = "none"));
-      console.log("full online");
-      if (value > 10000) {
-        listDisclaimerElement.style.display = "block";
-        nextDisclaimerElement.style.display = "none";
-      } else {
-        listDisclaimerElement.style.display = "none";
-        nextDisclaimerElement.style.display = "block";
-      }
-    } else {
-      // Hide all elements exclusive to full online funnel
-      requestflowItems.forEach((item) => (item.style.display = "block"));
-      onlineflowItems.forEach((item) => (item.style.display = "none"));
-      listDisclaimerElement.style.display = "none";
-      nextDisclaimerElement.style.display = "none";
-      // proberaumDetailsElement.style.display = "none";
-    }
 
     let obfuscatedCode = obfuscateString(enteredCode.toLowerCase());
     // If the discount code is correct
@@ -150,7 +128,7 @@ function initCalculator() {
       updateCustomRadioAppearence();
       intervalButtons.forEach((button) => (button.disabled = true));
       interval = "Jährlich";
-      let discountPrice = value * 0.016065;
+      discountPrice = value * 0.016065;
       // Set minimum price
       discountPrice < 23.8 && (discountPrice = 23.8);
       discountPriceElement.innerHTML = formatToGerman(discountPrice) + " €";
@@ -164,6 +142,7 @@ function initCalculator() {
       priceElement.style.textDecoration = "none";
       priceElement.style.opacity = "1";
       discountPriceElement.style.display = "none";
+      discountPrice = null;
     }
 
     // Divide to monlthy price for montly payment and add 5%
@@ -193,6 +172,72 @@ function initCalculator() {
 
     // Set price in HTML
     priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
+
+    // Full online process possible
+    const onlineflowItems = document.querySelectorAll("[data-flow='online']");
+    const requestflowItems = document.querySelectorAll("[data-flow='request']");
+    const flowInput = document.querySelector("input[name='flow']");
+    let beitragInput = document.querySelector("input[name='Beitrag']");
+    // Get the form element
+    const formElement = document.querySelector("form");
+
+    // Show elements and hide others
+    if (value < 20000 && insurance === "IM SOUND") {
+      onlineflowItems.forEach((item) => (item.style.display = "block"));
+      requestflowItems.forEach((item) => (item.style.display = "none"));
+      console.log("full online");
+
+      // Set to online flow
+      function createFlowInput() {
+        if (flowInput) return;
+        // Create the input element
+        const inputElement = document.createElement("input");
+        inputElement.setAttribute("type", "text");
+        inputElement.setAttribute("name", "flow");
+        inputElement.setAttribute("value", "online");
+        inputElement.classList.add("hide");
+
+        // Append the input element to the form
+        formElement.appendChild(inputElement);
+      }
+      createFlowInput();
+      let finalPrice = discountPrice ? discountPrice : calculatedPrice;
+
+      function createBeitragInput() {
+        if (beitragInput) return;
+        // Create the input element
+        const inputElement = document.createElement("input");
+        inputElement.setAttribute("type", "text");
+        inputElement.setAttribute("name", "Beitrag");
+        inputElement.setAttribute("value", formatToGerman(finalPrice) + " €");
+        inputElement.classList.add("hide");
+
+        // Append the input element to the form
+        formElement.appendChild(inputElement);
+        beitragInput = document.querySelector("input[name='Beitrag']");
+      }
+      createBeitragInput();
+      beitragInput.setAttribute("value", formatToGerman(finalPrice) + " €");
+
+      if (value > 10000) {
+        listDisclaimerElement.style.display = "block";
+        nextDisclaimerElement.style.display = "none";
+      } else {
+        listDisclaimerElement.style.display = "none";
+        nextDisclaimerElement.style.display = "block";
+      }
+    } else {
+      flowInput && flowInput.remove();
+      beitragInput && beitragInput.remove();
+      // Hide all elements exclusive to full online funnel
+      requestflowItems.forEach((item) => (item.style.display = "block"));
+      onlineflowItems.forEach((item) => (item.style.display = "none"));
+      listDisclaimerElement.style.display = "none";
+      nextDisclaimerElement.style.display = "none";
+      // proberaumDetailsElement.style.display = "none";
+    }
+
+    //End of full online Process
   }
 
   // Get all custom radio buttons

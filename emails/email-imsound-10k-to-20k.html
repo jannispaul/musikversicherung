@@ -188,14 +188,18 @@
                             <p style="text-align: center; line-height: 1.5; word-break: break-word; mso-line-height-alt: NaNpx; margin: 0"><br /><span style="font-size: 18px">vielen Dank für Deinen Online-Antrag. Du hast ab sofort vorläufigen Versicherungsschutz. </span></p>
                             <br />
                             <p style="font-size: 18px">
-                              <b>Was jetzt passiert:</b><br />
-                              Die Mannheimer wird nun auf Basis deiner Angaben (siehe unten) einen Versicherungsvertrag ausstellen und Dir zusenden. Sollten sich daraus Fragen ergeben, melde Dich bitte bei mir.
+                              <b>Damit der Versicherungsschutz bestehen bleibt,</b>
+                              musst Du <span style="text-decoration: underline">innerhalb von 14 Tagen</span> die beigefügte Excel-Liste (oder ein anderes Listenformat) nachreichen. Kleinteile / Zubehör kannst Du ohne Einzelnennung in einer Pauschalposition zusammenfassen. Reichst Du die Liste nicht ein, <span style="text-decoration: underline">entfällt der Versicherungsschutz rückwirkend ab Beginn.</span>
                             </p>
                             <p style="font-size: 18px">
+                              <b>Und dann?</b><br />
+                              Folgt der Versicherungsvertrag per Post.
+                            </p>
+                            <!-- <p style="font-size: 18px">
                               <b>Musst Du sonst etwas tun?</b><br />
                               Du musst nicht - aber ich bitte Dich ganz herzlich, Dir eine Minute Zeit für eine Bewertung meines Angebots zu nehmen. Du hilfst mir damit sehr. Klick einfach hier:
                               <a href="https://musikversicherung.com/neue-bewertung.html">Kundenmeinungen</a>
-                            </p>
+                            </p> -->
                             <br />
                           </div>
                         </div>
@@ -206,12 +210,9 @@
                             <p style="line-height: 1.5; word-break: break-word; font-size: 18px; mso-line-height-alt: 27px; margin: 0">
                               <span style="font-size: 18px">Viele Grüße</span>
                             </p>
-                            <p style="line-height: 1.5; word-break: break-word; font-size: 18px; mso-line-height-alt: 27px; margin: 0">
+                            <p style="line-height: 1.5; word-break: break-word; font-size: 18px; mso-line-height-alt: 27px; margin-bottom: 16px">
                               <span style="font-size: 18px">Heiner Blaskewitz</span>
                             </p>
-                            <br />
-                            <br />
-                            <br />
                             <br />
                             <br />
                             <p style="font-size: 18px">
@@ -220,7 +221,7 @@
                               {{1.Anrede}}<br />
                               {{1.Vorname}} {{1.Nachname}}<br />
                               {{1.Email}}<br />
-                              {{if(1.Telefon;1.Telefon;)}}<br />
+                              {{if(1.Telefon; 1.Telefon; )}}<br />
                               <br />
                               Status: {{1.Status}} <br />
                               Mitgliedschaft in einer Organisation: {{if(1.Organisation = "Sonstige"; 1.SonstigeOrganisation; 1.Organisation)}}
@@ -237,22 +238,22 @@
                               <br />
                               Versicherung: {{1.Versicherung}}<br />
                               Gesamtwert des Equipments: {{1.Gesamtwert}} €<br />
-                              {{if(1.Aktionscode;"Aktionscode: "1.Aktionscode;)}}<br />
+                              {{if(1.Aktionscode; "Aktionscode: " + 1.Aktionscode; )}}<br />
                               Beitrag: {{1.Beitrag}}<br />
-                              Zahlung: {{if(1.Zahlung=""; "Jährlich"; 1.Zahlung)}}<br />
-                              IBAN: ******************{{substring(1.Iban; length(1.Iban) - 4; length(1.Iban))}}
+                              Zahlung: {{if((1.Zahlung = """") + """"; "Jährlich"; 1.Zahlung)}}<br />
+                              IBAN: ******************{{substring(1.Iban; length(1.Iban) - 4; length(1.Iban))}} <br />
                               <br />
                               <br />
                               <b>Proberaum:</b><br />
                               Wird das Equipment in einem Proberaum verwendet? {{1.Proberaum}}<br />
 
-                              {{if(1.Proberaum="Ja"; 1.ProberaumStrasse space 1.ProberaumHausnummer "<br />"1.ProberaumPostleitzahl space 1.ProberaumOrt"<br /><br />
-                              Befindet sich der Proberaum in einem auch ansonsten bewohnten Gebäude? "1.Bewohnt;)}}<br />
-                              {{if(1.Proberaum="Ja" and 1.Bewohnt="Nein"; "Kann der Schlüssel beim Abschließen zweimal gedreht werden oder kommt der Riegel des Türschlosses min. 20mm aus der Tür heraus? " 1.Schloss20mm "<br />
-                              Sind alle Schließzylinder auf der Türaußenseite mit dem Türblatt bündig? " 1.Schliesszylinder "<br />
-                              Sind alle Sicherheitsbeschläge von innen verschraubt? " 1.Sicherheitsbeschlaege "<br />
-                              Gibt es Fenster, die ohne Hilfsmittel erreichbar sind? " 1.Fenster "<br />
-                              Haben die Fenster eine Pilzkopfverriegelung? " 1.Pilzkopfverriegelung;)}}
+                              {{if(1.Proberaum = "Ja"; 1.ProberaumStrasse + space + 1.ProberaumHausnummer + "<br />" + 1.ProberaumPostleitzahl + space + 1.ProberaumOrt + "<br /><br />
+                              Befindet sich der Proberaum in einem auch ansonsten bewohnten Gebäude? " + 1.Bewohnt; )}}<br />
+                              {{if(1.Proberaum = "Ja" + and + 1.Bewohnt = "Nein"; "Kann der Schlüssel beim Abschließen zweimal gedreht werden oder kommt der Riegel des Türschlosses min. 20mm aus der Tür heraus? " + 1.Schloss20mm + "<br />
+                              Sind alle Schließzylinder auf der Türaußenseite mit dem Türblatt bündig? " + 1.Schliesszylinder + "<br />
+                              Sind alle Sicherheitsbeschläge von innen verschraubt? " + 1.Sicherheitsbeschlaege + "<br />
+                              Gibt es Fenster, die ohne Hilfsmittel erreichbar sind? " + 1.Fenster + "<br />
+                              Haben die Fenster eine Pilzkopfverriegelung? " + 1.Pilzkopfverriegelung; )}}
                               <br />
                               <br />
                             </p>
