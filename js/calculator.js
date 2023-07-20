@@ -2,41 +2,29 @@
 function initCalculator() {
   const valueInput = document.querySelector("input[name='Gesamtwert']");
   const priceElement = document.querySelector("[data-name='price']");
-  const personalOfferDisclaimer = document.querySelector(
-    "[data-name='personal']"
-  );
-  const discountSection = document.querySelector(
-    "[data-name='discount-section']"
-  );
+  const personalOfferDisclaimer = document.querySelector("[data-name='personal']");
+  const discountSection = document.querySelector("[data-name='discount-section']");
   const priceSection = document.querySelector("[data-name='price-section']");
-  const insuranceButtons = document.querySelectorAll(
-    "input[name='Versicherung']"
-  );
+  const insuranceButtons = document.querySelectorAll("input[name='Versicherung']");
   const intervalButtons = document.querySelectorAll("input[name='Zahlung']");
-  const coverageSection = document.querySelector(
-    "[data-name='coverage-section']"
-  );
+  const coverageSection = document.querySelector("[data-name='coverage-section']");
 
-  const sinfonimaWording = document.querySelector(
-    "[data-name='sinfonima-wording']"
-  );
-  const iamsoundWording = document.querySelector(
-    "[data-name='iamsound-wording']"
-  );
+  const sinfonimaWording = document.querySelector("[data-name='sinfonima-wording']");
+  const iamsoundWording = document.querySelector("[data-name='iamsound-wording']");
 
-  const discountCodeInput = document.querySelector(
-    "[data-name='discount-code']"
-  );
-  const discountPriceElement = document.querySelector(
-    "[data-name='discount-price']"
-  );
+  const discountCodeInput = document.querySelector("[data-name='discount-code']");
+  const discountPriceElement = document.querySelector("[data-name='discount-price']");
 
-  const listDisclaimerElement = document.querySelector(
-    "[data-name='list-disclaimer']"
-  );
-  const nextDisclaimerElement = document.querySelector(
-    "[data-name='next-disclaimer']"
-  );
+  const listDisclaimerElement = document.querySelector("[data-name='list-disclaimer']");
+  const nextDisclaimerElement = document.querySelector("[data-name='next-disclaimer']");
+  const secureSection = document.querySelector("[data-name='secure-section']");
+
+  const proberaumInputs = document.querySelectorAll("[name='Proberaum']");
+  const bewohntInputs = document.querySelectorAll("[name='Bewohnt']");
+
+  const requestSuccess = document.querySelector("[data-success='request']");
+  const onlineSuccess = document.querySelector("[data-success='online']");
+  const incompleteSuccess = document.querySelector("[data-success='incomplete']");
 
   let interval;
   let insurance;
@@ -48,19 +36,22 @@ function initCalculator() {
 
   coverageSection.style.display = "none";
   discountSection.style.display = "none";
+
+  // Event handlers
   discountCodeInput.addEventListener("keyup", calculatePrice);
   valueInput.addEventListener("keyup", calculatePrice);
   intervalButtons.forEach((el) => el.addEventListener("click", calculatePrice));
-  insuranceButtons.forEach((el) =>
-    el.addEventListener("click", calculatePrice)
-  );
+  insuranceButtons.forEach((el) => el.addEventListener("click", calculatePrice));
   coverageSection.addEventListener("click", calculatePrice);
+  coverageSection.addEventListener("click", calculatePrice);
+  secureSection.addEventListener("click", calculatePrice);
+  proberaumInputs.forEach((el) => el.addEventListener("click", calculatePrice));
+  bewohntInputs.forEach((el) => el.addEventListener("click", calculatePrice));
 
+  // Main function that gets run when input changes happen
   function calculatePrice() {
     interval = document.querySelector("input[name='Zahlung']:checked")?.value;
-    insurance = document.querySelector(
-      "input[name='Versicherung']:checked"
-    )?.value;
+    insurance = document.querySelector("input[name='Versicherung']:checked")?.value;
     value = parseInt(valueInput.value);
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
     enteredCode = discountCodeInput?.value;
@@ -111,16 +102,24 @@ function initCalculator() {
       // If price is lower than minimum set minimum
       calculatedPrice = Math.max(calculatedPrice, 71.4);
       personalOfferDisclaimer.style.display = "none";
-    } else if (
-      (value >= 40000 && insurance === "IM SOUND") ||
-      (value > 3000 && insurance === "SINFONIMA")
-    ) {
+    } else if ((value >= 40000 && insurance === "IM SOUND") || (value > 3000 && insurance === "SINFONIMA")) {
       // Hide pricesection and show personal offer disclaimer
       priceSection.style.display = "none";
       coverageSection.style.display = "none";
       personalOfferDisclaimer.style.display = "block";
     }
 
+    // Function to obfuscate discount code
+    function obfuscateString(inputString) {
+      let obfuscatedString = "";
+      for (let i = 0; i < inputString.length; i++) {
+        let charCode = inputString.charCodeAt(i);
+        obfuscatedString += String.fromCharCode(charCode + 1);
+      }
+      return obfuscatedString;
+    }
+
+    // Discount code validtion and forcing yearly interval
     let obfuscatedCode = obfuscateString(enteredCode.toLowerCase());
     // If the discount code is correct
     if (obfuscatedCode === code && insurance === "IM SOUND") {
@@ -160,34 +159,25 @@ function initCalculator() {
         maximumFractionDigits: 2,
       });
     }
-    // Function obfuscate code
-    function obfuscateString(inputString) {
-      let obfuscatedString = "";
-      for (let i = 0; i < inputString.length; i++) {
-        let charCode = inputString.charCodeAt(i);
-        obfuscatedString += String.fromCharCode(charCode + 1);
-      }
-      return obfuscatedString;
-    }
 
     // Set price in HTML
     priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
 
     // Full online process possible
-    const onlineflowItems = document.querySelectorAll("[data-flow='online']");
     const requestflowItems = document.querySelectorAll("[data-flow='request']");
+    const onlineflowItems = document.querySelectorAll("[data-flow='online']");
+
     const flowInput = document.querySelector("input[name='flow']");
     let beitragInput = document.querySelector("input[name='Beitrag']");
     // Get the form element
     const formElement = document.querySelector("form");
 
-    // Show elements and hide others
+    // Show online flow elements and hide request flow items
     if (value < 20000 && insurance === "IM SOUND") {
       onlineflowItems.forEach((item) => (item.style.display = "block"));
       requestflowItems.forEach((item) => (item.style.display = "none"));
-      console.log("full online");
 
-      // Set to online flow
+      // Create an input to set flow to online
       function createFlowInput() {
         if (flowInput) return;
         // Create the input element
@@ -203,13 +193,14 @@ function initCalculator() {
       createFlowInput();
       let finalPrice = discountPrice ? discountPrice : calculatedPrice;
 
+      // Create an input to set Beitrag
       function createBeitragInput() {
         if (beitragInput) return;
         // Create the input element
         const inputElement = document.createElement("input");
         inputElement.setAttribute("type", "text");
         inputElement.setAttribute("name", "Beitrag");
-        inputElement.setAttribute("value", formatToGerman(finalPrice) + " €");
+        inputElement.value = formatToGerman(finalPrice) + " €";
         inputElement.classList.add("hide");
 
         // Append the input element to the form
@@ -217,8 +208,9 @@ function initCalculator() {
         beitragInput = document.querySelector("input[name='Beitrag']");
       }
       createBeitragInput();
-      beitragInput.setAttribute("value", formatToGerman(finalPrice) + " €");
+      beitragInput.value = formatToGerman(finalPrice) + " €";
 
+      // If value is over 10.000€ show disclaimer that list must be provided
       if (value > 10000) {
         listDisclaimerElement.style.display = "block";
         nextDisclaimerElement.style.display = "none";
@@ -227,6 +219,7 @@ function initCalculator() {
         nextDisclaimerElement.style.display = "block";
       }
     } else {
+      // Show request flow and hide online flow
       flowInput && flowInput.remove();
       beitragInput && beitragInput.remove();
       // Hide all elements exclusive to full online funnel
@@ -234,7 +227,35 @@ function initCalculator() {
       onlineflowItems.forEach((item) => (item.style.display = "none"));
       listDisclaimerElement.style.display = "none";
       nextDisclaimerElement.style.display = "none";
-      // proberaumDetailsElement.style.display = "none";
+      requestSuccess.style.display = "block";
+      onlineSuccess.style.display = "none";
+      incompleteSuccess.style.display = "none";
+    }
+
+    // Check if security question are answered correctly
+    let schloss = document.querySelector("[name='Schloss20mm']:checked")?.value;
+    let schliesszylinder = document.querySelector("[name='Schliesszylinder']:checked")?.value;
+    let sicherheitsbeschlaege = document.querySelector("[name='Sicherheitsbeschlaege']:checked")?.value;
+    let pilzkopfverriegelung = document.querySelector("[name='Pilzkopfverriegelung']:checked")?.value;
+    let fenster = document.querySelector("[name='Fenster']:checked")?.value;
+    let proberaum = document.querySelector("[name='Proberaum']:checked")?.value;
+    let bewohnt = document.querySelector("[name='Bewohnt']:checked")?.value;
+
+    // If certain questions are answered with "Nein" then set flow to incomplete
+    if ((proberaum === "Nein" && flowInput) || (bewohnt === "Ja" && flowInput)) {
+      flowInput.value = "online";
+    } else if (proberaum === "Ja" && bewohnt === "Nein" && flowInput) {
+      if (schloss === "Nein" || schliesszylinder === "Nein" || sicherheitsbeschlaege === "Nein" || (fenster === "Ja" && pilzkopfverriegelung === "Nein")) {
+        flowInput.value = "incomplete";
+        requestSuccess.style.display = "none";
+        onlineSuccess.style.display = "none";
+        incompleteSuccess.style.display = "block";
+      } else {
+        flowInput.value = "online";
+        requestSuccess.style.display = "none";
+        incompleteSuccess.style.display = "none";
+        onlineSuccess.style.display = "block";
+      }
     }
 
     //End of full online Process
@@ -245,11 +266,7 @@ function initCalculator() {
 
   function updateCustomRadioAppearence() {
     // Update the checked ones with webflow classes
-    customRadioButton.forEach((el) =>
-      el.nextSibling.checked == true
-        ? el.classList.add("w--redirected-checked")
-        : el.classList.remove("w--redirected-checked")
-    );
+    customRadioButton.forEach((el) => (el.nextSibling.checked == true ? el.classList.add("w--redirected-checked") : el.classList.remove("w--redirected-checked")));
   }
   updateCustomRadioAppearence();
 
