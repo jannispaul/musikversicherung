@@ -1,4 +1,4 @@
-import { initModals } from "./initModals";
+import { initModals } from "./initModals.js";
 
 // Used on anfrage.html
 // Modified multi-step-form script
@@ -193,9 +193,10 @@ import { initModals } from "./initModals";
           if (!lottieTrigger) return;
           lottieTrigger.click(); // Trigger a click event on the Lottie trigger div
 
-          // window.location.href = redirectUrl; // Clear saved formdata from localstorage
+          // window.location.href = redirectUrl;
+
           // Clear saved formdata from localstorage
-          //   localStorage.removeItem(formName);
+          localStorage.removeItem(formName);
         }
       }) // If there is an error log it to console and reidrect to fehler page
       ["catch"](function (error) {

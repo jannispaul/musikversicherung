@@ -28,7 +28,8 @@ Mermaid Flow Diagram Link: [https://www.mermaidflow.app/]
 Logic differentiates between 2 flows:
 
 1. Request (data-flow="request")
-2. Online (data-flow="online)
+2. Online (data-flow="online")
+3. Incomplete (data-flow="incomplete")
 
 Additional data points for online flow
 
