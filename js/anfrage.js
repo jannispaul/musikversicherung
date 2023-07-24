@@ -13,15 +13,11 @@
   const errorElement = document.querySelector("[data-form='error']");
   //  const backButtons = document.querySelectorAll("[data-form='back-btn']");
   const nextButtons = document.querySelectorAll("[data-form='next-btn']");
-  const submitButton = document.querySelector("[data-form='submit-btn']");
-  const stepIndicators = document.querySelectorAll(
-    "[data-form='step-indicator']"
-  );
+  const submitButtons = document.querySelectorAll("[data-form='submit-btn']");
+  const stepIndicators = document.querySelectorAll("[data-form='step-indicator']");
 
   // These element get evaluated
-  const conditionHolderElements = document.querySelectorAll(
-    "[data-condition-name]"
-  );
+  const conditionHolderElements = document.querySelectorAll("[data-condition-name]");
   // These elementes get shown / hidden
   const conditionalElements = document.querySelectorAll("[data-condition-el]");
   const repeatableItem = document.querySelector("[data-repeat='item']");
@@ -61,12 +57,8 @@
   // Show active step and update step indicator
   function showActiveStep(params) {
     steps.forEach((el, index) => {
-      index === currentStep
-        ? (el.style.display = "block")
-        : (el.style.display = "none");
-      index === currentStep
-        ? stepIndicators[index]?.classList.add("active")
-        : stepIndicators[index]?.classList.remove("active");
+      index === currentStep ? (el.style.display = "block") : (el.style.display = "none");
+      index === currentStep ? stepIndicators[index]?.classList.add("active") : stepIndicators[index]?.classList.remove("active");
     });
 
     // Make sure all conditional fields are displayed correctely
@@ -80,11 +72,7 @@
     let isValid = true;
 
     // Get all required inputs, textareas and selects
-    const requiredFields = Array.from(
-      steps[currentStep].querySelectorAll(
-        "input[required], textarea[required], select[required]"
-      )
-    );
+    const requiredFields = Array.from(steps[currentStep].querySelectorAll("input[required], textarea[required], select[required]"));
 
     // Loop over requiered fields
     for (let i = 0; i < requiredFields.length; i++) {
@@ -92,9 +80,7 @@
       if (!isVisible(requiredFields[i])) continue;
 
       // Trigger browser validity check
-      const fieldIsValid = hideValidationOverlays
-        ? requiredFields[i].checkValidity()
-        : requiredFields[i].reportValidity();
+      const fieldIsValid = hideValidationOverlays ? requiredFields[i].checkValidity() : requiredFields[i].reportValidity();
 
       // Field is invalid stop
       if (!fieldIsValid) return (isValid = false);
@@ -107,10 +93,10 @@
     const hideValidationOverlays = true;
     if (!validateStep(hideValidationOverlays)) {
       nextButtons.forEach((button) => button.classList.add("disabled"));
-      submitButton.classList.add("disabled");
+      submitButtons?.forEach((button) => button.classList.add("disabled"));
     } else {
       nextButtons.forEach((button) => button.classList.remove("disabled"));
-      submitButton.classList.remove("disabled");
+      submitButtons?.forEach((button) => button.classList.remove("disabled"));
     }
   }
 
@@ -221,26 +207,20 @@
   function updateConditionalElements(el) {
     let conditionElement;
     // Check if el or a child of it holds condition
-    el.dataset.conditionName
-      ? (conditionElement = el)
-      : (conditionElement = el.querySelector("[data-condition-name]"));
+    el.dataset.conditionName ? (conditionElement = el) : (conditionElement = el.querySelector("[data-condition-name]"));
 
     if (!conditionElement?.dataset) return;
 
     // Get all conditional Elements
-    let conditionHolders = document.querySelectorAll(
-      `[data-condition-el="${conditionElement.dataset.conditionName}"]`
-    );
+    let conditionHolders = document.querySelectorAll(`[data-condition-el="${conditionElement.dataset.conditionName}"]`);
 
     // Get selected/checked value
-    const value = el.querySelector(":checked")?.value;
+    const value = conditionElement.querySelector(":checked")?.value;
 
     // Get conditions from conditionholders
 
     conditionHolders.forEach((holder) => {
-      const conditionValues = holder?.dataset?.condition
-        .split(",")
-        .map((item) => item.trim());
+      const conditionValues = holder?.dataset?.condition.split(",").map((item) => item.trim());
 
       // Check if any condtion is met
       function meetsAnyCondition(arrayOfConditions, activeValue) {
@@ -251,14 +231,11 @@
         // // });
         return arrayOfConditions.some((condition) =>
           // if the condition starts with ! its negated
-          Array.from(condition)[0] === "!"
-            ? condition.substring(1) !== activeValue
-            : condition === activeValue
+          Array.from(condition)[0] === "!" ? condition.substring(1) !== activeValue : condition === activeValue
         );
       }
       // Check if any condition is true
       const conditionIsMet = meetsAnyCondition(conditionValues, value);
-
       if (!conditionElement) return;
 
       // If no condtion is true or the element is not visible hide the dependant element
@@ -317,9 +294,7 @@
     if (!saved) return;
     saved = JSON.parse(saved);
     // Get all of the form fields
-    let fields = document.querySelectorAll(
-      "[data-auto-save] input, [data-auto-save] textarea, [data-auto-save] select"
-    );
+    let fields = document.querySelectorAll("[data-auto-save] input, [data-auto-save] textarea, [data-auto-save] select");
 
     // Loop through each field and load any saved data in localStorage
     Array.prototype.slice.call(fields).forEach(function (field) {
@@ -459,9 +434,7 @@
       validateStepWithoutOverlays();
       // Click on conditional logic element trigger
       if (event.target.closest("[data-condition-name]")) {
-        updateConditionalElements(
-          event.target.closest("[data-condition-name]")
-        );
+        updateConditionalElements(event.target.closest("[data-condition-name]"));
       }
     },
     true

@@ -1,5 +1,7 @@
-// Used on anfrage.html
+// Handles all calculations and conditions extending the multi-step-form script on anfrage.html
 function initCalculator() {
+  // Variables
+  // Dom Elements
   const valueInput = document.querySelector("input[name='Gesamtwert']");
   const priceElement = document.querySelector("[data-name='price']");
   const personalOfferDisclaimer = document.querySelector("[data-name='personal']");
@@ -26,6 +28,7 @@ function initCalculator() {
   const onlineSuccess = document.querySelector("[data-success='online']");
   const incompleteSuccess = document.querySelector("[data-success='incomplete']");
 
+  // Variables
   let interval;
   let insurance;
   let value;
@@ -36,6 +39,7 @@ function initCalculator() {
 
   coverageSection.style.display = "none";
   discountSection.style.display = "none";
+  incompleteSuccess.style.display = "none";
 
   // Event handlers
   discountCodeInput.addEventListener("keyup", calculatePrice);
@@ -66,16 +70,18 @@ function initCalculator() {
       sinfonimaWording.style.display = "inline";
       iamsoundWording.style.display = "none";
       discountSection.style.display = "none";
+      // console.log("reuest");
+      updateSuccessMessage("request");
     }
-
-    // Return if there is no value, no interval, no insurance or sinfonima is selected
+    if (value) {
+      priceSection.style.display = "block";
+    }
+    // Hide if there is no value, no interval, no insurance or sinfonima is selected
     if (!value || value === 0 || !interval || !insurance) {
       priceSection.style.display = "none";
       personalOfferDisclaimer.style.display = "none";
       coverageSection.style.display = "none";
-      return;
     }
-    priceSection.style.display = "block";
 
     // Sinfonima pauschal Preis
     if ((value <= 3000) & (insurance === "SINFONIMA")) {
@@ -87,7 +93,7 @@ function initCalculator() {
       calculatedPrice = value * 0.01785;
 
       // If IM SOUND over 20000€
-      if (value >= 20000) {
+      if (value > 20000) {
         // Show option for stationär
         coverageSection.style.display = "block";
 
@@ -121,22 +127,30 @@ function initCalculator() {
 
     // Discount code validtion and forcing yearly interval
     let obfuscatedCode = obfuscateString(enteredCode.toLowerCase());
+
     // If the discount code is correct
     if (obfuscatedCode === code && insurance === "IM SOUND") {
+      // Discount is only available on yearly paid plans
+      // Selects yearly and disables the interval radio buttons
       document.querySelector("input[value='Jaehrlich']").checked = true;
       updateCustomRadioAppearence();
       intervalButtons.forEach((button) => (button.disabled = true));
       interval = "Jährlich";
+
+      // Calculate discount price
       discountPrice = value * 0.016065;
       // Set minimum price
       discountPrice < 23.8 && (discountPrice = 23.8);
+      // Set discount price in HTML
       discountPriceElement.innerHTML = formatToGerman(discountPrice) + " €";
       discountPriceElement.style.display = "block";
-      // Set price in HTML
+
+      // Set regular price in HTML
       priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
       priceElement.style.textDecoration = "line-through";
       priceElement.style.opacity = "0.5";
     } else {
+      // Enale interval radio button, hide discount price and show regular price
       intervalButtons.forEach((button) => (button.disabled = false));
       priceElement.style.textDecoration = "none";
       priceElement.style.opacity = "1";
@@ -163,17 +177,17 @@ function initCalculator() {
     // Set price in HTML
     priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
 
-    // Full online process possible
+    // Full online process for IM SOUND
+    // Variables: DOM Elements
     const requestflowItems = document.querySelectorAll("[data-flow='request']");
     const onlineflowItems = document.querySelectorAll("[data-flow='online']");
 
     const flowInput = document.querySelector("input[name='flow']");
     let beitragInput = document.querySelector("input[name='Beitrag']");
-    // Get the form element
     const formElement = document.querySelector("form");
 
     // Show online flow elements and hide request flow items
-    if (value < 20000 && insurance === "IM SOUND") {
+    if (value <= 20000 && insurance === "IM SOUND") {
       onlineflowItems.forEach((item) => (item.style.display = "block"));
       requestflowItems.forEach((item) => (item.style.display = "none"));
 
@@ -219,6 +233,7 @@ function initCalculator() {
         nextDisclaimerElement.style.display = "block";
       }
     } else {
+      // console.log("not online");
       // Show request flow and hide online flow
       flowInput && flowInput.remove();
       beitragInput && beitragInput.remove();
@@ -227,9 +242,7 @@ function initCalculator() {
       onlineflowItems.forEach((item) => (item.style.display = "none"));
       listDisclaimerElement.style.display = "none";
       nextDisclaimerElement.style.display = "none";
-      requestSuccess.style.display = "block";
-      onlineSuccess.style.display = "none";
-      incompleteSuccess.style.display = "none";
+      updateSuccessMessage("request");
     }
 
     // Check if security question are answered correctly
@@ -242,19 +255,21 @@ function initCalculator() {
     let bewohnt = document.querySelector("[name='Bewohnt']:checked")?.value;
 
     // If certain questions are answered with "Nein" then set flow to incomplete
-    if ((proberaum === "Nein" && flowInput) || (bewohnt === "Ja" && flowInput)) {
+    if ((insurance === "IM SOUND" && proberaum === "Nein" && flowInput) || (insurance === "IM SOUND" && bewohnt === "Ja" && flowInput)) {
+      // Online Flow: Kein Proberaum or bewohnt
       flowInput.value = "online";
+      updateSuccessMessage("online");
     } else if (proberaum === "Ja" && bewohnt === "Nein" && flowInput) {
       if (schloss === "Nein" || schliesszylinder === "Nein" || sicherheitsbeschlaege === "Nein" || (fenster === "Ja" && pilzkopfverriegelung === "Nein")) {
+        // Incomplete flow
+        // console.log("incomplete");
         flowInput.value = "incomplete";
-        requestSuccess.style.display = "none";
-        onlineSuccess.style.display = "none";
-        incompleteSuccess.style.display = "block";
+        updateSuccessMessage("incomplete");
       } else {
+        // Online Flow: Secured Location
+        // console.log("online");
         flowInput.value = "online";
-        requestSuccess.style.display = "none";
-        incompleteSuccess.style.display = "none";
-        onlineSuccess.style.display = "block";
+        updateSuccessMessage("online");
       }
     }
 
@@ -264,6 +279,14 @@ function initCalculator() {
   // Get all custom radio buttons
   let customRadioButton = document.querySelectorAll(".w-radio-input");
 
+  function updateSuccessMessage(sectionString) {
+    // console.log("updating success message");
+    sectionString === "request" ? (requestSuccess.style.display = "block") : (requestSuccess.style.display = "none");
+    sectionString === "online" ? (onlineSuccess.style.display = "block") : (onlineSuccess.style.display = "none");
+    sectionString === "incomplete" ? (incompleteSuccess.style.display = "block") : (incompleteSuccess.style.display = "none");
+  }
+
+  // Update the custom webflow radio buttons
   function updateCustomRadioAppearence() {
     // Update the checked ones with webflow classes
     customRadioButton.forEach((el) => (el.nextSibling.checked == true ? el.classList.add("w--redirected-checked") : el.classList.remove("w--redirected-checked")));
