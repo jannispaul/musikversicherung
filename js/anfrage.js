@@ -1,11 +1,14 @@
+import { initModals } from "./initModals";
+
 // Used on anfrage.html
-// import { validIban } from "./utilities/validIban.js";
+// Modified multi-step-form script
+
 (function () {
   // window.addEventListener("DOMContentLoaded", (event) => {
   //
   // Variables
+  // DOM Elements
   //
-
   const form = document.querySelector("[data-form='multi-step'] form");
   const formName = form.dataset.name;
   const steps = document.querySelectorAll("[data-form='step']");
@@ -342,7 +345,7 @@
     repeatableCount--;
     validateStepWithoutOverlays();
   }
-  function addRepeatable(params) {
+  function addRepeatable() {
     repeatableCount++;
     //   console.log("add");
     const items = document.querySelectorAll("[data-repeat='item']");
@@ -361,6 +364,7 @@
 
     items[items.length - 1].after(clone);
     validateStepWithoutOverlays();
+    initModals();
     // repeatableItem.after(repeatableItem.cloneNode(true));
   }
 
@@ -372,6 +376,7 @@
     hideConditionalElements();
     showActiveStep();
     validateStepWithoutOverlays();
+    initModals();
   }
   // Run once on startup
   initiateForm();
