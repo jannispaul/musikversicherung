@@ -63,6 +63,8 @@ import { initModals } from "./initModals";
       index === currentStep ? (el.style.display = "block") : (el.style.display = "none");
       index === currentStep ? stepIndicators[index]?.classList.add("active") : stepIndicators[index]?.classList.remove("active");
     });
+    // form.scrollIntoView();
+    window.scrollTo({ top: 0 });
 
     // Make sure all conditional fields are displayed correctely
     updateLogic();
