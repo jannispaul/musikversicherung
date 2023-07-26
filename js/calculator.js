@@ -56,7 +56,10 @@ function initCalculator() {
   function calculatePrice() {
     interval = document.querySelector("input[name='Zahlung']:checked")?.value;
     insurance = document.querySelector("input[name='Versicherung']:checked")?.value;
-    value = parseInt(valueInput.value);
+    // Cleaning up dots and everything after comma
+    let sanatizedValue = valueInput.value.replace(/\.(?:\d{1,2})$/, "");
+    value = parseInt(sanatizedValue.replace(".", ""));
+
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
     enteredCode = discountCodeInput?.value;
     const code = "tzouitxbq21"; // Obfuscated using obfuscateString function below: synthswap10
