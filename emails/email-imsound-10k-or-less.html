@@ -248,7 +248,7 @@
 
                               {{if(1.Proberaum="Ja"; 1.ProberaumStrasse space 1.ProberaumHausnummer "<br />"1.ProberaumPostleitzahl space 1.ProberaumOrt"<br /><br />
                               Befindet sich der Proberaum in einem auch ansonsten bewohnten Gebäude? "1.Bewohnt;)}}<br />
-                              {{if(1.Proberaum="Ja" and 1.Bewohnt="Nein"; "Kann der Schlüssel beim Abschließen zweimal gedreht werden oder kommt der Riegel des Türschlosses min. 20mm aus der Tür heraus? " 1.Schloss20mm "<br />
+                              {{if(1.Bewohnt="Nein"; "Kann der Schlüssel beim Abschließen zweimal gedreht werden oder kommt der Riegel des Türschlosses min. 20mm aus der Tür heraus? " 1.Schloss20mm "<br />
                               Sind alle Schließzylinder auf der Türaußenseite mit dem Türblatt bündig? " 1.Schliesszylinder "<br />
                               Sind alle Sicherheitsbeschläge von innen verschraubt? " 1.Sicherheitsbeschlaege "<br />
                               Gibt es Fenster, die ohne Hilfsmittel erreichbar sind? " 1.Fenster "<br />
