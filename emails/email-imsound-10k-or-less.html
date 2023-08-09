@@ -232,14 +232,11 @@
                               {{1.Wohnsitz}}
                               <br />
                               <br />
-
-                              <br />
-                              <br />
                               Versicherung: {{1.Versicherung}}<br />
                               Gesamtwert des Equipments: {{1.Gesamtwert}} €<br />
                               {{if(1.Aktionscode;"Aktionscode: "1.Aktionscode;)}}<br />
                               Beitrag: {{1.Beitrag}}<br />
-                              Zahlung: {{if(1.Zahlung=""; "Jährlich"; 1.Zahlung)}}<br />
+                              Zahlung: {{1.Zahlung}}<br />
                               IBAN: ******************{{substring(1.Iban; length(1.Iban) - 4; length(1.Iban))}}
                               <br />
                               <br />
