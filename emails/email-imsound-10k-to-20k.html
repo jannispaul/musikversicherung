@@ -237,7 +237,7 @@
                               Gesamtwert des Equipments: {{1.Gesamtwert}} €<br />
                               {{if(1.Aktionscode; "Aktionscode: " + 1.Aktionscode; )}}<br />
                               Beitrag: {{1.Beitrag}}<br />
-                              Zahlung: {{1.Zahlung}}<br />
+                              Zahlung: {{1.Zahlung}}{{ifempty(1.Zahlung; "Jaehrlich")}}<br />
                               IBAN: ******************{{substring(1.Iban; length(1.Iban) - 4; length(1.Iban))}} <br />
                               <br />
                               <br />
