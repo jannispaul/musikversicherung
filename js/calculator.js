@@ -137,7 +137,8 @@ function initCalculator() {
       // Selects yearly and disables the interval radio buttons
       document.querySelector("input[value='Jaehrlich']").checked = true;
       updateCustomRadioAppearence();
-      intervalButtons.forEach((button) => (button.disabled = true));
+      // Disabled the mothly option
+      intervalButtons[0].disabled = true;
       interval = "Jährlich";
 
       // Calculate discount price
