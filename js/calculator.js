@@ -205,8 +205,8 @@ function initCalculator() {
         inputElement.setAttribute("value", "online");
         inputElement.classList.add("hide");
 
-        // Append the input element to the form
-        formElement.appendChild(inputElement);
+        // Add the input element to the beginning of the form
+        formElement.prepend(inputElement);
       }
       createFlowInput();
       let finalPrice = discountPrice ? discountPrice : calculatedPrice;
@@ -221,8 +221,8 @@ function initCalculator() {
         inputElement.value = formatToGerman(finalPrice) + " €";
         inputElement.classList.add("hide");
 
-        // Append the input element to the form
-        formElement.appendChild(inputElement);
+        // Add the input element to the beginning of the form
+        formElement.prepend(inputElement);
         beitragInput = document.querySelector("input[name='Beitrag']");
       }
       createBeitragInput();
