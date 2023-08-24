@@ -36,3 +36,5 @@ document.head.appendChild(ele)
 ### Minify and copy to webflow
 
 `pnpm run build`
+
+Build folder dist/assets is automatically pushed to ftp server with github action.
