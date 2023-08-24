@@ -200,10 +200,9 @@ function initCalculator() {
         if (flowInput) return;
         // Create the input element
         const inputElement = document.createElement("input");
-        inputElement.setAttribute("type", "text");
+        inputElement.setAttribute("type", "hidden");
         inputElement.setAttribute("name", "flow");
         inputElement.setAttribute("value", "online");
-        inputElement.classList.add("hide");
 
         // Add the input element to the beginning of the form
         formElement.prepend(inputElement);
@@ -216,10 +215,9 @@ function initCalculator() {
         if (beitragInput) return;
         // Create the input element
         const inputElement = document.createElement("input");
-        inputElement.setAttribute("type", "text");
+        inputElement.setAttribute("type", "hidden");
         inputElement.setAttribute("name", "Beitrag");
         inputElement.value = formatToGerman(finalPrice) + " €";
-        inputElement.classList.add("hide");
 
         // Add the input element to the beginning of the form
         formElement.prepend(inputElement);
