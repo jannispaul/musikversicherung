@@ -54,6 +54,7 @@ function initCalculator() {
 
   // Main function that gets run when input changes happen
   function calculatePrice() {
+    // console.log("calculating");
     interval = document.querySelector("input[name='Zahlung']:checked")?.value;
     insurance = document.querySelector("input[name='Versicherung']:checked")?.value;
     // Cleaning up dots and everything after comma
@@ -288,14 +289,14 @@ function initCalculator() {
     sectionString === "incomplete" ? (incompleteSuccess.style.display = "block") : (incompleteSuccess.style.display = "none");
   }
 
+  // Run calculator once to show price in case data was loaded from localStorage
+  calculatePrice();
+
   // Update the custom webflow radio buttons
   function updateCustomRadioAppearence() {
     // Update the checked ones with webflow classes
     customRadioButton.forEach((el) => (el.nextSibling.checked == true ? el.classList.add("w--redirected-checked") : el.classList.remove("w--redirected-checked")));
   }
   updateCustomRadioAppearence();
-
-  // Run calculator once to show price in case data was loaded from localStorage
-  calculatePrice();
 }
 document.addEventListener("DOMContentLoaded", initCalculator);
