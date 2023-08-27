@@ -76,11 +76,11 @@ function initCalculator() {
       // console.log("reuest");
       updateSuccessMessage("request");
     }
-    if (value) {
+    if (value && insurance === "IM SOUND") {
       priceSection.style.display = "block";
     }
     // Hide if there is no value, no interval, no insurance or sinfonima is selected
-    if (!value || value === 0 || !interval || !insurance) {
+    if (!value || value === 0 || !interval || !insurance || insurance === "SINFONIMA") {
       priceSection.style.display = "none";
       personalOfferDisclaimer.style.display = "none";
       coverageSection.style.display = "none";
