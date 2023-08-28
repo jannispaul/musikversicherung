@@ -27,6 +27,7 @@ function initCalculator() {
   const requestSuccess = document.querySelector("[data-success='request']");
   const onlineSuccess = document.querySelector("[data-success='online']");
   const incompleteSuccess = document.querySelector("[data-success='incomplete']");
+  const formElement = document.querySelector("form");
 
   // Variables
   let interval;
@@ -189,7 +190,6 @@ function initCalculator() {
 
     const flowInput = document.querySelector("input[name='flow']");
     let beitragInput = document.querySelector("input[name='Beitrag']");
-    const formElement = document.querySelector("form");
 
     // Show online flow elements and hide request flow items
     if (value <= 20000 && insurance === "IM SOUND") {
@@ -289,7 +289,8 @@ function initCalculator() {
     sectionString === "incomplete" ? (incompleteSuccess.style.display = "block") : (incompleteSuccess.style.display = "none");
   }
   function setUserMeta() {
-    let meta = navigator?.userAgent + navigator?.oscpu;
+    let meta = navigator.userAgent ? navigator.userAgent : "" + navigator.oscpu ? navigator.oscpu : "";
+    if (!meta) return;
     const inputElement = document.createElement("input");
     inputElement.setAttribute("type", "hidden");
     inputElement.setAttribute("name", "meta");
