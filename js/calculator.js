@@ -288,6 +288,18 @@ function initCalculator() {
     sectionString === "online" ? (onlineSuccess.style.display = "block") : (onlineSuccess.style.display = "none");
     sectionString === "incomplete" ? (incompleteSuccess.style.display = "block") : (incompleteSuccess.style.display = "none");
   }
+  function setUserMeta() {
+    let meta = navigator?.userAgent + navigator?.oscpu;
+    const inputElement = document.createElement("input");
+    inputElement.setAttribute("type", "hidden");
+    inputElement.setAttribute("name", "meta");
+
+    inputElement.setAttribute("value", meta);
+
+    // Add the input element to the beginning of the form
+    formElement.prepend(inputElement);
+  }
+  setUserMeta();
 
   // Run calculator once to show price in case data was loaded from localStorage
   calculatePrice();
