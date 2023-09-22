@@ -132,7 +132,7 @@ import { initModals } from "./initModals.js";
     instrumentNodes.forEach((el, index) => {
       const name = el.querySelector("[name*='Instrument']").value;
       const value = el.querySelector("[name*='Instrumentenwert']").value;
-      const valueType = el.querySelector("[name*='Wertart']").value;
+      const valueType = el.querySelector("[name*='Wertart']:checked").value;
       instrumentsString += name + "\n" + valueType + "\n" + value + "\n\n";
     });
     //   formData.append("Instruments", JSON.stringify(instrumentData));
@@ -359,9 +359,10 @@ import { initModals } from "./initModals.js";
       if (input.type === "text" || input.type === "number") {
         input.value = "";
         input.name += repeatableCount;
-      } else {
+      } else if (input.type === "radio") {
         input.checked = false;
         input.name += repeatableCount;
+        input.id += repeatableCount;
       }
     });
 
