@@ -149,7 +149,7 @@ function initCalculator() {
     // If the discount code is correct
     if (validCode && insurance === "IM SOUND") {
       // If code is synthswap only yearly payment is available
-      if (obfuscatedCode === code[0]) {
+      if (obfuscatedCode === codes[0]) {
         // Discount is only available on yearly paid plans
         // Selects yearly and disables the interval radio buttons
         document.querySelector("input[value='Jaehrlich']").checked = true;
