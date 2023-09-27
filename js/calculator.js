@@ -64,7 +64,7 @@ function initCalculator() {
 
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
     enteredCode = discountCodeInput?.value;
-    const code = "tzouitxbq21"; // Obfuscated using obfuscateString function below: synthswap10
+    const codes = ["tzouitxbq21", "JN`TVNNJU`3134"]; // Obfuscated using obfuscateString function below: synthswap10 and IM_SUMMIT_2023
 
     // Show / hide "Instrumente" vs Equipment
     if (insurance === "IM SOUND") {
@@ -133,8 +133,21 @@ function initCalculator() {
     // Discount code validtion and forcing yearly interval
     let obfuscatedCode = obfuscateString(enteredCode.toLowerCase());
 
+    // Check if code is valid by comparing entered code with array of possible codes
+    function validateCode(codeString) {
+      let codeIsValid = false;
+      codes.forEach((code) => {
+        if (code === codeString) {
+          codeIsValid = true;
+        }
+      });
+      return codeIsValid;
+    }
+    // Is true if code is valid, otherwise false
+    const validCode = validateCode(obfuscatedCode);
+
     // If the discount code is correct
-    if (obfuscatedCode === code && insurance === "IM SOUND") {
+    if (validCode && insurance === "IM SOUND") {
       // Discount is only available on yearly paid plans
       // Selects yearly and disables the interval radio buttons
       document.querySelector("input[value='Jaehrlich']").checked = true;
