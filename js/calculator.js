@@ -93,7 +93,7 @@ function initCalculator() {
       calculatedPrice = 53.55;
       personalOfferDisclaimer.style.display = "none";
       coverageSection.style.display = "none";
-    } else if (value < 40000 && insurance === "IM SOUND") {
+    } else if (value <= 40000 && insurance === "IM SOUND") {
       // Regular calculation
       calculatedPrice = value * 0.01785;
 
@@ -113,7 +113,7 @@ function initCalculator() {
       // If price is lower than minimum set minimum
       calculatedPrice = Math.max(calculatedPrice, 71.4);
       personalOfferDisclaimer.style.display = "none";
-    } else if ((value >= 40000 && insurance === "IM SOUND") || (value > 3000 && insurance === "SINFONIMA")) {
+    } else if ((value > 40000 && insurance === "IM SOUND") || (value > 3000 && insurance === "SINFONIMA")) {
       // Hide pricesection and show personal offer disclaimer
       priceSection.style.display = "none";
       coverageSection.style.display = "none";
@@ -157,12 +157,18 @@ function initCalculator() {
         // Disabled the mothly option
         intervalButtons[0].disabled = true;
         interval = "Jährlich";
+        // Calculate discount price
+        discountPrice = value * 0.016065;
+        // Set minimum yearly discounted price
+        discountPrice = Math.max(discountPrice, 23.8);
+        coverageSection.style.display = "none";
+      } else {
+        // Replace calculated with discount price
+        // coverageSection.style.display = "none";
+        discountPrice = calculatedPrice * 0.9;
+        discountPrice = calculateMonthlyPrice(discountPrice);
       }
 
-      // Calculate discount price
-      discountPrice = value * 0.016065;
-      // Set minimum price
-      discountPrice < 23.8 && (discountPrice = 23.8);
       // Set discount price in HTML
       discountPriceElement.innerHTML = formatToGerman(discountPrice) + " €";
       discountPriceElement.style.display = "block";
@@ -180,10 +186,14 @@ function initCalculator() {
       discountPrice = null;
     }
 
-    // Divide to monlthy price for montly payment and add 5%
-    if (interval === "Monatlich" && !intervalButtons[0].disabled) {
-      calculatedPrice = (calculatedPrice / 12) * 1.05;
+    function calculateMonthlyPrice(price) {
+      // Divide to monlthy price for montly payment and add 5%
+      if (interval === "Monatlich" && !intervalButtons[0].disabled) {
+        return (price / 12) * 1.05;
+      }
+      return price;
     }
+    calculatedPrice = calculateMonthlyPrice(calculatedPrice);
 
     // Round to 2 decimal points
     calculatedPrice = Math.round(calculatedPrice * 100) / 100;
