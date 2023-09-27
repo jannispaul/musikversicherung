@@ -130,10 +130,12 @@ import { initModals } from "./initModals.js";
     let instrumentsString = "";
     //   var materials = $("input[name*=material]");
     instrumentNodes.forEach((el, index) => {
-      const name = el.querySelector("[name*='Instrument']").value;
-      const value = el.querySelector("[name*='Instrumentenwert']").value;
-      const valueType = el.querySelector("[name*='Wertart']:checked").value;
-      instrumentsString += name + "\n" + valueType + "\n" + value + "\n\n";
+      const name = el.querySelector("[name*='Instrument']")?.value;
+      const value = el.querySelector("[name*='Instrumentenwert']")?.value;
+      const valueType = el.querySelector("[name*='Wertart']:checked")?.value;
+      if (name && value && valueType) {
+        instrumentsString += name + "\n" + valueType + "\n" + value + "\n\n";
+      }
     });
     //   formData.append("Instruments", JSON.stringify(instrumentData));
     formData.append("Instruments", instrumentsString);
