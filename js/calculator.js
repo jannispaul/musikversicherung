@@ -23,6 +23,7 @@ function initCalculator() {
 
   const proberaumInputs = document.querySelectorAll("[name='Proberaum']");
   const bewohntInputs = document.querySelectorAll("[name='Bewohnt']");
+  const flowInputs = document.querySelectorAll("input[name='flow']");
 
   const requestSuccess = document.querySelector("[data-success='request']");
   const onlineSuccess = document.querySelector("[data-success='online']");
@@ -45,13 +46,14 @@ function initCalculator() {
   // Event handlers
   discountCodeInput.addEventListener("keyup", calculatePrice);
   valueInput.addEventListener("keyup", calculatePrice);
-  intervalButtons.forEach((el) => el.addEventListener("click", calculatePrice));
-  insuranceButtons.forEach((el) => el.addEventListener("click", calculatePrice));
+  intervalButtons.forEach((el) => el.addEventListener("input", calculatePrice));
+  insuranceButtons.forEach((el) => el.addEventListener("input", calculatePrice));
   coverageSection.addEventListener("click", calculatePrice);
-  coverageSection.addEventListener("click", calculatePrice);
+  // coverageSection.addEventListener("click", calculatePrice);
   secureSection.addEventListener("click", calculatePrice);
-  proberaumInputs.forEach((el) => el.addEventListener("click", calculatePrice));
+  proberaumInputs.forEach((el) => el.addEventListener("input", calculatePrice));
   bewohntInputs.forEach((el) => el.addEventListener("click", calculatePrice));
+  flowInputs.forEach((el) => el.addEventListener("input", calculatePrice));
 
   // Main function that gets run when input changes happen
   function calculatePrice() {
@@ -198,63 +200,46 @@ function initCalculator() {
     // Round to 2 decimal points
     calculatedPrice = Math.round(calculatedPrice * 100) / 100;
 
-    // Function to format number to german
-    function formatToGerman(number) {
-      return number.toLocaleString("de-DE", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-    }
-
     // Set price in HTML
     priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
 
-    // Full online process for IM SOUND
+    // 3 Different flows for IM SOUND
+    // online / online partial / request
     // Variables: DOM Elements
     const requestflowItems = document.querySelectorAll("[data-flow='request']");
     const onlineflowItems = document.querySelectorAll("[data-flow='online']");
+    // For users that could finish online but choose an email offer instead
+    const onlinePartialFlowItems = document.querySelectorAll("[data-flow='online-partial']");
+    let flow = document.querySelector("[name='flow']:checked")?.value;
 
-    const flowInput = document.querySelector("input[name='flow']");
+    //const flowInput = document.querySelector("input[name='flow']");
     let beitragInput = document.querySelector("input[name='Beitrag']");
 
     // Show online flow elements and hide request flow items
     if (value <= 20000 && insurance === "IM SOUND") {
-      onlineflowItems.forEach((item) => (item.style.display = "block"));
-      requestflowItems.forEach((item) => (item.style.display = "none"));
+      console.log("Flow: (potentially) online", flow, value, insurance);
 
-      // Create an input to set flow to online
-      function createFlowInput() {
-        if (flowInput) return;
-        // Create the input element
-        const inputElement = document.createElement("input");
-        inputElement.setAttribute("type", "hidden");
-        inputElement.setAttribute("name", "flow");
-        inputElement.setAttribute("value", "online");
-
-        // Add the input element to the beginning of the form
-        formElement.prepend(inputElement);
+      if (flow === "online") {
+        console.log("Flow: fully online", flow, value, insurance);
+        onlinePartialFlowItems.forEach((item) => (item.style.display = "block"));
+        onlineflowItems.forEach((item) => (item.style.display = "block"));
+        requestflowItems.forEach((item) => (item.style.display = "none"));
+        updateSuccessMessage("online");
+      } else if (flow === "online-partial") {
+        console.log("Flow: online partial", flow, value, insurance);
+        onlineflowItems.forEach((item) => (item.style.display = "none"));
+        requestflowItems.forEach((item) => (item.style.display = "block"));
+        updateSuccessMessage("request");
       }
-      createFlowInput();
+      onlinePartialFlowItems.forEach((item) => (item.style.display = "block"));
+
+      // Get final price
       let finalPrice = discountPrice ? discountPrice : calculatedPrice;
-
-      // Create an input to set Beitrag
-      function createBeitragInput() {
-        if (beitragInput) return;
-        // Create the input element
-        const inputElement = document.createElement("input");
-        inputElement.setAttribute("type", "hidden");
-        inputElement.setAttribute("name", "Beitrag");
-        inputElement.value = formatToGerman(finalPrice) + " €";
-
-        // Add the input element to the beginning of the form
-        formElement.prepend(inputElement);
-        beitragInput = document.querySelector("input[name='Beitrag']");
-      }
-      createBeitragInput();
-      beitragInput.value = formatToGerman(finalPrice) + " €";
+      // Create Beitrag input
+      createBeitragInput(beitragInput, finalPrice);
 
       // If value is over 10.000€ show disclaimer that list must be provided
-      if (value > 10000) {
+      if (value > 10000 && flow === "online") {
         listDisclaimerElement.style.display = "block";
         nextDisclaimerElement.style.display = "none";
       } else {
@@ -262,12 +247,12 @@ function initCalculator() {
         nextDisclaimerElement.style.display = "block";
       }
     } else {
-      // console.log("not online");
+      console.log("Flow: Request", flow, value, insurance);
       // Show request flow and hide online flow
-      flowInput && flowInput.remove();
       beitragInput && beitragInput.remove();
       // Hide all elements exclusive to full online funnel
       requestflowItems.forEach((item) => (item.style.display = "block"));
+      onlinePartialFlowItems.forEach((item) => (item.style.display = "none"));
       onlineflowItems.forEach((item) => (item.style.display = "none"));
       listDisclaimerElement.style.display = "none";
       nextDisclaimerElement.style.display = "none";
@@ -284,25 +269,63 @@ function initCalculator() {
     let bewohnt = document.querySelector("[name='Bewohnt']:checked")?.value;
 
     // If certain questions are answered with "Nein" then set flow to incomplete
-    if ((insurance === "IM SOUND" && proberaum === "Nein" && flowInput) || (insurance === "IM SOUND" && bewohnt === "Ja" && flowInput)) {
+    if ((insurance === "IM SOUND" && proberaum === "Nein" && flow === "online") || (insurance === "IM SOUND" && bewohnt === "Ja" && flow === "online")) {
       // Online Flow: Kein Proberaum or bewohnt
-      flowInput.value = "online";
+      createSecurityInput("sicher");
       updateSuccessMessage("online");
-    } else if (proberaum === "Ja" && bewohnt === "Nein" && flowInput) {
+    } else if (proberaum === "Ja" && bewohnt === "Nein" && flow === "online") {
       if (schloss === "Nein" || schliesszylinder === "Nein" || sicherheitsbeschlaege === "Nein" || (fenster === "Ja" && pilzkopfverriegelung === "Nein")) {
         // Incomplete flow
         // console.log("incomplete");
-        flowInput.value = "incomplete";
+        // flowInput.value = "incomplete";
+        createSecurityInput("unsicher");
         updateSuccessMessage("incomplete");
-      } else {
-        // Online Flow: Secured Location
-        // console.log("online");
-        flowInput.value = "online";
-        updateSuccessMessage("online");
       }
     }
 
     //End of full online Process
+  }
+
+  function createSecurityInput(securityValue) {
+    let securityInput = document.querySelector("input[name='Sicherheit']");
+    // If it doesnt exist yet, create it
+    if (!securityInput) {
+      // Create the input element
+      securityInput = document.createElement("input");
+      securityInput.setAttribute("type", "hidden");
+      securityInput.setAttribute("name", "Sicherheit");
+
+      // Add the input element to the beginning of the form
+      formElement.prepend(securityInput);
+    }
+
+    securityInput.value = securityValue;
+  }
+
+  // Create an input to set Beitrag
+  function createBeitragInput(beitragInput, finalPrice) {
+    // If it doesnt exist yet, create it
+    if (!beitragInput) {
+      // Create the input element
+      const inputElement = document.createElement("input");
+      inputElement.setAttribute("type", "hidden");
+      inputElement.setAttribute("name", "Beitrag");
+      inputElement.value = formatToGerman(finalPrice) + " €";
+
+      // Add the input element to the beginning of the form
+      formElement.prepend(inputElement);
+    }
+
+    beitragInput = document.querySelector("input[name='Beitrag']");
+    beitragInput.value = formatToGerman(finalPrice) + " €";
+  }
+
+  // Function to format number to german
+  function formatToGerman(number) {
+    return number.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   // Get all custom radio buttons
