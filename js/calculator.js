@@ -280,10 +280,14 @@ function initCalculator() {
         // flowInput.value = "incomplete";
         createSecurityInput("unsicher");
         updateSuccessMessage("incomplete");
+      } else {
+        // Online Flow: Proberaum is sicher
+        createSecurityInput("sicher");
+        updateSuccessMessage("online");
       }
     }
 
-    //End of full online Process
+    // End of full online Process
   }
 
   function createSecurityInput(securityValue) {
