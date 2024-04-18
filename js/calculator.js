@@ -66,7 +66,7 @@ function initCalculator() {
 
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
     enteredCode = discountCodeInput?.value;
-    const codes = ["tzouitxbq21", "jntpvoe21"]; // Obfuscated using obfuscateString function below: synthswap10 & IMSOUND10 (need to be lowercase)
+    const codes = ["jntpvoe21"]; // Obfuscated using obfuscateString function below: IMSOUND10 (need to be lowercase)
 
     // Show / hide "Instrumente" vs Equipment
     if (insurance === "IM SOUND") {
