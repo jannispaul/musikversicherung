@@ -164,12 +164,14 @@ function initCalculator() {
         discountPrice = value * 0.01428;
         // Set minimum yearly discounted price
         discountPrice = Math.max(discountPrice, 71.4);
+        discountPrice = calculateMonthlyPrice(discountPrice);
         // coverageSection.style.display = "none";
       } else {
         // If code is IMSOUND10
         // Replace calculated with discount price
         // coverageSection.style.display = "none";
-        discountPrice = calculatedPrice * 0.9;
+        discountPrice = value * 0.016065;
+        discountPrice = Math.max(discountPrice, 71.4);
         discountPrice = calculateMonthlyPrice(discountPrice);
       }
 
