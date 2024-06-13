@@ -66,7 +66,7 @@ function initCalculator() {
 
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
     enteredCode = discountCodeInput?.value;
-    const codes = ["jntpvoe21"]; // Obfuscated using obfuscateString function below: IMSOUND10 (need to be lowercase)
+    const codes = ["jntpvoe21", "jntpvoewvu3135"]; // Obfuscated using obfuscateString function below: IMSOUND10,  IMSOUNDVUT2024 (need to be lowercase): https://www.dcode.fr/caesar-cipher
 
     // Show / hide "Instrumente" vs Equipment
     if (insurance === "IM SOUND") {
