@@ -67,6 +67,7 @@ function initCalculator() {
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
     enteredCode = discountCodeInput?.value;
     const codes = ["jntpvoe21", "jntpvoewvu3135"]; // Obfuscated using obfuscateString function below: IMSOUND10,  IMSOUNDVUT2024 (need to be lowercase): https://www.dcode.fr/caesar-cipher
+    // WHen deactivating codes make sure to delete logic further down
 
     // Show / hide "Instrumente" vs Equipment
     if (insurance === "IM SOUND") {
@@ -150,21 +151,22 @@ function initCalculator() {
 
     // If the discount code is correct
     if (validCode && insurance === "IM SOUND") {
-      // If code is synthswap only yearly payment is available
-      if (obfuscatedCode === codes[0]) {
+      // If code is IMSOUNDVUT2024 is available
+      if (obfuscatedCode === codes[1]) {
         // Discount is only available on yearly paid plans
         // Selects yearly and disables the interval radio buttons
-        document.querySelector("input[value='Jaehrlich']").checked = true;
-        updateCustomRadioAppearence();
+        // document.querySelector("input[value='Jaehrlich']").checked = true;
+        // updateCustomRadioAppearence();
         // Disabled the mothly option
-        intervalButtons[0].disabled = true;
-        interval = "Jährlich";
+        // intervalButtons[0].disabled = true;
+        // interval = "Jährlich";
         // Calculate discount price
-        discountPrice = value * 0.016065;
+        discountPrice = value * 0.01428;
         // Set minimum yearly discounted price
-        discountPrice = Math.max(discountPrice, 23.8);
-        coverageSection.style.display = "none";
+        discountPrice = Math.max(discountPrice, 71.4);
+        // coverageSection.style.display = "none";
       } else {
+        // If code is IMSOUND10
         // Replace calculated with discount price
         // coverageSection.style.display = "none";
         discountPrice = calculatedPrice * 0.9;
