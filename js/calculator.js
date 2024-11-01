@@ -29,6 +29,7 @@ function initCalculator() {
   const onlineSuccess = document.querySelector("[data-success='online']");
   const incompleteSuccess = document.querySelector("[data-success='incomplete']");
   const formElement = document.querySelector("form");
+  const flowChoice = document.querySelector("[data-name='flow-choice']");
 
   // Variables
   let interval;
@@ -208,12 +209,17 @@ function initCalculator() {
     priceElement.innerHTML = formatToGerman(calculatedPrice) + " €";
 
     // 3 Different flows for IM SOUND
-    // online / online partial / request
+    // online / callback / request
     // Variables: DOM Elements
-    const requestflowItems = document.querySelectorAll("[data-flow='request']");
+    // Flow "online": under 40.000 € and IM SOUND
+    // Flow "callback": under 40.000 € and IM SOUND but callback selected
+    // Flow "request": over 40.000 € or Security not fulfilled or SINFONIMA
     const onlineflowItems = document.querySelectorAll("[data-flow='online']");
     // For users that could finish online but choose an email offer instead
-    const onlinePartialFlowItems = document.querySelectorAll("[data-flow='online-partial']");
+    const callbackFlowItems = document.querySelectorAll("[data-flow='callback']");
+    const notCallbackFlowItems = document.querySelectorAll("[data-flow='!callback']");
+    const requestflowItems = document.querySelectorAll("[data-flow='request']");
+
     let flow = document.querySelector("[name='flow']:checked")?.value;
 
     //const flowInput = document.querySelector("input[name='flow']");
@@ -222,20 +228,27 @@ function initCalculator() {
     // Show online flow elements and hide request flow items
     if (value <= 20000 && insurance === "IM SOUND") {
       console.log("Flow: (potentially) online", flow, value, insurance);
-
+      flowChoice.style.display = "block";
+      notCallbackFlowItems.forEach((item) => (item.style.display = "block"));
+      // User can select if they want online flow or callback
       if (flow === "online") {
         console.log("Flow: fully online", flow, value, insurance);
-        onlinePartialFlowItems.forEach((item) => (item.style.display = "block"));
-        onlineflowItems.forEach((item) => (item.style.display = "block"));
+        callbackFlowItems.forEach((item) => (item.style.display = "none"));
         requestflowItems.forEach((item) => (item.style.display = "none"));
+        onlineflowItems.forEach((item) => (item.style.display = "block"));
         updateSuccessMessage("online");
-      } else if (flow === "online-partial") {
-        console.log("Flow: online partial", flow, value, insurance);
+      } else if (flow === "callback") {
+        console.log("Flow: callback", flow, value, insurance);
+        notCallbackFlowItems.forEach((item) => (item.style.display = "none"));
         onlineflowItems.forEach((item) => (item.style.display = "none"));
         requestflowItems.forEach((item) => (item.style.display = "block"));
+        console.log(callbackFlowItems);
+        callbackFlowItems.forEach((item) => {
+          item.style.display = "block";
+          console.log(item);
+        });
         updateSuccessMessage("request");
       }
-      onlinePartialFlowItems.forEach((item) => (item.style.display = "block"));
 
       // Get final price
       let finalPrice = discountPrice ? discountPrice : calculatedPrice;
@@ -251,12 +264,13 @@ function initCalculator() {
         nextDisclaimerElement.style.display = "block";
       }
     } else {
+      flowChoice.style.display = "none";
       console.log("Flow: Request", flow, value, insurance);
       // Show request flow and hide online flow
       beitragInput && beitragInput.remove();
       // Hide all elements exclusive to full online funnel
       requestflowItems.forEach((item) => (item.style.display = "block"));
-      onlinePartialFlowItems.forEach((item) => (item.style.display = "none"));
+      callbackFlowItems.forEach((item) => (item.style.display = "none"));
       onlineflowItems.forEach((item) => (item.style.display = "none"));
       listDisclaimerElement.style.display = "none";
       nextDisclaimerElement.style.display = "none";
