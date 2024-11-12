@@ -227,25 +227,25 @@ function initCalculator() {
 
     // Show online flow elements and hide request flow items
     if (value <= 20000 && insurance === "IM SOUND") {
-      console.log("Flow: (potentially) online", flow, value, insurance);
+      //   console.log("Flow: (potentially) online", flow, value, insurance);
       flowChoice.style.display = "block";
       notCallbackFlowItems.forEach((item) => (item.style.display = "block"));
       // User can select if they want online flow or callback
       if (flow === "online") {
-        console.log("Flow: fully online", flow, value, insurance);
+        // console.log("Flow: fully online", flow, value, insurance);
         callbackFlowItems.forEach((item) => (item.style.display = "none"));
         requestflowItems.forEach((item) => (item.style.display = "none"));
         onlineflowItems.forEach((item) => (item.style.display = "block"));
         updateSuccessMessage("online");
       } else if (flow === "callback") {
-        console.log("Flow: callback", flow, value, insurance);
+        // console.log("Flow: callback", flow, value, insurance);
         notCallbackFlowItems.forEach((item) => (item.style.display = "none"));
         onlineflowItems.forEach((item) => (item.style.display = "none"));
         requestflowItems.forEach((item) => (item.style.display = "block"));
-        console.log(callbackFlowItems);
+        // console.log(callbackFlowItems);
         callbackFlowItems.forEach((item) => {
           item.style.display = "block";
-          console.log(item);
+          //   console.log(item);
         });
         updateSuccessMessage("request");
       }
@@ -265,7 +265,7 @@ function initCalculator() {
       }
     } else {
       flowChoice.style.display = "none";
-      console.log("Flow: Request", flow, value, insurance);
+      //   console.log("Flow: Request", flow, value, insurance);
       // Show request flow and hide online flow
       beitragInput && beitragInput.remove();
       // Hide all elements exclusive to full online funnel
