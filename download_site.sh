@@ -1,9 +1,10 @@
 #!/bin/bash
-SITE_NAME="gentle-sage.webflow.io"
+SITE_NAME="musikversicherung.webflow.io"
 SITE_URL="https://${SITE_NAME}/"
 ASSETS_DOMAIN="cdn.prod.website-files.com"
-FOLDER_NAME="website"
+FOLDER_NAME="dist"
 TARGET_ASSETS_DIR="./${FOLDER_NAME}/assets"
+LIVE_URL="https://www.musikversicherung.com"
 
 # Step 1: Clean up any previous runs
 rm -rf $SITE_NAME https/ ${FOLDER_NAME}
@@ -11,10 +12,10 @@ rm -rf $SITE_NAME https/ ${FOLDER_NAME}
 # Step 2: Create target assets directory
 mkdir -p "$TARGET_ASSETS_DIR"
 
-# Step 3.1: Download sitemap.xml
-wget -q "${SITE_URL}sitemap.xml" -O "./${FOLDER_NAME}/sitemap.xml" && \
-  echo "Successfully downloaded sitemap.xml" || \
-  echo "Failed to download sitemap.xml"
+# # Step 3.1: Download sitemap.xml 
+# wget -q "${SITE_URL}sitemap.xml" -O "./${FOLDER_NAME}/sitemap.xml" && \
+#   echo "Successfully downloaded sitemap.xml" || \
+#   echo "Failed to download sitemap.xml"
 
 # Step 3.2: Download the website
 # --convert-links disabled to prevent conversion of links to local files
@@ -112,4 +113,10 @@ find ./$FOLDER_NAME -type f \( -name "*.html" \) -exec sed -i "s|.js.gz|.js|g" {
 
 # Step 11: Clean up redundant directories
 rm -rf https/
-echo "Download completed successfully! Running rest of github action now to commit files to repo..."
+echo "Download completed successfully! Generating sitemap now..."
+
+# Generate sitemap
+# You can specify patterns to exclude, e.g.: "404.html,private,temp"
+./generate_sitemap.sh "$FOLDER_NAME" "$LIVE_URL" "404.html,thank-you"
+
+echo "Sitemap generation completed successfully! Running rest of github action now to commit files to repo..."
