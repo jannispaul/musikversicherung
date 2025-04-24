@@ -30,6 +30,7 @@ export default defineConfig({
         reviews: "js/reviews.js",
         index: "js/index.js",
         fileUpload: "js/file-upload.js",
+        params: "js/params.js",
         createJSONLD: "js/createJSONLD.js",
         "multi-step-form": "js/multi-step-form.js",
       },

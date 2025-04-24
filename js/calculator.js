@@ -372,6 +372,36 @@ function initCalculator() {
     formElement.prepend(inputElement);
   }
   setUserMeta();
+  /**
+   * Takes a form element and sets a hidden input field
+   * named "parameters" with the query parameters stored
+   * in localStorage.
+   *
+   * The query parameters are expected to be stored in
+   * localStorage with a key that starts with "qp_".
+   *
+   * @param {HTMLElement} formElement The form element to add the
+   *                                   hidden input field to.
+   */
+  function setParameters(formElement) {
+    if (!formElement) return;
+
+    const params = new URLSearchParams();
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("qp_")) {
+        params.set(key.slice(3), localStorage.getItem(key));
+      }
+    });
+
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "parameters"; // you can change this key
+    input.value = params.toString();
+
+    formElement.prepend(input);
+  }
+
+  setParameters(formElement);
 
   // Run calculator once to show price in case data was loaded from localStorage
   calculatePrice();
