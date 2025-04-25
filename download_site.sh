@@ -24,7 +24,7 @@ wget --mirror  --adjust-extension --page-requisites --no-parent -nv \
   --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36" \
   $SITE_URL 
 
-# Step 4: Merge /gentle-sage.webflow.io into /dist
+# Step 4: Merge /musikversicherung.webflow.io into /dist
  if [ -d "${SITE_NAME}" ]; then
    cp -r ${SITE_NAME}/* ${FOLDER_NAME}/
    rm -rf ${SITE_NAME}

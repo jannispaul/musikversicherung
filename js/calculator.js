@@ -56,6 +56,28 @@ function initCalculator() {
   bewohntInputs.forEach((el) => el.addEventListener("click", calculatePrice));
   flowInputs.forEach((el) => el.addEventListener("input", calculatePrice));
 
+  /**
+   * Selects and triggers the insurance option based on URL query parameter.
+   * If a 'versicherung' query parameter exists, it locates the corresponding
+   * radio button for the insurance option and simulates a click on it to
+   * update the selection and trigger price calculation.
+   */
+  function selectInsurance() {
+    // get Query parameter from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const insuranceParam = urlParams.get("versicherung");
+    console.log(insuranceParam);
+    // Check if insuranceParam is not null
+    if (insuranceParam !== null) {
+      // Click the corresponding radio button
+      const radio = document.querySelector(`input[name="Versicherung"][value="${insuranceParam}"]`);
+      if (radio) {
+        radio.click();
+      }
+    }
+  }
+  selectInsurance();
+
   // Main function that gets run when input changes happen
   function calculatePrice() {
     // console.log("calculating");
