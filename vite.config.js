@@ -23,6 +23,7 @@ export default defineConfig({
     // ViteMinifyPlugin(),
   ],
   build: {
+    outDir: "./build",
     rollupOptions: {
       input: {
         anfrage: "js/anfrage.js",
@@ -35,9 +36,9 @@ export default defineConfig({
         "multi-step-form": "js/multi-step-form.js",
       },
       output: {
-        entryFileNames: `assets/[name].js`,
-        chunkFileNames: `assets/[name].js`,
-        assetFileNames: `assets/[name].[ext]`,
+        entryFileNames: `[name].js`,
+        chunkFileNames: `[name].js`,
+        assetFileNames: `[name].[ext]`,
       },
     },
   },

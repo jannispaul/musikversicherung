@@ -3,10 +3,10 @@
 title: "Anfrage Flow"
 ---
 flowchart
-	136865{"Choose \ninsurance\n"} --- 979959["IM Sound"]
+	136865{"Choose insurance"} --- 979959["IM Sound"]
 	136865 --- 444918["SINFONIMA"]
 	979959 --- 154197{"Value > 20.000"}
-	205444(["Anfrageformular Start\n"]) --- 136865
+	205444(["Anfrageformular Start"]) --- 136865
 	154197 ---|"No"| 712291["Full online process"]
 	154197 ---|"Yes"| 713757["Request process"]
 	713757 --- 549359(["Success Request"])
@@ -56,3 +56,5 @@ Additional data points for online flow
 - Nachricht2
 - flow
 - Sicherheit (Wird von JS im IM SOUND Flow generiert)
+- meta
+- parameters
