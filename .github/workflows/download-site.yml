@@ -27,6 +27,7 @@ jobs:
           chmod +x generate_sitemap.sh
           ./download_site.sh
           mv robots.txt dist/
+          mv build/* dist/
 
       - name: Commit and push changes
         env:
@@ -38,3 +39,20 @@ jobs:
           git add dist
           git commit -m "Updated site from Webflow"
           git push origin HEAD:${{ github.ref }}
+
+  upload-files:
+    name: Upload all website files to server.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Upload Files
+        id: upload
+        uses: Creepios/sftp-action@v1.0.3
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          port: 22
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localPath: "./dist/"
+          remotePath: "./musikversicherung/test"

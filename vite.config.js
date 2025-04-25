@@ -29,7 +29,7 @@ export default defineConfig({
         anfrage: "js/anfrage.js",
         calculator: "js/calculator.js",
         reviews: "js/reviews.js",
-        index: "js/index.js",
+        index: "js/home.js",
         fileUpload: "js/file-upload.js",
         params: "js/params.js",
         createJSONLD: "js/createJSONLD.js",
