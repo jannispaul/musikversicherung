@@ -191,11 +191,7 @@ import { initModals } from "./initModals.js";
 
           // Custom success
           window.scrollTo({ top: 0, behavior: "smooth" });
-          const lottieTrigger = document.querySelector(".lottie-trigger");
-          if (!lottieTrigger) return;
-          lottieTrigger.click(); // Trigger a click event on the Lottie trigger div
-
-          // window.location.href = redirectUrl;
+          playSuccessLottie();
 
           // Clear saved formdata from localstorage
           localStorage.removeItem(formName);
@@ -206,6 +202,19 @@ import { initModals } from "./initModals.js";
         success.style.display = "none";
         errorElement.style.display = "block";
       });
+  }
+
+  // Docs: https://github.com/LottieFiles/dotlottie-web/blob/main/packages/wc/README.md
+  function playSuccessLottie() {
+    const lotties = document.querySelectorAll("dotlottie-wc");
+    lotties.forEach((lottie) => {
+      lottie.dotLottie.play();
+    });
+    setTimeout(() => {
+      lotties.forEach((lottie) => {
+        lottie.dotLottie.play();
+      });
+    }, 3600);
   }
 
   //

@@ -46,7 +46,14 @@ Contents of build folder /dist/assets are automatically pushed to ftp server wit
 
 **TODOs**
 
-- [ ] Create Github Action to run bash script
-- [ ] Make sure files dont get overwritten
+- [x] Create Github Action to run bash script
+- [x] Make sure files dont get overwritten
   - [ ]both folders are name dist
-  - [ ] reviews.json, new-reviews.json, robots.txt
+  - [ ] reviews.json, new-reviews.json,
+- [x] robots.txt
+- [ ] Create file with list of pages that wget doesnt find
+- [ ] Update lottie dependency on submit animation
+
+## Git conflicts
+
+In case of git conflicts run `git config pull.rebase false` to merge the file changes on server with local changes.
