@@ -187,11 +187,12 @@ import { initModals } from "./initModals.js";
         if (response.ok) {
           // console.log("fetch response ok");
           form.style.display = "none";
+          errorElement.style.display = "none";
           success.style.display = "block";
 
           // Custom success
+          playSuccessLottie(); // Needs to be before the scroll
           window.scrollTo({ top: 0, behavior: "smooth" });
-          playSuccessLottie();
 
           // Clear saved formdata from localstorage
           localStorage.removeItem(formName);
