@@ -208,6 +208,7 @@ import { initModals } from "./initModals.js";
   function playSuccessLottie() {
     const lotties = document.querySelectorAll("dotlottie-wc");
     lotties.forEach((lottie) => {
+      lottie.style.opacity = 1;
       lottie.dotLottie.play();
     });
     setTimeout(() => {
