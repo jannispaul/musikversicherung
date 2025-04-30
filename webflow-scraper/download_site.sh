@@ -5,8 +5,7 @@ ASSETS_DOMAIN="cdn.prod.website-files.com"
 FOLDER_NAME="dist"
 TARGET_ASSETS_DIR="./${FOLDER_NAME}/assets"
 LIVE_URL="https://www.musikversicherung.com"
-DISCOVER_URLS_FILE="discover-urls.txt"
-SITEMAP_NOINDEX_FILE="sitemap-noindex.txt"
+DISCOVER_URLS_FILE="./webflow-scraper/discover-urls.txt"
 
 # Step 1: Clean up any previous runs
 rm -rf $SITE_NAME https/ ${FOLDER_NAME}
@@ -136,6 +135,6 @@ echo "Download completed successfully! Generating sitemap now..."
 
 # Generate sitemap
 # You can specify patterns to exclude, e.g.: "404.html,private,temp"
-./generate_sitemap.sh "$FOLDER_NAME" "$LIVE_URL" "404.html,thank-you"
+./webflow-scraper/generate_sitemap.sh "$FOLDER_NAME" "$LIVE_URL" "404.html,thank-you"
 
 echo "Sitemap generation completed successfully! Running rest of github action now to commit files to repo..."
