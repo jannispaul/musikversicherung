@@ -1,4 +1,4 @@
-name: Run Download Site Script
+name: Download Site, Modify Code and Upload to SFTP
 
 on:
   issue_comment:
