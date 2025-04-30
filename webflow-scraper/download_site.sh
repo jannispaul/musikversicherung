@@ -6,6 +6,7 @@ FOLDER_NAME="dist"
 TARGET_ASSETS_DIR="./${FOLDER_NAME}/assets"
 LIVE_URL="https://www.musikversicherung.com"
 DISCOVER_URLS_FILE="discover-urls.txt"
+SITEMAP_NOINDEX_FILE="sitemap-noindex.txt"
 
 # Step 1: Clean up any previous runs
 rm -rf $SITE_NAME https/ ${FOLDER_NAME}
@@ -135,6 +136,24 @@ echo "Download completed successfully! Generating sitemap now..."
 
 # Generate sitemap
 # You can specify patterns to exclude, e.g.: "404.html,private,temp"
-./generate_sitemap.sh "$FOLDER_NAME" "$LIVE_URL" "404.html,thank-you"
+# Read noindex list from sitemap-noindex.txt file if it exists
+EXCLUDE_PATTERNS="404.html,thank-you"
+if [ -f "$SITEMAP_NOINDEX_FILE" ]; then
+  echo "Reading noindex patterns from $SITEMAP_NOINDEX_FILE"
+  while IFS= read -r pattern || [ -n "$pattern" ]; do
+    # Skip empty lines or comments
+    [[ -z "$pattern" || "$pattern" =~ ^# ]] && continue
+    
+    # Add to exclude patterns
+    if [ -z "$EXCLUDE_PATTERNS" ]; then
+      EXCLUDE_PATTERNS="$pattern"
+    else
+      EXCLUDE_PATTERNS="$EXCLUDE_PATTERNS,$pattern"
+    fi
+  done < "$SITEMAP_NOINDEX_FILE"
+  echo "Excluding these patterns from sitemap: $EXCLUDE_PATTERNS"
+fi
+
+./generate_sitemap.sh "$FOLDER_NAME" "$LIVE_URL" "$EXCLUDE_PATTERNS"
 
 echo "Sitemap generation completed successfully! Running rest of github action now to commit files to repo..."
