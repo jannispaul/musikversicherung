@@ -20,8 +20,9 @@ mkdir -p "$TARGET_ASSETS_DIR"
 
 # Step 3.2: Download the website
 # --convert-links disabled to prevent conversion of links to local files
-wget --mirror  --adjust-extension --page-requisites --no-parent -nv \
+wget --mirror --adjust-extension --page-requisites --no-parent -nv \
   -H -D $SITE_NAME,$ASSETS_DOMAIN -e robots=off \
+  --reject-regex '.*\?.*' \
   --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36" \
   $SITE_URL 
 
@@ -32,9 +33,16 @@ if [ -f "$DISCOVER_URLS_FILE" ]; then
     # Skip empty lines or comments
     [[ -z "$url" || "$url" =~ ^# ]] && continue
     
+    # Skip URLs with parameters
+    if [[ "$url" == *"?"* ]]; then
+      echo "Skipping URL with parameters: $url"
+      continue
+    fi
+    
     echo "Downloading additional URL: $url"
     wget --adjust-extension --page-requisites --no-parent -nv \
       -H -D $SITE_NAME,$ASSETS_DOMAIN -e robots=off \
+      --reject-regex '.*\?.*' \
       --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36" \
       "$url"
   done < "$DISCOVER_URLS_FILE"
