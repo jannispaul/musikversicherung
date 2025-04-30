@@ -1,24 +1,25 @@
 # Musikversicherung.com
 
-This is a comined repo that handles 3 things:
+This is a comined repo that handles 2 things:
 
-1. Download Website and all assets from Webflow servers. (Not fully implemented yet)
-2. Handle custom JS implementation, with minifying
-3. Upload everything to the SFTP server so its hosted in germany (strato).
+1. Download website from Webflow staging, modify it, and Upload everything to the SFTP server so its hosted in germany (strato).
+2. Handle custom JS implementation, with build step / minifying
 
-## 1. Download Website
+## 1. Download Website -> Webflow Scraper
 
-[download_site.sh] script runs on darwin/linux systems and
+On a push to to the main branch [webflow-scraper/download_site.sh] script runs (on darwin/linux systems only). It does the following:
 
-- downloads the website, open grah image and sitemap.xml
-- Removes jquery, webflow.js
+- downloads the website & open grah image
+- Removes jquery & webflow.js
+- Adds robots.txt
+- Generates sitemap.xml
+- Copies custom js from `build` to `dist` folder
+- Uploads `build` folder to SFTP server
 
-**TODOs:**
+### Settings:
 
-- [ ] Fix Lottie download & implementation
-- [ ] Fix Sitemap links / Create own sitemap -> Better generate your own sitemap:
-  - [ ] https://github.com/mcmilk/sitemap-generator
-  - [ ] https://www.plop.at/en/xml-sitemap.html
+- Use `discover-urls.txt` to add additional URLs to download
+- Use `sitemap-noindex.txt` to hide pages from sitemap
 
 ## 2. Custom JS
 
@@ -39,20 +40,6 @@ Run `pnpm run dev`: http://localhost:5173`
 Local dev script can be added in Weblfow: `<script src="http://localhost:5173/script.js"></script>`
 
 Run `pnpm run build` to minifiy to build folder dist/assets
-
-## 3. Automatic Upload
-
-Contents of build folder /dist/assets are automatically pushed to ftp server with github action.
-
-**TODOs**
-
-- [x] Create Github Action to run bash script
-- [x] Make sure files dont get overwritten
-  - [ ]both folders are name dist
-  - [ ] reviews.json, new-reviews.json,
-- [x] robots.txt
-- [ ] Create file with list of pages that wget doesnt find
-- [ ] Update lottie dependency on submit animation
 
 ## Git conflicts
 
