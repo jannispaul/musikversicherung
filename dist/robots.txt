@@ -1,4 +1,4 @@
 User-Agent: * 
 Allow: /
 
-Sitemap: https://www.gentle-sage.nl/sitemap.xml
+Sitemap: https://www.musikversicherung.com/sitemap.xml
