@@ -21,11 +21,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wget curl gzip sed
 
-      - name: Run download_site.sh script
+      - name: Run webflow-scraper/download_site.sh script
         run: |
-          chmod +x download_site.sh
-          chmod +x generate_sitemap.sh
-          ./download_site.sh
+          chmod +x webflow-scraper/download_site.sh
+          chmod +x webflow-scraper/generate_sitemap.sh
+          ./webflow-scraper/download_site.sh
           mv robots.txt dist/
           mv build/* dist/
 
