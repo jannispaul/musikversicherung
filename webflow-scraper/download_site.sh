@@ -5,6 +5,7 @@ ASSETS_DOMAIN="cdn.prod.website-files.com"
 FOLDER_NAME="dist"
 TARGET_ASSETS_DIR="./${FOLDER_NAME}/assets"
 LIVE_URL="https://www.musikversicherung.com"
+DISCOVER_URLS_FILE="discover-urls.txt"
 
 # Step 1: Clean up any previous runs
 rm -rf $SITE_NAME https/ ${FOLDER_NAME}
@@ -23,6 +24,23 @@ wget --mirror  --adjust-extension --page-requisites --no-parent -nv \
   -H -D $SITE_NAME,$ASSETS_DOMAIN -e robots=off \
   --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36" \
   $SITE_URL 
+
+# Step 3.3: Download additional URLs from discover-urls.txt if it exists
+if [ -f "$DISCOVER_URLS_FILE" ]; then
+  echo "Downloading additional URLs from $DISCOVER_URLS_FILE"
+  while IFS= read -r url || [ -n "$url" ]; do
+    # Skip empty lines or comments
+    [[ -z "$url" || "$url" =~ ^# ]] && continue
+    
+    echo "Downloading additional URL: $url"
+    wget --adjust-extension --page-requisites --no-parent -nv \
+      -H -D $SITE_NAME,$ASSETS_DOMAIN -e robots=off \
+      --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36" \
+      "$url"
+  done < "$DISCOVER_URLS_FILE"
+else
+  echo "Warning: $DISCOVER_URLS_FILE not found. Continuing without additional URLs."
+fi
 
 # Step 4: Merge /musikversicherung.webflow.io into /dist
  if [ -d "${SITE_NAME}" ]; then
