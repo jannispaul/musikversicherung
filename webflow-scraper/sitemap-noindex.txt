@@ -1,3 +1,3 @@
-/berufsmusiker
-/berufshaftpflicht
-/neue-bewertung
+berufsmusiker
+berufshaftpflicht
+neue-bewertung
