@@ -3,7 +3,7 @@
 FOLDER_NAME=${1:-"dist"}
 SITE_URL=${2:-"https://www.musikversicherung.com"}
 EXCLUDE_PATTERNS=${3:-""}  # Comma-separated list of patterns to exclude
-NOINDEX_FILE="/webflow-scraper/sitemap-noindex.txt"  # File containing paths to exclude
+NOINDEX_FILE="./webflow-scraper/sitemap-noindex.txt"  # File containing paths to exclude
 
 generate_sitemap() {
     local folder="$1"
