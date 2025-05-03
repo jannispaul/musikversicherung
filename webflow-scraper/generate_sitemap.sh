@@ -18,9 +18,12 @@ generate_sitemap() {
         while IFS= read -r line || [ -n "$line" ]; do
             # Skip empty lines and comments
             if [ -n "$line" ] && [[ ! "$line" =~ ^[[:space:]]*# ]]; then
-                noindex_paths+=("$line")
+                # Remove any carriage returns that might be present (for Windows compatibility)
+                clean_line=$(echo "$line" | tr -d '\r')
+                noindex_paths+=("$clean_line")
             fi
         done < "$noindex_file"
+        echo "Loaded ${#noindex_paths[@]} paths to exclude from $noindex_file"
     fi
 
     # Create sitemap header
@@ -49,15 +52,21 @@ EOF
         url_path=${relative_path%index.html}
         # Remove .html extension if present
         url_path=${url_path%.html}
+        # Normalize the URL path (remove leading/trailing slashes)
+        normalized_url_path=$(echo "$url_path" | sed 's:^/::' | sed 's:/$::')
 
         # Check if path is in noindex list
         for noindex_path in "${noindex_paths[@]}"; do
-            # Normalize paths before comparison (remove leading/trailing slashes)
+            # Normalize the noindex path (remove leading/trailing slashes)
             normalized_noindex_path=$(echo "$noindex_path" | sed 's:^/::' | sed 's:/$::')
-            normalized_url_path=$(echo "$url_path" | sed 's:^/::' | sed 's:/$::')
             
-            if [ "$normalized_url_path" == "$normalized_noindex_path" ]; then
+            # Debug: Print paths (uncomment if needed for debugging)
+            # echo "Checking: '$normalized_url_path' against noindex: '$normalized_noindex_path'"
+            
+            # Check for exact match or if URL path starts with noindex path followed by /
+            if [ "$normalized_url_path" = "$normalized_noindex_path" ] || [[ "$normalized_url_path" = "$normalized_noindex_path"/* ]]; then
                 skip=true
+                # Uncomment for debugging: echo "Excluded: $url_path"
                 break
             fi
         done
@@ -80,8 +89,9 @@ EOF
     echo "</urlset>" >> "$output_file"
 
     echo "Sitemap generated at $output_file"
-    if [ -f "$noindex_file" ]; then
+    if [ -f "$noindex_file" ] && [ ${#noindex_paths[@]} -gt 0 ]; then
         echo "Excluded paths from $noindex_file: ${#noindex_paths[@]}"
+        echo "Excluded paths: ${noindex_paths[*]}"
     fi
 }
 
