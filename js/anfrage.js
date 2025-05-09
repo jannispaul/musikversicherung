@@ -148,6 +148,7 @@ import { initModals } from "./initModals.js";
 
     let formData = new FormData(form);
 
+    addConversionData(formData);
     // Dont submit if fields are invalid
     if (!validateStep()) return;
 
@@ -182,7 +183,7 @@ import { initModals } from "./initModals.js";
     // console.log(formData.get("files"));
 
     fetch(requestUrl, requestOptions)
-      .then(function (response) {
+      .then(async function (response) {
         // If response is ok
         if (response.ok) {
           // console.log("fetch response ok");
@@ -190,12 +191,12 @@ import { initModals } from "./initModals.js";
           errorElement.style.display = "none";
           success.style.display = "block";
 
-          // Custom success
-          playSuccessLottie(); // Needs to be before the scroll
-          window.scrollTo({ top: 0, behavior: "smooth" });
-
           // Clear saved formdata from localstorage
           localStorage.removeItem(formName);
+
+          // Custom success
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          await playSuccessLottie(); // Needs to be before the scroll
         }
       }) // If there is an error log it to console and reidrect to fehler page
       ["catch"](function (error) {
@@ -219,6 +220,48 @@ import { initModals } from "./initModals.js";
     }, 3600);
   }
 
+  /**
+   * Adds conversion data to the global dataLayer object for analytics.
+   *
+   * This function calculates the lead value based on form data and pushes an event
+   * to the dataLayer for tracking purposes. It uses the 'Email' and 'Versicherung'
+   * fields from the formData to determine the specific insurance type and calculate
+   * the lead value accordingly. The calculated lead value, along with the email, is
+   * added to the dataLayer under the event name 'lead_form_submit'.
+   *
+   * @param {FormData} formData - The form data containing input fields to be processed.
+   */
+
+  function addConversionData(formData) {
+    if (!window.dataLayer || !formData) return;
+
+    const email = formData.get("Email");
+    const insurance = formData.get("Versicherung");
+    let sinfonimaValue = 0;
+    let imsoundValue = formData.get("Gesamtwert");
+    const provisionFactor = 0.12; // 12% provision
+
+    formData.entries().forEach((entry) => {
+      // console.log(entry[0], entry[1]);
+      if (entry[0].includes("Instrumentenwert")) {
+        sinfonimaValue += parseInt(entry[1]);
+      }
+    });
+
+    let value = insurance === "SINFONIMA" ? sinfonimaValue : imsoundValue;
+    // Versicherungssumme grob ist abhängig von der Versicherungssumme und Versicherungstyp
+    let insuranceFactor = insurance === "SINFONIMA" || value > "50000" ? 0.012 : 0.015;
+
+    // Sum up all values in values array
+    let leadValue = value * insuranceFactor * provisionFactor || 0;
+    console.log("leadValue", leadValue, insuranceFactor, value);
+
+    window.dataLayer.push({
+      event: "lead_form_submit",
+      "lead-value": Math.round(leadValue * 100) / 100,
+      email: email,
+    });
+  }
   //
   // Conditional logic
   //
