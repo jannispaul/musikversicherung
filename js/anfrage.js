@@ -148,7 +148,6 @@ import { initModals } from "./initModals.js";
 
     let formData = new FormData(form);
 
-    addConversionData(formData);
     // Dont submit if fields are invalid
     if (!validateStep()) return;
 
@@ -194,9 +193,12 @@ import { initModals } from "./initModals.js";
           // Clear saved formdata from localstorage
           localStorage.removeItem(formName);
 
-          // Custom success
           window.scrollTo({ top: 0, behavior: "smooth" });
-          await playSuccessLottie(); // Needs to be before the scroll
+          // Custom success, needs to be after the scroll with slight delay
+          // Otherwise the animation wont play ( dotlottie intersection observer)
+          setTimeout(() => {
+            playSuccessLottie(); //
+          }, 300);
         }
       }) // If there is an error log it to console and reidrect to fehler page
       ["catch"](function (error) {
@@ -210,6 +212,7 @@ import { initModals } from "./initModals.js";
   function playSuccessLottie() {
     const lotties = document.querySelectorAll("dotlottie-wc");
     lotties.forEach((lottie) => {
+      console.log("play lottie", lottie, lottie.dotLottie);
       lottie.style.opacity = 1;
       lottie.dotLottie.play();
     });
@@ -220,6 +223,19 @@ import { initModals } from "./initModals.js";
     }, 3600);
   }
 
+  // Conversion data needs to be added before sumbit since google tag manager liststens for click on button, not submit event
+  submitButtons.forEach((button) => {
+    button.addEventListener("focus", () => {
+      console.log("focused"); // only triggered on focus
+      addConversionData();
+    });
+
+    button.addEventListener("mouseover", () => {
+      console.log("mouse over"); // triggered on hover
+      addConversionData();
+    });
+  });
+
   /**
    * Adds conversion data to the global dataLayer object for analytics.
    *
@@ -228,11 +244,11 @@ import { initModals } from "./initModals.js";
    * fields from the formData to determine the specific insurance type and calculate
    * the lead value accordingly. The calculated lead value, along with the email, is
    * added to the dataLayer under the event name 'lead_form_submit'.
-   *
-   * @param {FormData} formData - The form data containing input fields to be processed.
+
    */
 
-  function addConversionData(formData) {
+  function addConversionData() {
+    let formData = new FormData(form);
     if (!window.dataLayer || !formData) return;
 
     const email = formData.get("Email");
