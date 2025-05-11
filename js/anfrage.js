@@ -270,7 +270,6 @@ import { initModals } from "./initModals.js";
 
     // Sum up all values in values array
     let leadValue = value * insuranceFactor * provisionFactor || 0;
-    console.log("leadValue", leadValue, insuranceFactor, value);
 
     window.dataLayer.push({
       value: Math.round(leadValue * 100) / 100,
