@@ -273,8 +273,7 @@ import { initModals } from "./initModals.js";
     console.log("leadValue", leadValue, insuranceFactor, value);
 
     window.dataLayer.push({
-      event: "lead_form_submit",
-      "lead-value": Math.round(leadValue * 100) / 100,
+      value: Math.round(leadValue * 100) / 100,
       email: email,
     });
   }
