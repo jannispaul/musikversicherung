@@ -2,3 +2,4 @@ https://musikversicherung.webflow.io/lp/sinfonima
 https://musikversicherung.webflow.io/lp/berufsmusiker
 https://musikversicherung.webflow.io/neue-bewertung
 https://musikversicherung.webflow.io/berufshaftpflicht
+https://musikversicherung.webflow.io/lp/klangschalen
