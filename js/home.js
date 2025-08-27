@@ -25,7 +25,7 @@ fetch("https://musikversicherung.com/new-reviews.json")
         reviewCount: aggregatedData?.Count,
       },
       // review: reviewsArray,
-      description: "Deine Versicherung für Instrumente und Equipment.",
+      description: "Deine Instrumentenversicherung: Instrumente & Equipment einfach online versichern.",
     };
     creatJSONLD(schema);
 
@@ -55,13 +55,7 @@ fetch("https://musikversicherung.com/new-reviews.json")
         }
       }
 
-      reviewDiv.innerHTML = `<div><div class="reviews_item-stars" title="${
-        review.rating
-      } von 5 Sternen">${stars}</div></div><div class="reviews_item-body"><p class="reviews_item-p">${
-        review.review
-      }</p><div class="reviews_item-name">${review.name} am ${new Date(
-        review.date
-      ).toLocaleDateString("de-DE")}</div></div>`;
+      reviewDiv.innerHTML = `<div><div class="reviews_item-stars" title="${review.rating} von 5 Sternen">${stars}</div></div><div class="reviews_item-body"><p class="reviews_item-p">${review.review}</p><div class="reviews_item-name">${review.name} am ${new Date(review.date).toLocaleDateString("de-DE")}</div></div>`;
       reviewContainer.appendChild(reviewDiv);
     });
   })
