@@ -130,7 +130,7 @@ find ./$FOLDER_NAME -type f -name "*.html" -exec sed -i -E 's|<script[[:space:]]
 find ./$FOLDER_NAME -type f \( -name "*.html" \) -exec sed -i -E "s|data-wf-[a-z]+=\"[^\"]+\"||g" {} \;
 
 # Remove Webflow JS script
-find ./$FOLDER_NAME -type f -name "*.html" -exec sed -i -E "s|<script src=\"/assets/[^/]+/js/webflow\.[^\.]+\.js\" type=\"text/javascript\"></script>||g" {} \;
+find ./$FOLDER_NAME -type f -name "*.html" -exec sed -i -E 's|<script src="/assets/[^/]+/js/webflow\.[^.]+(\.[^.]+)*\.js" type="text/javascript"></script>||g' {} \;
 
 
 # Step 10: Fix CSS and JS compressed file references
