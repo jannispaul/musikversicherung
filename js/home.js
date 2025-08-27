@@ -21,7 +21,7 @@ fetch("https://musikversicherung.com/new-reviews.json")
       },
       aggregateRating: {
         "@type": "AggregateRating",
-        ratingValue: parseFloat(aggregatedData?.Average.replace(",", ".")),
+        ratingValue: parseFloat(aggregatedData?.Average.replace(",", ".")).toString(),
         reviewCount: aggregatedData?.Count,
       },
       // review: reviewsArray,
