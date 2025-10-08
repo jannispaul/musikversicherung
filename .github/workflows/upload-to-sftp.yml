@@ -1,0 +1,52 @@
+name: Upload to SFTP
+
+on:
+  # Trigger automatically after the download-and-process workflow completes successfully
+  workflow_run:
+    workflows: ["Download Site and Process Code"]
+    types:
+      - completed
+    branches:
+      - master
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  upload-files:
+    name: Upload all website files to server
+    runs-on: ubuntu-latest
+    # Only run if the workflow_run was successful, or if manually triggered
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.3.4
+        with:
+          # Ensure we get the latest committed changes
+          ref: master
+
+      - name: Verify dist directory exists
+        run: |
+          if [ ! -d "./dist" ]; then
+            echo "❌ Error: dist directory does not exist"
+            exit 1
+          fi
+          echo "✅ dist directory found"
+          echo "Files to upload:"
+          ls -la ./dist
+
+      - name: Upload Files to SFTP
+        id: upload
+        uses: Creepios/sftp-action@v1.0.3
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          port: 22
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localPath: "./dist/"
+          remotePath: "./musikversicherung/"
+
+      - name: Upload complete
+        run: |
+          echo "✅ All files have been uploaded successfully to the server"

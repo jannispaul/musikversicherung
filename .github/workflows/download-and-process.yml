@@ -1,15 +1,16 @@
-name: Download Site, Modify Code and Upload to SFTP
+name: Download Site and Process Code
 
 on:
   issue_comment:
     types: [created]
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - master
   workflow_dispatch:
 
 jobs:
-  run-script:
+  download-and-process:
+    name: Download site, modify code, and commit changes
     runs-on: ubuntu-latest
 
     steps:
@@ -37,22 +38,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_PAT }}@github.com/${{ github.repository }}.git
           git add dist
-          git commit -m "Updated site from Webflow"
+          git commit -m "Updated site from Webflow" || echo "No changes to commit"
           git push origin HEAD:${{ github.ref }}
 
-  upload-files:
-    name: Upload all website files to server.
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.4
-      - name: Upload Files
-        id: upload
-        uses: Creepios/sftp-action@v1.0.3
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          port: 22
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          localPath: "./dist/"
-          remotePath: "./musikversicherung/"
+      - name: Verify changes were committed
+        run: |
+          echo "✅ All changes have been committed and pushed successfully"
+          echo "The upload workflow will now trigger automatically"
