@@ -112,10 +112,12 @@ echo "Current directory: $(pwd)"
 echo "Checking for HTML/CSS files in ./$FOLDER_NAME:"
 find ./$FOLDER_NAME -type f \( -name "*.html" -or -name "*.css" \) -ls
 
-# Step 8: Fix links in all HTML and CSS files
-# wget --convert-links causes faulty "../cdn.prod.website-files.com" links
-find ./$FOLDER_NAME -type f \( -name "*.html" -or -name "*.css" \) -exec sed -i "s|\.\./${ASSETS_DOMAIN}|/assets|g" {} \;
-find ./$FOLDER_NAME -type f \( -name "*.html" -or -name "*.css" \) -exec sed -i "s|https://${ASSETS_DOMAIN}|/assets|g" {} \;
+# Step 8: Fix CDN links in HTML only (not CSS)
+# Rewriting inside .css changes bytes and breaks Subresource Integrity on <link integrity="sha384-...">.
+# Mirrored CSS here uses /assets/... and external hosts (e.g. cloudfront); cdn.prod URLs are not required in CSS for this site.
+# wget --convert-links causes faulty "../cdn.prod.website-files.com" links in HTML
+find ./$FOLDER_NAME -type f -name "*.html" -exec sed -i "s|\.\./${ASSETS_DOMAIN}|/assets|g" {} \;
+find ./$FOLDER_NAME -type f -name "*.html" -exec sed -i "s|https://${ASSETS_DOMAIN}|/assets|g" {} \;
 
 
 # Step 9: Fix relative path issues caused by "../cdn.prod.website-files.com"
