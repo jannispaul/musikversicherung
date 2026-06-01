@@ -1,11 +1,5 @@
 [
   {
-    "date": "2026-05-31T18:42:17.794Z",
-    "name": "TEST – Smoke 2 (delete me)",
-    "rating": 5,
-    "review": "TEST — second attempt, should now land in dist/reviews.json. Bitte löschen."
-  },
-  {
     "date": "2026-05-27T16:18:17.989Z",
     "name": "anonym",
     "rating": 5,
