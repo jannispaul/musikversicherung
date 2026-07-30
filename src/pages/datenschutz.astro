@@ -1,0 +1,19 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/datenschutz.html?raw";
+
+const seo = {
+  "title": "Datenschutz – Musikversicherung.com",
+  "canonical": "https://musikversicherung.com/datenschutz",
+  "lang": "de",
+  "ogTitle": "Datenschutz – Musikversicherung.com",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterTitle": "Datenschutz – Musikversicherung.com",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script id="CookieDeclaration" src="https://consent.cookiebot.com/88d955d0-3b6f-4434-a22c-3286e17ac641/cd.js" type="text/javascript" async is:inline></script>
+</Layout>

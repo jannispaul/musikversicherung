@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/berufshaftpflicht.html?raw";
+import pageJs from "../partials/berufshaftpflicht.inline.js?raw";
+
+const seo = {
+  "title": "Berufshaftpflicht | Musikversicherung.com",
+  "description": "Mit der I'M SOUND Berufs-Haftpflichtversicherung sicherst Du Dich gegen Schadenersatzansprüche Dritter im Rahmen Deiner Berufsausübung und im Privatbereich ab.",
+  "canonical": "https://musikversicherung.com/berufshaftpflicht",
+  "lang": "de",
+  "ogTitle": "Berufshaftpflicht | Musikversicherung.com",
+  "ogDescription": "Mit der I'M SOUND Berufs-Haftpflichtversicherung sicherst Du Dich gegen Schadenersatzansprüche Dritter im Rahmen Deiner Berufsausübung und im Privatbereich ab.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Berufshaftpflicht | Musikversicherung.com",
+  "twitterDescription": "Mit der I'M SOUND Berufs-Haftpflichtversicherung sicherst Du Dich gegen Schadenersatzansprüche Dritter im Rahmen Deiner Berufsausübung und im Privatbereich ab.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image",
+  "robots": "noindex"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

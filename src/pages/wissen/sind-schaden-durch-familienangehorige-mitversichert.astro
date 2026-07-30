@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/wissen/sind-schaden-durch-familienangehorige-mitversichert.html?raw";
+import pageJs from "../../partials/wissen/sind-schaden-durch-familienangehorige-mitversichert.inline.js?raw";
+
+const seo = {
+  "title": "Sind Schäden durch Familienangehörige mitversichert?",
+  "description": "Welche Instrumentenversicherung leistet bei Schäden durch Familienangehörige?",
+  "canonical": "https://musikversicherung.com/wissen/sind-schaden-durch-familienangehorige-mitversichert",
+  "lang": "de",
+  "ogTitle": "Sind Schäden durch Familienangehörige mitversichert?",
+  "ogDescription": "Welche Instrumentenversicherung leistet bei Schäden durch Familienangehörige?",
+  "ogType": "website",
+  "twitterTitle": "Sind Schäden durch Familienangehörige mitversichert?",
+  "twitterDescription": "Welche Instrumentenversicherung leistet bei Schäden durch Familienangehörige?",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

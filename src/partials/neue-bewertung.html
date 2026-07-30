@@ -1,0 +1,67 @@
+<main class="main-wrapper"><section class="section_form"><div class="padding-global"><div class="container-small"><div class="padding-section-large"><div class="form_container gradient-border"><div class="form_component w-form"><form name="wf-form-Review-2" data-name="form" action="https://automations.arise.so/webhooks/mv-review" method="post" id="email-form" class="form_form" data-wf-page-id="640f6b6559e6902926bd1abe" data-wf-element-id="9f434e02-12b3-be2c-6746-5890e60ddd82"><div><div class="margin-bottom margin-medium"><h1 class="heading-style-h2">Ich freue mich über deine Bewertung!</h1></div><div class="form_field-wrapper"><div class="form-rating-widget w-embed"><fieldset class="rating">
+  <input type="radio" id="star5" name="Rating" value="5" checked="checked">
+  <label class="full" for="star5" title="5 Sterne"></label>
+  <input type="radio" id="star4" name="Rating" value="4">
+  <label class="full" for="star4" title="4 Sterne"></label>
+  <input type="radio" id="star3" name="Rating" value="3">
+  <label class="full" for="star3" title="3 Sterne"></label>
+  <input type="radio" id="star2" name="Rating" value="2">
+  <label class="full" for="star2" title="2 Sterne"></label>
+  <input type="radio" id="star1" name="Rating" value="1">
+  <label class="full" for="star1" title="1 Stern"></label>
+</fieldset>
+<style>
+
+    /****** Style Star Rating Widget *****/
+
+    .rating {
+        border: none;
+        float: left;
+    }
+
+    .rating > input {
+        display: none;
+    }
+    .rating > label:before {
+        margin: 0px;
+        font-size: 2rem;
+        display: inline-block;
+        content: "\2605";
+        cursor: pointer;
+    }
+
+    .rating > .half:before {
+        content: "\2605";
+        position: absolute;
+    }
+
+    .rating > label {
+        color: #ccc;
+        float: right;
+        
+    }
+
+    /***** CSS Magic to Highlight Stars on Hover *****/
+
+    .rating > input:checked ~ label,
+    /* show gold star when clicked */
+    .rating:not(:checked) > label:hover,
+    /* hover current star */
+    .rating:not(:checked) > label:hover ~ label {
+        color: #ffd700;
+    }
+    /* hover previous stars in list */
+
+    .rating > input:checked + label:hover,
+    /* hover current star when changing rating */
+    .rating > input:checked ~ label:hover, .rating > label:hover ~ input:checked ~ label,
+    /* lighten current selection */
+    .rating > input:checked ~ label:hover ~ label {
+        color: #ffed85;
+    }
+    @media (min-width: 768px) {
+        .rating > label:before {
+            font-size: 2rem;
+        }
+    }
+</style></div></div><div class="form_field-wrapper"><label for="Name" class="form_label">Name *</label><input class="form_input w-input" maxlength="256" name="Name" data-name="Name" placeholder="" type="text" id="Name" required=""></div><div data-condition-name="description" class="form_field-wrapper"><label for="Review" class="form_label">Bewertung *</label><textarea id="Review" name="Review" maxlength="5000" data-name="Review" placeholder="" required="" class="form_input is-text-area w-input"></textarea></div><div class="form_rating-bottom"><input type="submit" data-wait="Wird gesendet..." class="button w-button" value="Absenden"><div class="form_review-disclaimer">Dein angegebener Name und deine Bewertung werden auf der Website veröffentlicht und können anschließend nicht mehr verändert werden.</div></div></div></form><div data-name="success" class="form_message-success w-form-done"><div class="margin-bottom margin-medium"><h2>Vielen Dank für Deine Bewertung!</h2></div><p>In Kürze wird deine Bewertung an erster Stelle neben den Reviews anderer Kunden auf der Website erscheinen.</p></div><div data-name="error" class="form_message-error w-form-fail"><div>Das hat leider nicht geklappt. Bitte versuche es später erneut.</div></div></div></div></div></div></div></section></main>

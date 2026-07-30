@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://musikversicherung.com/sitemap-index.xml

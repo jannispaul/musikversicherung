@@ -1,0 +1,18 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/impressum.html?raw";
+
+const seo = {
+  "title": "Impressum – Musikversicherung.com",
+  "canonical": "https://musikversicherung.com/impressum",
+  "lang": "de",
+  "ogTitle": "Impressum – Musikversicherung.com",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterTitle": "Impressum – Musikversicherung.com",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+</Layout>

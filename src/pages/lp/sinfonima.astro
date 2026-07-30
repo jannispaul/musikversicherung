@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/lp/sinfonima.html?raw";
+import pageCss from "../../partials/lp/sinfonima.css?raw";
+
+const seo = {
+  "title": "Versicherung für klassische Instrumente | Mannheimer Sinfonima",
+  "description": "Mit der Sinfonima Instrumentenversicherung sind deine Instrumente weltweit optimal geschützt – ob im Alltag, auf Reisen oder bei Konzerten.",
+  "canonical": "https://musikversicherung.com/lp/sinfonima",
+  "lang": "de",
+  "ogTitle": "Versicherung für klassische Instrumente | Mannheimer Sinfonima",
+  "ogDescription": "Mit der Sinfonima Instrumentenversicherung sind deine Instrumente weltweit optimal geschützt – ob im Alltag, auf Reisen oder bei Konzerten.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Versicherung für klassische Instrumente | Mannheimer Sinfonima",
+  "twitterDescription": "Mit der Sinfonima Instrumentenversicherung sind deine Instrumente weltweit optimal geschützt – ob im Alltag, auf Reisen oder bei Konzerten.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image",
+  "robots": "index,follow"
+};
+---
+
+<Layout {...seo}>
+  <style is:global is:inline set:html={pageCss} slot="head"></style>
+  <Fragment set:html={mainHtml} />
+  <script>
+      import "../../scripts/accordion.js";
+  </script>
+</Layout>

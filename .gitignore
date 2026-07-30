@@ -4,3 +4,7 @@
 node_modules/
 # macOS-specific files
 .DS_Store
+# build output (generated in CI, deployed via SFTP)
+dist/
+# astro cache
+.astro/

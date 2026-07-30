@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/wissen/warum-ist-eine-musikinstrumentenversicherung-wichtig.html?raw";
+import pageJs from "../../partials/wissen/warum-ist-eine-musikinstrumentenversicherung-wichtig.inline.js?raw";
+
+const seo = {
+  "title": "Warum ist eine Musikinstrumentenversicherung wichtig?",
+  "description": "Warum eine Musikinstrumentenversicherung für dich als Musiker unverzichtbar ist. Rundum-Schutz bei unerwarteten Ereignissen wie Diebstahl und Beschädigung. Sorgenfrei bei Auftritten, Proben und auf Tour.",
+  "canonical": "https://musikversicherung.com/wissen/warum-ist-eine-musikinstrumentenversicherung-wichtig",
+  "lang": "de",
+  "ogTitle": "Warum ist eine Musikinstrumentenversicherung wichtig?",
+  "ogDescription": "Warum eine Musikinstrumentenversicherung für dich als Musiker unverzichtbar ist. Rundum-Schutz bei unerwarteten Ereignissen wie Diebstahl und Beschädigung. Sorgenfrei bei Auftritten, Proben und auf Tour.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Warum ist eine Musikinstrumentenversicherung wichtig?",
+  "twitterDescription": "Warum eine Musikinstrumentenversicherung für dich als Musiker unverzichtbar ist. Rundum-Schutz bei unerwarteten Ereignissen wie Diebstahl und Beschädigung. Sorgenfrei bei Auftritten, Proben und auf Tour.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/anfrage.html?raw";
+
+const seo = {
+  "title": "Jetzt anfragen – Musikversicherung.com",
+  "description": "Direkt online abschließen oder anfragen. Beantworte nur wenige Fragen bis zur Absicherung deiner Instrumente.",
+  "canonical": "https://musikversicherung.com/anfrage",
+  "lang": "de",
+  "ogTitle": "Jetzt anfragen – Musikversicherung.com",
+  "ogDescription": "Direkt online abschließen oder anfragen. Beantworte nur wenige Fragen bis zur Absicherung deiner Instrumente.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Jetzt anfragen – Musikversicherung.com",
+  "twitterDescription": "Direkt online abschließen oder anfragen. Beantworte nur wenige Fragen bis zur Absicherung deiner Instrumente.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script type="module" src="https://unpkg.com/@lottiefiles/dotlottie-wc@latest/dist/dotlottie-wc.js" is:inline></script>
+  <script>
+      import "../scripts/anfrage.js";
+      import "../scripts/calculator.js";
+  </script>
+</Layout>

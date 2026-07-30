@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Design tokens
+   --------------------------------------------------------------------------
+   Single source of truth for the visual system. The original Webflow export
+   already exposed a handful of brand colours on :root (--black, --primary,
+   --white, --light); this file keeps those names and layers a complete,
+   documented token set on top (colours, typography, spacing, radii, shadows,
+   breakpoints, transitions).
+
+   Values are the exact ones used by the original site, so referencing these
+   tokens never changes the rendered output.
+   ========================================================================== */
+
+:root {
+  /* --- Brand colours (kept identical to the Webflow export) --- */
+  --black: #333;
+  --primary: #6b46c1; /* SINFONIMA / I'M SOUND purple */
+  --white: white;
+  --light: #f8f5ff; /* light purple surface */
+
+  /* --- Extended palette --- */
+  --color-text: var(--black);
+  --color-primary: var(--primary);
+  --color-primary-tint: #f9f5ff; /* radio / input active fill */
+  --color-surface: var(--white);
+  --color-surface-light: var(--light);
+
+  /* Decorative gradient used on borders, badges and the confetti/cta band */
+  --gradient-border-from: #e6dcfe;
+  --gradient-border-to: #ffe4f5;
+  --color-star: #f8c439; /* review star fill */
+  --color-star-inactive: #ddd;
+  --color-focus-ring: #4d65ff; /* keyboard focus outline */
+
+  /* --- Typography --- */
+  --font-family-base: "Plus Jakarta Sans", sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* --- Spacing scale (Client-First rem scale) --- */
+  --space-0: 0rem;
+  --space-xxsmall: 0.25rem;
+  --space-xsmall: 0.5rem;
+  --space-small: 1rem;
+  --space-medium: 1.5rem;
+  --space-large: 2rem;
+  --space-xlarge: 3rem;
+  --space-xxlarge: 4rem;
+  --space-huge: 6rem;
+
+  /* --- Radii --- */
+  --radius-small: 0.25rem;
+  --radius-medium: 0.5rem;
+  --radius-large: 1rem;
+  --radius-pill: 100vmax;
+
+  /* --- Shadows --- */
+  --shadow-small: 0 1px 2px rgba(51, 51, 51, 0.08);
+  --shadow-medium: 0 8px 24px rgba(51, 51, 51, 0.12);
+  --shadow-focus-primary: inset 0 0 0 1px var(--color-primary);
+
+  /* --- Breakpoints (reference values; media queries can't read variables) ---
+     tablet: 991px · mobile-landscape: 767px · mobile: 479px */
+  --breakpoint-tablet: 991px;
+  --breakpoint-mobile-landscape: 767px;
+  --breakpoint-mobile: 479px;
+
+  /* --- Transitions --- */
+  --transition-menu: 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+}

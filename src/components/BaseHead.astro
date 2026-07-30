@@ -1,0 +1,147 @@
+---
+import "../styles/main.css";
+import { SITE } from "../data/site";
+
+interface Props {
+  title: string;
+  description?: string | null;
+  canonical?: string | null;
+  ogTitle?: string | null;
+  ogDescription?: string | null;
+  ogImage?: string | null;
+  ogType?: string | null;
+  twitterTitle?: string | null;
+  twitterDescription?: string | null;
+  twitterImage?: string | null;
+  twitterCard?: string | null;
+  robots?: string | null;
+  /** Raw JSON-LD strings, injected verbatim into <script type="application/ld+json">. */
+  jsonld?: string[];
+}
+
+const {
+  title,
+  description,
+  canonical = new URL(Astro.url.pathname.replace(/\/$/, "") || "/", SITE.url).href,
+  ogTitle,
+  ogDescription,
+  ogImage,
+  ogType = "website",
+  twitterTitle,
+  twitterDescription,
+  twitterImage,
+  twitterCard = "summary_large_image",
+  robots,
+  jsonld = [],
+} = Astro.props;
+
+const ASSET = "/assets/63f2893134fa326a6838c84d";
+const resolvedOgImage = ogImage ?? SITE.defaultOgImage;
+const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+{robots && <meta name="robots" content={robots} />}
+<link rel="canonical" href={canonical} />
+
+{/* Open Graph */}
+<meta property="og:title" content={ogTitle ?? title} />
+{
+  (ogDescription ?? description) && (
+    <meta property="og:description" content={ogDescription ?? description!} />
+  )
+}
+<meta property="og:image" content={resolvedOgImage} />
+<meta property="og:type" content={ogType} />
+{canonical && <meta property="og:url" content={canonical} />}
+
+{/* Twitter */}
+<meta property="twitter:title" content={twitterTitle ?? ogTitle ?? title} />
+{
+  (twitterDescription ?? ogDescription ?? description) && (
+    <meta
+      property="twitter:description"
+      content={twitterDescription ?? ogDescription ?? description!}
+    />
+  )
+}
+<meta property="twitter:image" content={resolvedTwitterImage} />
+<meta name="twitter:card" content={twitterCard} />
+
+{/* Favicons */}
+<link rel="shortcut icon" type="image/x-icon" href={`${ASSET}/63f3e1b701f05c48543fdca2_favicon-32x32.png`} />
+<link rel="apple-touch-icon" href={`${ASSET}/63f3e2ae508ba1ff759ac321_touchicon.png`} />
+
+{/* Webflow feature-detection: adds .w-mod-js / .w-mod-touch to <html> for CSS hooks */}
+<script is:inline>
+  !(function (o, c) {
+    var n = c.documentElement,
+      t = " w-mod-";
+    (n.className += t + "js"),
+      ("ontouchstart" in o || (o.DocumentTouch && c instanceof DocumentTouch)) &&
+        (n.className += t + "touch");
+  })(window, document);
+</script>
+
+{/* Page-specific structured data */}
+{jsonld.map((data) => <script type="application/ld+json" is:inline set:html={data} />)}
+
+{/* Speculation Rules: prerender same-origin links for snappier navigation */}
+<script type="speculationrules" is:inline>
+  {`{
+    "prerender": [{
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          { "not": {"selector_matches": ".do-not-prerender"}},
+          { "not": {"selector_matches": "[rel=nofollow]"}}
+        ]
+      },
+      "eagerness": "moderate"
+    }]
+  }`}
+</script>
+
+{/* --- Analytics & consent (site-wide, third-party) --- */}
+<script defer src="https://umami.paulwicke.com/script.js" data-website-id="0b06d9ab-7a86-4977-9e81-3f1931717e3f" is:inline></script>
+<script is:inline>
+  window.addEventListener("CookiebotOnDialogInit", function () {
+    if (Cookiebot.getDomainUrlParam("CookiebotScan") === "true")
+      Cookiebot.setOutOfRegion();
+  });
+</script>
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="88d955d0-3b6f-4434-a22c-3286e17ac641" data-blockingmode="auto" type="text/javascript" is:inline></script>
+<script data-cookieconsent="ignore" is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("consent", "default", {
+    ad_personalization: "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    analytics_storage: "denied",
+    functionality_storage: "denied",
+    personalization_storage: "denied",
+    security_storage: "granted",
+    wait_for_update: 500,
+  });
+  gtag("set", "ads_data_redaction", true);
+  gtag("set", "url_passthrough", false);
+</script>
+<script is:inline>
+  (function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != "dataLayer" ? "&l=" + l : "";
+    j.async = true;
+    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, "script", "dataLayer", "GTM-N8TXTKR");
+</script>
