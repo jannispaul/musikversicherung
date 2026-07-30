@@ -1,0 +1,14 @@
+# Astro builds with build.format:"file", so pages are emitted as flat files
+# (anfrage.html, wissen/instrumentenversicherung-fur-klaviere.html, …) while
+# internal links are extensionless (/anfrage, /wissen/…). Map an extensionless
+# request to the matching .html file so those links resolve.
+#
+# The single guarded rule only rewrites when "<request>.html" actually exists,
+# so real assets (/images/…, /_astro/…, /reviews.json) pass through untouched.
+# It also makes /wissen serve wissen.html rather than the wissen/ directory.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>
