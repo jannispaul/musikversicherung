@@ -1,8 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/versicherungsbedingungen.html?raw";
+import { breadcrumbLd } from "../data/structured-data";
 
 const seo = {
+  "jsonld": [
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Versicherungsbedingungen" },
+    ]),
+  ],
   "title": "Versicherungsbedingungen – Musikversicherung.com",
   "description": "Hier findest du das Kleingedruckte. Die Versicherungsbedingungen der Mannheimer in voller Länger.",
   "canonical": "https://musikversicherung.com/versicherungsbedingungen",

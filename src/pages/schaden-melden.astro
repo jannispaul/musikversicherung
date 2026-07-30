@@ -2,8 +2,15 @@
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/schaden-melden.html?raw";
 import pageCss from "../partials/schaden-melden.css?raw";
+import { breadcrumbLd } from "../data/structured-data";
 
 const seo = {
+  "jsonld": [
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Schaden melden" },
+    ]),
+  ],
   "title": "Schaden melden – Musikversicherung.com",
   "description": "Wenn du deine Instrumentenverischerung über Musikversicherung.com abgeschlossen hast, kannst du hier einfach und schnell deinen Schaden melden.",
   "canonical": "https://musikversicherung.com/schaden-melden",

@@ -1,9 +1,18 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/zeitwert-oder-neuwert-versichern.html?raw";
+import { articleLd, breadcrumbLd } from "../../data/structured-data";
 import pageJs from "../../partials/wissen/zeitwert-oder-neuwert-versichern.inline.js?raw";
 
 const seo = {
+  "jsonld": [
+    articleLd({ headline: "Instrumentenversicherung: Zeitwert oder Neuwert versichern?", description: "Neu- oder Zeitwert eines Instruments versichern? Tipps zur richtigen Wahl der Versicherungssumme.", url: "https://musikversicherung.com/wissen/zeitwert-oder-neuwert-versichern" }),
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Wissen", item: "https://musikversicherung.com/wissen" },
+      { name: "Instrumentenversicherung: Zeitwert oder Neuwert versichern?" },
+    ]),
+  ],
   "title": "Instrumentenversicherung: Zeitwert oder Neuwert versichern?",
   "description": "Neu- oder Zeitwert eines Instruments versichern? Tipps zur richtigen Wahl der Versicherungssumme.",
   "canonical": "https://musikversicherung.com/wissen/zeitwert-oder-neuwert-versichern",

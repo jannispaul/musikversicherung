@@ -2,8 +2,17 @@
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/faqs.html?raw";
 import pageCss from "../partials/faqs.css?raw";
+import { breadcrumbLd } from "../data/structured-data";
 
+// NB: the FAQ Q&A markup already ships as schema.org FAQPage microdata inside
+// faqs.html, so only the breadcrumb is added here (no duplicate FAQPage).
 const seo = {
+  "jsonld": [
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "FAQ" },
+    ]),
+  ],
   "title": "Häufe Fragen zur Instrumentenversicherung – Musikversicherung.com",
   "description": "Alle Fragen zum Thema Instrumentenversicherung schnell und einfach vom Experten beantwortet. In den FAQs findest du die Antworten.",
   "canonical": "https://musikversicherung.com/faqs",

@@ -1,8 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/wissen.html?raw";
+import { articleLd, breadcrumbLd } from "../data/structured-data";
 
 const seo = {
+  "jsonld": [
+    articleLd({
+      headline: "Wissen zur Instrumentenversicherung",
+      description:
+        "Alle wichtigen Detailinformationen zur Instrumentenversicherung und Absicherung von Equipment vom Experten für dich aufbereitet.",
+      url: "https://musikversicherung.com/wissen",
+    }),
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Wissen" },
+    ]),
+  ],
   "title": "Alles rund um Instrumentenversicherungen – Musikversicherung.com Wissen",
   "description": "Alle wichtigen Detailinformationen zur Instrumentenverischerung und Absicherung von Equipment vom Experten für dich aufbereitet.",
   "canonical": "https://musikversicherung.com/wissen",

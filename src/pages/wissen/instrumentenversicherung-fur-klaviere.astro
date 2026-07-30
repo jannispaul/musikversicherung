@@ -1,9 +1,18 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/instrumentenversicherung-fur-klaviere.html?raw";
+import { articleLd, breadcrumbLd } from "../../data/structured-data";
 import pageJs from "../../partials/wissen/instrumentenversicherung-fur-klaviere.inline.js?raw";
 
 const seo = {
+  "jsonld": [
+    articleLd({ headline: "Instrumentenversicherung für Klaviere", description: "Klavier, Flügel oder E-Piano: Wir erzählen dir alles über die passende Versicherung für Tasteninstrumente.", url: "https://musikversicherung.com/wissen/instrumentenversicherung-fur-klaviere" }),
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Wissen", item: "https://musikversicherung.com/wissen" },
+      { name: "Instrumentenversicherung für Klaviere" },
+    ]),
+  ],
   "title": "Instrumentenversicherung für Klaviere",
   "description": "Klavier, Flügel oder E-Piano: Wir erzählen dir alles über die passende Versicherung für Tasteninstrumente.",
   "canonical": "https://musikversicherung.com/wissen/instrumentenversicherung-fur-klaviere",

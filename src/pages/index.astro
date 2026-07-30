@@ -6,9 +6,9 @@ import {
   renderReviewItems,
   reviews,
   reviewCount,
-  averageValue,
   averageDisplay,
 } from "../data/reviews";
+import { productLd } from "../data/structured-data";
 
 // The homepage shows a clipped preview of the most recent reviews (the full
 // list lives on /reviews). Bake them in at build time.
@@ -40,17 +40,10 @@ const seo = {
   "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
   "twitterCard": "summary_large_image",
   "robots": "index,follow",
-  "jsonld": [
-    "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"WebPage\",\n  \"name\": \"Instrumentenversicherung: Instrumente & Equipment versichern\",\n  \"description\": \"Mannheimer Instrumentenversicherung ohne Selbstbeteiligung mit weltweitem Schutz. SINFONIMA für klassische und IM SOUND für elektronische Instrumente\",\n  \"inLanguage\": \"de\",\n  \"mainEntity\": {\n    \"@type\": \"Service\",\n    \"name\": \"Instrumentenversicherung\",\n    \"provider\": {\n      \"@type\": \"Organization\",\n      \"name\": \"musikversicherung.com\",\n      \"telephone\": \"+49 172 511 3611\",\n      \"email\": \"info@musikversicherung.com\",\n      \"sameAs\": [\n        \"https://www.facebook.com/instrumentenversicherung/\",\n        \"https://musikversicherung.com\"\n      ],\n      \"aggregateRating\": {\n        \"@type\": \"AggregateRating\",\n        \"ratingValue\": \"4.96\",\n        \"reviewCount\": \"1070\",\n        \"bestRating\": \"5\"\n      }\n    },\n    \"serviceType\": \"Musikinstrumentenversicherung\",\n    \"areaServed\": \"Worldwide\",\n    \"description\": \"Umfassende Allgefahrendeckung für klassische und elektronische Musikinstrumente sowie Equipment\",\n    \"offers\": [\n      {\n        \"@type\": \"Offer\",\n        \"name\": \"SINFONIMA Instrumentenversicherung\",\n        \"description\": \"Versicherung für klassische Instrumente\",\n        \"price\": \"4.69\",\n        \"priceCurrency\": \"EUR\",\n        \"priceSpecification\": {\n          \"@type\": \"UnitPriceSpecification\",\n          \"price\": \"4.69\",\n          \"priceCurrency\": \"EUR\",\n          \"unitText\": \"Monat\"\n        }\n      },\n      {\n        \"@type\": \"Offer\",\n        \"name\": \"I'M SOUND Equipmentversicherung\",\n        \"description\": \"Rundumschutz für elektronische Instrumente und Musikequipment\",\n        \"price\": \"6.25\",\n        \"priceCurrency\": \"EUR\",\n        \"priceSpecification\": {\n          \"@type\": \"UnitPriceSpecification\",\n          \"price\": \"6.25\",\n          \"priceCurrency\": \"EUR\",\n          \"unitText\": \"Monat\"\n        }\n      }\n    ]\n  },\n  \"breadcrumb\": {\n    \"@type\": \"BreadcrumbList\",\n    \"itemListElement\": [\n      {\n        \"@type\": \"ListItem\",\n        \"position\": 1,\n        \"name\": \"Home\",\n        \"item\": \"https://musikversicherung.com\"\n      },\n      {\n        \"@type\": \"ListItem\",\n        \"position\": 2,\n        \"name\": \"Wissen\",\n        \"item\": \"https://musikversicherung.com/wissen\"\n      },\n      {\n        \"@type\": \"ListItem\",\n        \"position\": 3,\n        \"name\": \"FAQ\",\n        \"item\": \"https://musikversicherung.com/faqs\"\n      },\n      {\n        \"@type\": \"ListItem\",\n        \"position\": 4,\n        \"name\": \"Kontakt\",\n        \"item\": \"https://musikversicherung.com/kontakt\"\n      }\n    ]\n  },\n  \"mainEntityOfPage\": {\n    \"@type\": \"FAQPage\",\n    \"mainEntity\": [\n      {\n        \"@type\": \"Question\",\n        \"name\": \"Was kostet eine Instrumentenversicherung?\",\n        \"acceptedAnswer\": {\n          \"@type\": \"Answer\",\n          \"text\": \"Die Kosten einer Instrumentenversicherung, richten sich vor allem nach Instrumentenart und -wert. Bei SINFONIMA liegt der Beitrag für Instrumente bis 3.000 € bei 4,69 € im Monat, bei I'M SOUND zahlen Musiker 6,25 € monatlich für Instrumente bis 4.000 €.\"\n        }\n      },\n      {\n        \"@type\": \"Question\",\n        \"name\": \"Gilt die Versicherung auch im Ausland?\",\n        \"acceptedAnswer\": {\n          \"@type\": \"Answer\",\n          \"text\": \"Ja, der Versicherungsschutz gilt weltweit.\"\n        }\n      },\n      {\n        \"@type\": \"Question\",\n        \"name\": \"Besteht auch im Auto Versicherungsschutz?\",\n        \"acceptedAnswer\": {\n          \"@type\": \"Answer\",\n          \"text\": \"Ja, der Versicherungsschutz gilt auch im Auto. Es gibt jedoch eine Höchstentschädigung von 50.000 € (SINFONIMA) und 100.000 € (I'M SOUND). Voraussetzung ist die Aufbewahrung in einem von außen nicht einsehbaren Koffer- oder Laderaum.\"\n        }\n      },\n      {\n        \"@type\": \"Question\",\n        \"name\": \"Kann ich für die Reparatur ein Ersatzinstrument leihen?\",\n        \"acceptedAnswer\": {\n          \"@type\": \"Answer\",\n          \"text\": \"Ja, die Kosten für ein gleichwertiges Leihinstrument während der Reparatur werden im Rahmen der Versicherung ebenfalls ersetzt.\"\n        }\n      }\n    ]\n  }\n}"
-  ]
+  // Insurance offering as a Product (ratings sourced live from ./reviews).
+  // Organization + WebSite are emitted site-wide from BaseHead.
+  "jsonld": [productLd()]
 };
-
-// Keep the Service schema's aggregateRating in sync with the live review data.
-seo.jsonld = seo.jsonld.map((entry) =>
-  entry
-    .replace(/("ratingValue":\s*")[^"]*(")/, `$1${averageValue.toFixed(2)}$2`)
-    .replace(/("reviewCount":\s*")[^"]*(")/, `$1${reviewCount}$2`)
-);
 ---
 
 <Layout {...seo}>

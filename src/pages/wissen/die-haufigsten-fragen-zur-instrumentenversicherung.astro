@@ -1,9 +1,18 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/die-haufigsten-fragen-zur-instrumentenversicherung.html?raw";
+import { articleLd, breadcrumbLd } from "../../data/structured-data";
 import pageJs from "../../partials/wissen/die-haufigsten-fragen-zur-instrumentenversicherung.inline.js?raw";
 
 const seo = {
+  "jsonld": [
+    articleLd({ headline: "Die häufigsten Fragen zur Instrumentenversicherung", description: "Erfahre alles über Instrumentenversicherung. Von Kosten bis Deckungsbereichen und finde die passende Absicherung für deine Musikinstrumente.", url: "https://musikversicherung.com/wissen/die-haufigsten-fragen-zur-instrumentenversicherung" }),
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Wissen", item: "https://musikversicherung.com/wissen" },
+      { name: "Die häufigsten Fragen zur Instrumentenversicherung" },
+    ]),
+  ],
   "title": "Die häufigsten Fragen zur Instrumentenversicherung",
   "description": "Erfahre alles über Instrumentenversicherung. Von Kosten bis Deckungsbereichen und finde die passende Absicherung für deine Musikinstrumente.",
   "canonical": "https://musikversicherung.com/wissen/die-haufigsten-fragen-zur-instrumentenversicherung",

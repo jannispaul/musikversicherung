@@ -1,6 +1,7 @@
 ---
 import "../styles/main.css";
 import { SITE } from "../data/site";
+import { organizationLd } from "../data/structured-data";
 
 interface Props {
   title: string;
@@ -86,6 +87,9 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
         (n.className += t + "touch");
   })(window, document);
 </script>
+
+{/* Site-wide structured data: InsuranceAgency + WebSite */}
+<script type="application/ld+json" is:inline set:html={organizationLd()} />
 
 {/* Page-specific structured data */}
 {jsonld.map((data) => <script type="application/ld+json" is:inline set:html={data} />)}

@@ -1,9 +1,18 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment.html?raw";
+import { articleLd, breadcrumbLd } from "../../data/structured-data";
 import pageJs from "../../partials/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment.inline.js?raw";
 
 const seo = {
+  "jsonld": [
+    articleLd({ headline: "Tipps zur Auswahl der richtigen Instrumentenversicherung", description: "Erfahre, wie du die passende Instrumentenversicherung für dein wertvolles Instrument oder Equipment auswählst. Finde die richtige Deckung und genieße deine Musik ohne Sorgen.", url: "https://musikversicherung.com/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment" }),
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Wissen", item: "https://musikversicherung.com/wissen" },
+      { name: "Tipps zur Auswahl der richtigen Instrumentenversicherung" },
+    ]),
+  ],
   "title": "Tipps zur Auswahl der richtigen Instrumentenversicherung",
   "description": "Erfahre, wie du die passende Instrumentenversicherung für dein wertvolles Instrument oder Equipment auswählst. Finde die richtige Deckung und genieße deine Musik ohne Sorgen.",
   "canonical": "https://musikversicherung.com/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment",

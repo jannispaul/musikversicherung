@@ -72,49 +72,5 @@ export function renderReviewItems(list: Review[] = reviews): string {
     .join("");
 }
 
-interface JsonLdOptions {
-  /** Include the individual reviews array (heavy). Defaults to true. */
-  includeReviews?: boolean;
-}
-
-/**
- * schema.org Product JSON-LD with an AggregateRating and (optionally) the
- * individual Review entries. Returned as a JSON string ready for injection.
- */
-export function reviewsJsonLd(
-  list: Review[] = reviews,
-  { includeReviews = true }: JsonLdOptions = {},
-): string {
-  const schema: Record<string, unknown> = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    image: "https://musikversicherung.com/images/og-image.jpg",
-    name: "SINFONIMA / I'M SOUND Instrumentenversicherung",
-    brand: { "@type": "Brand", name: "Mannheimer Versicherung AG" },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: averageValue.toFixed(2),
-      reviewCount: reviewCount,
-      bestRating: "5",
-      worstRating: "1",
-    },
-    description: "Deine Versicherung für Instrumente und Equipment.",
-  };
-
-  if (includeReviews) {
-    schema.review = list.map((review) => ({
-      "@type": "Review",
-      author: { "@type": "Person", name: review.name },
-      datePublished: review.date,
-      reviewBody: review.review,
-      reviewRating: {
-        "@type": "Rating",
-        bestRating: "5",
-        ratingValue: String(review.rating),
-        worstRating: "1",
-      },
-    }));
-  }
-
-  return JSON.stringify(schema);
-}
+// The schema.org Product/Review JSON-LD lives in ./structured-data.ts, which
+// consumes the review aggregates exported above.

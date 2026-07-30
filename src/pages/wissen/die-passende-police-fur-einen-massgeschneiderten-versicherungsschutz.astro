@@ -1,9 +1,18 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/die-passende-police-fur-einen-massgeschneiderten-versicherungsschutz.html?raw";
+import { articleLd, breadcrumbLd } from "../../data/structured-data";
 import pageJs from "../../partials/wissen/die-passende-police-fur-einen-massgeschneiderten-versicherungsschutz.inline.js?raw";
 
 const seo = {
+  "jsonld": [
+    articleLd({ headline: "Die passende Police für einen maßgeschneiderten Versicherungsschutz", description: "Erfahre, welche Arten von Instrumentenversicherungen es gibt und finde die passende Absicherung für deine wertvollen Musikinstrumente, egal ob Hobby-Instrumentalist oder Orchester-Musiker, Band-Mitglied oder DJ.", url: "https://musikversicherung.com/wissen/die-passende-police-fur-einen-massgeschneiderten-versicherungsschutz" }),
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Wissen", item: "https://musikversicherung.com/wissen" },
+      { name: "Die passende Police für einen maßgeschneiderten Versicherungsschutz" },
+    ]),
+  ],
   "title": "Die passende Police für einen maßgeschneiderten Versicherungsschutz",
   "description": "Erfahre, welche Arten von Instrumentenversicherungen es gibt und finde die passende Absicherung für deine wertvollen Musikinstrumente, egal ob Hobby-Instrumentalist oder Orchester-Musiker, Band-Mitglied oder DJ.",
   "canonical": "https://musikversicherung.com/wissen/die-passende-police-fur-einen-massgeschneiderten-versicherungsschutz",

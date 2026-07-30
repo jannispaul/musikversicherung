@@ -1,8 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/anfrage.html?raw";
+import { breadcrumbLd } from "../data/structured-data";
 
 const seo = {
+  "jsonld": [
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Anfrage" },
+    ]),
+  ],
   "title": "Jetzt anfragen – Musikversicherung.com",
   "description": "Direkt online abschließen oder anfragen. Beantworte nur wenige Fragen bis zur Absicherung deiner Instrumente.",
   "canonical": "https://musikversicherung.com/anfrage",

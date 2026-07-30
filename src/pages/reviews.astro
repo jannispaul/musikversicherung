@@ -1,12 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/reviews.html?raw";
-import {
-  renderReviewItems,
-  reviewsJsonLd,
-  reviewCount,
-  averageDisplay,
-} from "../data/reviews";
+import { renderReviewItems, reviewCount, averageDisplay } from "../data/reviews";
+import { productLd, breadcrumbLd } from "../data/structured-data";
 
 // Bake the reviews into the markup at build time (previously fetched client-side).
 const renderedHtml = mainHtml
@@ -24,7 +20,13 @@ const renderedHtml = mainHtml
   );
 
 const seo = {
-  jsonld: [reviewsJsonLd()],
+  jsonld: [
+    productLd({ includeReviews: true }),
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Bewertungen" },
+    ]),
+  ],
   "title": "Berwertungen und Erfahrungen – Musikversicherung.com",
   "description": "Die positiven Bewertungen sprechen für sich. Über 1000 Reviews sagen: Einfach, schnell und freundlich. Top Service und eine einzigartige Instrumentenversicherung",
   "canonical": "https://musikversicherung.com/reviews",

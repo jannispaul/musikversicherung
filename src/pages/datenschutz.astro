@@ -1,8 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/datenschutz.html?raw";
+import { breadcrumbLd } from "../data/structured-data";
 
 const seo = {
+  "jsonld": [
+    breadcrumbLd([
+      { name: "Home", item: "https://musikversicherung.com" },
+      { name: "Datenschutz" },
+    ]),
+  ],
   "title": "Datenschutz – Musikversicherung.com",
   "canonical": "https://musikversicherung.com/datenschutz",
   "lang": "de",
