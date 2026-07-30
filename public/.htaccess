@@ -9,6 +9,14 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Enforce the site's trailingSlash:"never" convention: redirect /wissen/ to
+  # /wissen (root excluded) so there's one canonical URL and the rule below can
+  # resolve it. This also fixes /wissen/, whose trailing slash otherwise maps to
+  # the index-less wissen/ directory (404) instead of wissen.html.
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # Extensionless URL -> flat .html file (/anfrage -> anfrage.html), only when
+  # that file exists so real assets pass through untouched.
   RewriteCond %{REQUEST_FILENAME}.html -f
   RewriteRule ^(.+?)/?$ $1.html [L]
 </IfModule>
