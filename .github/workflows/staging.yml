@@ -2,7 +2,7 @@ name: Build and Deploy (Staging)
 
 # Builds the Astro site and deploys the generated `dist/` output to the STAGING
 # directory on the Strato server over SFTP. Mirrors deploy.yml but targets
-# ./musikversicherung/staging/ so it never overwrites the live production site
+# ./musikversicherung-staging/ so it never overwrites the live production site
 # that lives at ./musikversicherung/.
 on:
   push:
@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           localPath: "./dist/"
-          remotePath: "./musikversicherung/staging/"
+          remotePath: "./musikversicherung-staging/"
 
       - name: Done
-        run: echo "✅ Deployed dist/ to ./musikversicherung/staging/ on the server"
+        run: echo "✅ Deployed dist/ to ./musikversicherung-staging/ on the server"
