@@ -12,3 +12,12 @@
   RewriteCond %{REQUEST_FILENAME}.html -f
   RewriteRule ^(.+?)/?$ $1.html [L]
 </IfModule>
+
+# /wissen has both wissen.html and a wissen/ directory (from wissen/*.astro).
+# Without this, mod_dir 301-redirects /wissen -> /wissen/, which serves the
+# index-less directory (404) instead of wissen.html. Turning off the auto-slash
+# lets the rewrite above resolve /wissen to wissen.html. No directory on the
+# site is browsed for a listing, so losing the trailing-slash redirect is safe.
+<IfModule mod_dir.c>
+  DirectorySlash Off
+</IfModule>
