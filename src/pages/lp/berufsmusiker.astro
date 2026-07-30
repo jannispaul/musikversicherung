@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/lp/berufsmusiker.html?raw";
+import pageCss from "../../partials/lp/berufsmusiker.css?raw";
+
+const seo = {
+  "title": "Instrumentenversicherung für Berufsmusiker",
+  "description": "Musikinstrumente, Equipment und Zubehör online versichern  ✅ weltweiter Schutz  ✅ auch im Auto ✅   SINFONIMA & IM SOUND ab 4,69 €",
+  "canonical": "https://musikversicherung.com/lp/berufsmusiker",
+  "lang": "de",
+  "ogTitle": "Instrumentenversicherung für Berufsmusiker",
+  "ogDescription": "Musikinstrumente, Equipment und Zubehör online versichern  ✅ weltweiter Schutz  ✅ auch im Auto ✅   SINFONIMA & IM SOUND ab 4,69 €",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Instrumentenversicherung für Berufsmusiker",
+  "twitterDescription": "Musikinstrumente, Equipment und Zubehör online versichern  ✅ weltweiter Schutz  ✅ auch im Auto ✅   SINFONIMA & IM SOUND ab 4,69 €",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image",
+  "robots": "noindex,nofollow"
+};
+---
+
+<Layout {...seo}>
+  <style is:global is:inline set:html={pageCss} slot="head"></style>
+  <Fragment set:html={mainHtml} />
+  <script>
+      import "../../scripts/accordion.js";
+  </script>
+</Layout>

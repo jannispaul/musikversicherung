@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/wissen/was-deckt-eine-instrumentenversicherung-ab.html?raw";
+import pageJs from "../../partials/wissen/was-deckt-eine-instrumentenversicherung-ab.inline.js?raw";
+
+const seo = {
+  "title": "Welche Risiken deckt eine Instrumentenversicherung ab?",
+  "description": "Erfahre, wie eine Intrumentenversicherung deine Musikinstrumente vor  Beschädigung, Verlust und anderen unvorhergesehenen Ereignissen schützen kann.",
+  "canonical": "https://musikversicherung.com/wissen/was-deckt-eine-instrumentenversicherung-ab",
+  "lang": "de",
+  "ogTitle": "Welche Risiken deckt eine Instrumentenversicherung ab?",
+  "ogDescription": "Erfahre, wie eine Intrumentenversicherung deine Musikinstrumente vor  Beschädigung, Verlust und anderen unvorhergesehenen Ereignissen schützen kann.",
+  "ogType": "website",
+  "twitterTitle": "Welche Risiken deckt eine Instrumentenversicherung ab?",
+  "twitterDescription": "Erfahre, wie eine Intrumentenversicherung deine Musikinstrumente vor  Beschädigung, Verlust und anderen unvorhergesehenen Ereignissen schützen kann.",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

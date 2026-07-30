@@ -1,0 +1,337 @@
+/* ==========================================================================
+   Global base styles
+   --------------------------------------------------------------------------
+   These rules were previously duplicated as inline <style> blocks in the
+   <head> of every Webflow page (fluid root font-size, Client-First base
+   helpers, and the CSS-only mobile navigation). They are consolidated here
+   once and loaded globally. Brand values are wired to the design tokens in
+   variables.css — the values are identical, so rendering is unchanged.
+   ========================================================================== */
+
+/* --- Fluid root font-size ------------------------------------------------ */
+html {
+  font-size: calc(0.8301886792452831rem + 0.18867924528301885vw);
+}
+@media screen and (max-width: 2500px) {
+  html {
+    font-size: calc(0.8301886792452831rem + 0.18867924528301888vw);
+  }
+}
+@media screen and (max-width: 1440px) {
+  html {
+    font-size: 1rem;
+  }
+}
+@media screen and (max-width: 479px) {
+  html {
+    font-size: 1rem;
+  }
+}
+
+/* --- Client-First base --------------------------------------------------- */
+
+/* Make text look crisper and more legible in all browsers */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus state for keyboard navigation of focusable elements */
+*[tabindex]:focus-visible,
+input[type="file"]:focus-visible {
+  outline: 0.125rem solid var(--color-focus-ring);
+  outline-offset: 0.125rem;
+}
+
+/* Rich-text: strip the first element's top margin and last element's bottom margin */
+.w-richtext > :not(div):first-child,
+.w-richtext > div:first-child > :first-child {
+  margin-top: 0 !important;
+}
+.w-richtext > :last-child,
+.w-richtext ol li:last-child,
+.w-richtext ul li:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Pointer-event helpers */
+.pointer-events-off {
+  pointer-events: none;
+}
+.pointer-events-on {
+  pointer-events: auto;
+}
+
+/* 1:1 aspect-ratio helper */
+.div-square::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+/* Keep containers centred */
+.container-medium,
+.container-small,
+.container-large {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+/* Line-clamp helpers */
+.text-style-3lines {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.text-style-2lines {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.display-inlineflex {
+  display: inline-flex;
+}
+
+/* Never-overwritten visibility helpers */
+.hide {
+  display: none !important;
+}
+@media screen and (max-width: 991px) {
+  .hide,
+  .hide-tablet {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 767px) {
+  .hide-mobile-landscape {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 479px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Spacing overrides */
+.margin-0 {
+  margin: 0rem !important;
+}
+.padding-0 {
+  padding: 0rem !important;
+}
+.spacing-clean {
+  padding: 0rem !important;
+  margin: 0rem !important;
+}
+.margin-top {
+  margin-right: 0rem !important;
+  margin-bottom: 0rem !important;
+  margin-left: 0rem !important;
+}
+.padding-top {
+  padding-right: 0rem !important;
+  padding-bottom: 0rem !important;
+  padding-left: 0rem !important;
+}
+.margin-right {
+  margin-top: 0rem !important;
+  margin-bottom: 0rem !important;
+  margin-left: 0rem !important;
+}
+.padding-right {
+  padding-top: 0rem !important;
+  padding-bottom: 0rem !important;
+  padding-left: 0rem !important;
+}
+.margin-bottom {
+  margin-top: 0rem !important;
+  margin-right: 0rem !important;
+  margin-left: 0rem !important;
+}
+.padding-bottom {
+  padding-top: 0rem !important;
+  padding-right: 0rem !important;
+  padding-left: 0rem !important;
+}
+.margin-left {
+  margin-top: 0rem !important;
+  margin-right: 0rem !important;
+  margin-bottom: 0rem !important;
+}
+.padding-left {
+  padding-top: 0rem !important;
+  padding-right: 0rem !important;
+  padding-bottom: 0rem !important;
+}
+.margin-horizontal {
+  margin-top: 0rem !important;
+  margin-bottom: 0rem !important;
+}
+.padding-horizontal {
+  padding-top: 0rem !important;
+  padding-bottom: 0rem !important;
+}
+.margin-vertical {
+  margin-right: 0rem !important;
+  margin-left: 0rem !important;
+}
+.padding-vertical {
+  padding-right: 0rem !important;
+  padding-left: 0rem !important;
+}
+/* Client first end */
+
+/* --- Brand components ---------------------------------------------------- */
+
+/* Navbar hover dimming of sibling links */
+.navbar_link-wrapper:hover :not(:hover) {
+  opacity: 0.5;
+}
+
+/* Gradient borders */
+.gradient-border {
+  background: linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(
+        to bottom,
+        var(--gradient-border-from),
+        var(--gradient-border-to)
+      )
+      border-box;
+  border-color: transparent;
+}
+.gradient-border-light {
+  background: linear-gradient(#f8f5ff, #f8f5ff) padding-box,
+    linear-gradient(
+        to bottom,
+        var(--gradient-border-from),
+        var(--gradient-border-to)
+      )
+      border-box;
+  border-color: transparent;
+}
+
+/* Forms */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--color-primary);
+}
+.form_input.is-select-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-position: right 0.5rem center;
+}
+.form_radio {
+  box-sizing: border-box;
+}
+.form_radio:has(:checked) {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-primary);
+  background: var(--color-primary-tint);
+}
+/* Webflow's JS used to add `.w--redirected-checked` to toggle the check icon.
+   Since webflow.js was dropped in the migration, drive it from :checked instead. */
+.form_radio:has(:checked) .form_radio-icon {
+  background-image: url(/assets/63f2893134fa326a6838c84d/640b911dbeb22e2c69d4b8e7_radio-check.svg);
+  background-position: 0 0;
+  background-size: auto;
+  border-style: none;
+}
+.form_checkbox:has(:checked) .form_checkbox-icon {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+}
+.form_radio:has(:focus) {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus-primary);
+}
+.form_radio:has(:disabled) {
+  opacity: 50%;
+  cursor: not-allowed;
+}
+.form_radio:has(:disabled) .w-form-label {
+  cursor: not-allowed;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Headline / link word-breaking */
+h1,
+h2,
+h3 {
+  word-break: break-word;
+  font-feature-settings: "ss03";
+}
+a:not(> *) {
+  word-break: break-all;
+}
+
+/* The home "Alle Bewertungen ansehen" CTA renders as the last child of the
+   reviews section with no bottom padding below it (Webflow markup quirk) —
+   add breathing room so it isn't flush against the following section. */
+.section_home-reviews .button-group {
+  margin-bottom: 5rem;
+}
+@media (max-width: 767px) {
+  .section_home-reviews .button-group {
+    margin-bottom: 3rem;
+  }
+}
+
+/* Fix cta banner border-radius clipping */
+.cta_component {
+  isolation: isolate;
+}
+
+.css,
+.js {
+  display: none;
+}
+
+/* --- CSS-only mobile navigation ------------------------------------------ */
+@media (max-width: 991px) {
+  /* Prevent scroll when menu is open */
+  body:has(#menu-btn-input:checked) {
+    overflow: hidden;
+  }
+  .navbar_menu-btn {
+    display: flex;
+    flex-direction: column;
+  }
+  .navbar_menu-btn span {
+    border-radius: var(--radius-pill);
+    z-index: 1;
+    transform-origin: 0.0675rem;
+    transition: transform var(--transition-menu),
+      background var(--transition-menu), opacity 0.55s ease;
+  }
+  .navbar_menu-btn:has(.navbar_menu-input:checked) span:nth-last-child(1) {
+    transform: rotate(-45deg) translate(0, 0.15rem);
+  }
+  .navbar_menu-btn:has(.navbar_menu-input:checked) span:nth-last-child(2) {
+    transform: scaleX(0);
+  }
+  .navbar_menu-btn:has(.navbar_menu-input:checked) span:nth-last-child(3) {
+    transform: rotate(45deg) translate(0, -0.15rem);
+  }
+  .navbar_menu {
+    transform: translateY(-100%);
+    transition: transform var(--transition-menu);
+  }
+  .navbar_menu-btn:has(.navbar_menu-input:checked)
+    ~ .navbar_menu-wrap
+    .navbar_menu {
+    transform: translateY(0%);
+  }
+}

@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/versicherungsbedingungen.html?raw";
+
+const seo = {
+  "title": "Versicherungsbedingungen – Musikversicherung.com",
+  "description": "Hier findest du das Kleingedruckte. Die Versicherungsbedingungen der Mannheimer in voller Länger.",
+  "canonical": "https://musikversicherung.com/versicherungsbedingungen",
+  "lang": "de",
+  "ogTitle": "Versicherungsbedingungen – Musikversicherung.com",
+  "ogDescription": "Hier findest du das Kleingedruckte. Die Versicherungsbedingungen der Mannheimer in voller Länger.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Versicherungsbedingungen – Musikversicherung.com",
+  "twitterDescription": "Hier findest du das Kleingedruckte. Die Versicherungsbedingungen der Mannheimer in voller Länger.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+</Layout>

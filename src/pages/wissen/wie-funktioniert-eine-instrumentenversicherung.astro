@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/wissen/wie-funktioniert-eine-instrumentenversicherung.html?raw";
+import pageJs from "../../partials/wissen/wie-funktioniert-eine-instrumentenversicherung.inline.js?raw";
+
+const seo = {
+  "title": "Wie funktioniert eine Instrumentenversicherung?",
+  "description": "Wie schützt eine Instrumentenversicherung Deine wertvollen Instrumente?",
+  "canonical": "https://musikversicherung.com/wissen/wie-funktioniert-eine-instrumentenversicherung",
+  "lang": "de",
+  "ogTitle": "Wie funktioniert eine Instrumentenversicherung?",
+  "ogDescription": "Wie schützt eine Instrumentenversicherung Deine wertvollen Instrumente?",
+  "ogType": "website",
+  "twitterTitle": "Wie funktioniert eine Instrumentenversicherung?",
+  "twitterDescription": "Wie schützt eine Instrumentenversicherung Deine wertvollen Instrumente?",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

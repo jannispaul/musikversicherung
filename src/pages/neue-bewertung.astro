@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/neue-bewertung.html?raw";
+import pageCss from "../partials/neue-bewertung.css?raw";
+
+const seo = {
+  "title": "Neue Bewertung",
+  "canonical": "https://musikversicherung.com/neue-bewertung",
+  "lang": "de",
+  "ogTitle": "Neue Bewertung",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterTitle": "Neue Bewertung",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg"
+};
+---
+
+<Layout {...seo}>
+  <style is:global is:inline set:html={pageCss} slot="head"></style>
+  <Fragment set:html={mainHtml} />
+  <script>
+      import "../scripts/neue-bewertung.js";
+  </script>
+</Layout>

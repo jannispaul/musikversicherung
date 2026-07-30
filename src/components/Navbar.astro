@@ -1,0 +1,50 @@
+---
+import Logo from "./Logo.astro";
+import { NAV_LINKS } from "../data/site";
+
+/**
+ * Site header. The mobile menu is driven entirely by the CSS-only checkbox
+ * toggle defined in global.css (no JavaScript). Active-link state is derived
+ * from the current path so `aria-current` is correct on every page — an
+ * accessibility improvement over the static Webflow export.
+ */
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) => (href === "/" ? path === "/" : path === href);
+---
+
+<div role="banner" class="navbar_component w-nav">
+  <div class="navbar_container">
+    <a
+      aria-label="Zur Homepage gehen"
+      href="/"
+      class:list={["logo-link", "w-inline-block", { "w--current": isActive("/") }]}
+      aria-current={isActive("/") ? "page" : undefined}
+    >
+      <Logo />
+    </a>
+    <label for="menu-btn-input" class="navbar_menu-btn">
+      <input type="checkbox" id="menu-btn-input" class="navbar_menu-input" aria-label="Menü öffnen" />
+      <span class="navbar_menu-btn-line"></span>
+      <span class="navbar_menu-btn-line"></span>
+      <span class="navbar_menu-btn-line"></span>
+    </label>
+    <div class="navbar_menu-wrap">
+      <nav class="navbar_menu" aria-label="Hauptnavigation">
+        {
+          NAV_LINKS.map((link) => (
+            <a
+              href={link.href}
+              class:list={["navbar_link", { "w--current": isActive(link.href) }]}
+              aria-current={isActive(link.href) ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+        <div class="navbar_menu-buttons">
+          <a href="/anfrage" class="button is-small w-button">Jetzt anfragen</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>

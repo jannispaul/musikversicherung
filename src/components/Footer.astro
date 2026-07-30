@@ -1,0 +1,68 @@
+---
+import Logo from "./Logo.astro";
+import { SITE, FOOTER_LINKS, OBFUSCATED_EMAIL_LINK } from "../data/site";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isHome = path === "/";
+---
+
+<footer class="footer_component">
+  <div class="padding-global">
+    <div class="container-large">
+      <div class="padding-vertical padding-xxlarge">
+        <div class="footer_bottom-wrapper">
+          <div class="margin-bottom margin-medium">
+            <a
+              aria-label="Zur Homepage gehen"
+              href="/"
+              class:list={["logo-link", "w-inline-block", { "w--current": isHome }]}
+              aria-current={isHome ? "page" : undefined}
+            >
+              <Logo />
+            </a>
+          </div>
+          <div class="footer_divider"></div>
+        </div>
+        <div class="w-layout-grid footer_top-wrapper">
+          <div class="footer_left-wrapper">
+            <div class="margin-bottom margin-medium">
+              <div class="footer_details-wrapper">
+                <div class="footer_column-heading">
+                  Heiner Blaskewitz<span class="text-weight-semibold"></span>
+                </div>
+                <div class="footer_text">
+                  Versicherungsfachmann (BWV)<br />Mannheimer Generalagentur im
+                  Continentale Versicherungsverbund<br />‍<br />SINFONIMA® und
+                  I&#x27;M SOUND® sind eingetragene Marken der Mannheimer
+                  Versicherung AG
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-layout-grid footer_menu-wrapper">
+            <div class="footer_link-list">
+              <div class="footer_column-heading">
+                Kontakt<span class="text-weight-semibold"></span>
+              </div>
+              <div class="footer_link-wrapper">
+                <div>Tel: </div>
+                <a href={SITE.phoneHref} class="footer_link">{SITE.phoneLabel}</a>
+              </div>
+              <div class="footer_link-2 w-embed" set:html={OBFUSCATED_EMAIL_LINK}></div>
+            </div>
+            <div class="footer_link-list">
+              <div class="footer_column-heading">Links</div>
+              {
+                FOOTER_LINKS.map((link) => (
+                  <a href={link.href} class="footer_link">
+                    {link.label}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

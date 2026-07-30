@@ -1,0 +1,126 @@
+.button.is-file-upload {
+	width: fit-content;
+}
+.file-preview ul{
+	padding-left: 0;
+}
+.file-preview ul > li{
+	display: flex; 
+  gap: 1rem;
+  align-items: center;
+}
+.file-preview ul > li >img {
+	width: 4rem;
+}
+
+.my-settings {
+    --cfg-pubkey: 'ba8983bcdbe680415ece';
+    --h-accent: 258;
+		--s-accent: 64%;
+	--l-accent: calc(76% - 5% * var(--darkmode));
+    --l10n-upload-file: 'Datei hochladen';
+  --l10n-upload-files: 'Dateien hochladen';
+  --l10n-drop-files-here: 'Drop files here...';
+  --l10n-select-file-source: 'Dateien auswählen';
+    /* all available settings https://uploadcare.github.io/blocks/solutions/file-uploader/#configuration */}
+lr-copyright{
+	display:none;
+  }
+  
+lr-start-from{
+	padding:0;
+  padding-top: 0.5rem;
+  gap: 0;
+}
+lr-drop-area {
+	  height: 5rem;
+}
+
+
+.lr-wgt-l10n_en-US,
+.lr-wgt-common,
+:host {
+  --l10n-upload-file: 'Datei hochladen';
+  --l10n-upload-files: 'Dateien hochladen';
+  --l10n-drop-files-here: 'Drop files here...';
+  --l10n-select-file-source: 'Dateien auswählen';
+  --l10n-choose-file: 'Dateien auswählen';
+  --l10n-selected: 'Ausgewählt';
+  --l10n-upload: 'Hochladen';
+  --l10n-add-more: 'Weitere hinzufügen';
+  --l10n-cancel: 'Abbrechen';
+  --l10n-clear: 'Löschen';
+  --l10n-camera-shot: 'Shot';
+  --l10n-upload-url: 'Import';
+  --l10n-edit-image: 'Edit image';
+  --l10n-edit-detail: 'Details';
+  --l10n-back: 'Zurück';
+  --l10n-done: 'Fertig';
+  --l10n-remove-from-list: 'Entfernen';
+  --l10n-no: 'Nein';
+  --l10n-yes: 'Ja';
+  --l10n-confirm-your-action: 'Confirm your action';
+  --l10n-are-you-sure: 'Bist du sicher?';
+  --l10n-selected-count: 'Ausgewählt:';
+  --l10n-upload-error: 'Upload Fehler';
+  --l10n-no-files: 'Keine Dateien ausgewählt';
+
+  --l10n-src-type-local: 'Locale Dateien';
+  --l10n-src-type-from-url: 'From URL';
+  --l10n-src-type-camera: 'Camera';
+  --l10n-src-type-draw: 'Draw';
+  --l10n-src-type-facebook: 'Facebook';
+  --l10n-src-type-dropbox: 'Dropbox';
+  --l10n-src-type-gdrive: 'Gdrive';
+  --l10n-src-type-gphotos: 'Gphotos';
+  --l10n-src-type-instagram: 'Instagram';
+  --l10n-src-type-flickr: 'Flickr';
+  --l10n-src-type-vk: 'VK';
+  --l10n-src-type-evernote: 'Evernote';
+  --l10n-src-type-box: 'Box';
+  --l10n-src-type-onedrive: 'Onedrive';
+  --l10n-src-type-huddle: 'Huddle';
+  --l10n-src-type-other: 'Other';
+
+  --l10n-src-type: var(--l10n-src-type-local);
+
+  --l10n-caption-from-url: 'Import from external URL';
+  --l10n-caption-camera: 'Camera';
+  --l10n-caption-draw: 'Draw';
+  --l10n-caption-edit-file: 'Edit file';
+
+  --l10n-file-no-name: 'Kein Name...';
+
+  --l10n-toggle-fullscreen: 'Toggle fullscreen';
+  --l10n-toggle-guides: 'Toggle guides';
+  --l10n-rotate: 'Rotate';
+  --l10n-flip-vertical: 'Flip vertical';
+  --l10n-flip-horizontal: 'Flip horizontal';
+  --l10n-brightness: 'Brightness';
+  --l10n-contrast: 'Contrast';
+  --l10n-saturation: 'Saturation';
+  --l10n-resize: 'Resize image';
+  --l10n-crop: 'Crop';
+  --l10n-select-color: 'Farbe wählen';
+  --l10n-text: 'Text';
+  --l10n-draw: 'Draw';
+  --l10n-cancel-edit: 'Bearbeiten abbrechen';
+
+  --l10n-tab-view: 'Vorschau';
+  --l10n-tab-details: 'Details';
+
+  --l10n-file-name: 'Name';
+  --l10n-file-size: 'Größe';
+  --l10n-cdn-url: 'CDN URL';
+  --l10n-file-size-unknown: 'Unbekannt';
+  --l10n-browse: "Browse";
+    --l10n-not-uploaded-yet: "Not uploaded yet...";
+    --l10n-file__one: "Datei";
+    --l10n-file__other: "Dateien";
+    --l10n-error__one: "error";
+    --l10n-error__other: "errors";
+    --l10n-header-uploading: "Lädt {{count}} {{plural:file(count)}} hoch";
+    --l10n-header-failed: "{{count}} {{plural:error(count)}}";
+    --l10n-header-succeed: "{{count}} {{plural:file(count)}} hochgeladen";
+    --l10n-header-total: "{{count}} {{plural:file(count)}} ausgewählt";
+}

@@ -1,0 +1,43 @@
+.faq_question.open .faq_icon {
+    transform: rotate(45deg);
+  }
+
+.cta-banner_image {
+
+  opacity: 0;
+  animation: fade 25s infinite;
+}
+
+.cta-banner_slider img:nth-of-type(1) {
+  animation-delay: 0s;
+}
+.cta-banner_slider img:nth-of-type(2) {
+  animation-delay: 5s;
+}
+.cta-banner_slider img:nth-of-type(3) {
+  animation-delay: 10s;
+}
+.cta-banner_slider img:nth-of-type(4) {
+  animation-delay: 15s;
+}
+.cta-banner_slider img:nth-of-type(5) {
+  animation-delay: 20s;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 1;
+  }
+  24% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}

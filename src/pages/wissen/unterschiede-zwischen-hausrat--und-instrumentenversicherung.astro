@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung.html?raw";
+import pageJs from "../../partials/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung.inline.js?raw";
+
+const seo = {
+  "title": "Unterschiede zwischen Hausrat- und Instrumentenversicherung",
+  "description": "Wie unterscheiden sich Hausrat- und Instrumentenversicherung? Schützt eine Hausratversicherung auch Musikinstrumente? Vorteile einer Instrumentenversicherung.",
+  "canonical": "https://musikversicherung.com/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung",
+  "lang": "de",
+  "ogTitle": "Unterschiede zwischen Hausrat- und Instrumentenversicherung",
+  "ogDescription": "Wie unterscheiden sich Hausrat- und Instrumentenversicherung? Schützt eine Hausratversicherung auch Musikinstrumente? Vorteile einer Instrumentenversicherung.",
+  "ogType": "website",
+  "twitterTitle": "Unterschiede zwischen Hausrat- und Instrumentenversicherung",
+  "twitterDescription": "Wie unterscheiden sich Hausrat- und Instrumentenversicherung? Schützt eine Hausratversicherung auch Musikinstrumente? Vorteile einer Instrumentenversicherung.",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

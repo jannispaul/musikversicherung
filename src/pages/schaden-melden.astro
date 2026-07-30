@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/schaden-melden.html?raw";
+import pageCss from "../partials/schaden-melden.css?raw";
+
+const seo = {
+  "title": "Schaden melden – Musikversicherung.com",
+  "description": "Wenn du deine Instrumentenverischerung über Musikversicherung.com abgeschlossen hast, kannst du hier einfach und schnell deinen Schaden melden.",
+  "canonical": "https://musikversicherung.com/schaden-melden",
+  "lang": "de",
+  "ogTitle": "Schaden melden – Musikversicherung.com",
+  "ogDescription": "Wenn du deine Instrumentenverischerung über Musikversicherung.com abgeschlossen hast, kannst du hier einfach und schnell deinen Schaden melden.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Schaden melden – Musikversicherung.com",
+  "twitterDescription": "Wenn du deine Instrumentenverischerung über Musikversicherung.com abgeschlossen hast, kannst du hier einfach und schnell deinen Schaden melden.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <style is:global is:inline set:html={pageCss} slot="head"></style>
+  <Fragment set:html={mainHtml} />
+  <script type="module" src="https://unpkg.com/@uploadcare/blocks@0.17.1/web/file-uploader-regular.min.js" is:inline></script>
+  <script>
+      import "../scripts/multi-step-form.js";
+      import "../scripts/file-upload.js";
+  </script>
+</Layout>

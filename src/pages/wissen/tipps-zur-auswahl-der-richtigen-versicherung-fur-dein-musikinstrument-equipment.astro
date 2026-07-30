@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment.html?raw";
+import pageJs from "../../partials/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment.inline.js?raw";
+
+const seo = {
+  "title": "Tipps zur Auswahl der richtigen Instrumentenversicherung",
+  "description": "Erfahre, wie du die passende Instrumentenversicherung für dein wertvolles Instrument oder Equipment auswählst. Finde die richtige Deckung und genieße deine Musik ohne Sorgen.",
+  "canonical": "https://musikversicherung.com/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment",
+  "lang": "de",
+  "ogTitle": "Tipps zur Auswahl der richtigen Instrumentenversicherung",
+  "ogDescription": "Erfahre, wie du die passende Instrumentenversicherung für dein wertvolles Instrument oder Equipment auswählst. Finde die richtige Deckung und genieße deine Musik ohne Sorgen.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Tipps zur Auswahl der richtigen Instrumentenversicherung",
+  "twitterDescription": "Erfahre, wie du die passende Instrumentenversicherung für dein wertvolles Instrument oder Equipment auswählst. Finde die richtige Deckung und genieße deine Musik ohne Sorgen.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

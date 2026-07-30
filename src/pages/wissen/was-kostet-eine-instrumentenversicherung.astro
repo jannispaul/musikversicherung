@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import mainHtml from "../../partials/wissen/was-kostet-eine-instrumentenversicherung.html?raw";
+import pageJs from "../../partials/wissen/was-kostet-eine-instrumentenversicherung.inline.js?raw";
+
+const seo = {
+  "title": "Was kostet eine Instrumentenversicherung?",
+  "description": "Wir beleuchten die Kosten einer Instrumentenversicherung und gehen ins Detail. Wir klären wie sich die Beiträge für verschiedene Instrumente verhalten.",
+  "canonical": "https://musikversicherung.com/wissen/was-kostet-eine-instrumentenversicherung",
+  "lang": "de",
+  "ogTitle": "Was kostet eine Instrumentenversicherung?",
+  "ogDescription": "Wir beleuchten die Kosten einer Instrumentenversicherung und gehen ins Detail. Wir klären wie sich die Beiträge für verschiedene Instrumente verhalten.",
+  "ogType": "website",
+  "twitterTitle": "Was kostet eine Instrumentenversicherung?",
+  "twitterDescription": "Wir beleuchten die Kosten einer Instrumentenversicherung und gehen ins Detail. Wir klären wie sich die Beiträge für verschiedene Instrumente verhalten.",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+  <script is:inline set:html={pageJs}></script>
+</Layout>

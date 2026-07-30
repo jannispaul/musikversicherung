@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import mainHtml from "../partials/wissen.html?raw";
+
+const seo = {
+  "title": "Alles rund um Instrumentenversicherungen – Musikversicherung.com Wissen",
+  "description": "Alle wichtigen Detailinformationen zur Instrumentenverischerung und Absicherung von Equipment vom Experten für dich aufbereitet.",
+  "canonical": "https://musikversicherung.com/wissen",
+  "lang": "de",
+  "ogTitle": "Alles rund um Instrumentenversicherungen – Musikversicherung.com Wissen",
+  "ogDescription": "Alle wichtigen Detailinformationen zur Instrumentenverischerung und Absicherung von Equipment vom Experten für dich aufbereitet.",
+  "ogImage": "https://musikversicherung.com/images/og-image.jpg",
+  "ogType": "website",
+  "twitterTitle": "Alles rund um Instrumentenversicherungen – Musikversicherung.com Wissen",
+  "twitterDescription": "Alle wichtigen Detailinformationen zur Instrumentenverischerung und Absicherung von Equipment vom Experten für dich aufbereitet.",
+  "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
+  "twitterCard": "summary_large_image"
+};
+---
+
+<Layout {...seo}>
+  <Fragment set:html={mainHtml} />
+</Layout>
