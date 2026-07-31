@@ -4,7 +4,11 @@ import sitemap from "@astrojs/sitemap";
 
 // Pages that carry a `noindex` robots directive on the original site and must
 // therefore be excluded from the generated sitemap.
-const NOINDEX_PATHS = ["/berufshaftpflicht", "/lp/berufsmusiker"];
+const NOINDEX_PATHS = [
+  "/berufshaftpflicht",
+  "/lp/berufsmusiker",
+  "/neue-bewertung",
+];
 
 export default defineConfig({
   site: "https://musikversicherung.com",

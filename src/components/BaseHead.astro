@@ -58,6 +58,8 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
 }
 <meta property="og:image" content={resolvedOgImage} />
 <meta property="og:type" content={ogType} />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:site_name" content={SITE.name} />
 {canonical && <meta property="og:url" content={canonical} />}
 
 {/* Twitter */}
