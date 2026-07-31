@@ -407,15 +407,27 @@ import { initModals } from "./initModals.js";
   //
   // Get all
 
+  // Monotonic suffix seed – only ever increments so deleting an item can
+  // never let a later add reuse a suffix that is still in the DOM (which would
+  // clash radio-group names and duplicate ids).
   let repeatableCount = 1;
   function getAllRepeatables(params) {
     return document.querySelectorAll("[data-repeat='item']");
+  }
+  // Hide the delete control while a single item remains (it can't be removed)
+  function updateDeleteButtons() {
+    const items = getAllRepeatables();
+    const hide = items.length <= 1;
+    items.forEach((item) => {
+      const button = item.querySelector("[data-repeat='delete-item']");
+      if (button) button.style.display = hide ? "none" : "";
+    });
   }
   function deleteRepeatable(repeatableItem) {
     // console.log("remove");
     if (getAllRepeatables().length <= 1) return;
     repeatableItem.remove();
-    repeatableCount--;
+    updateDeleteButtons();
     validateStepWithoutOverlays();
   }
   function addRepeatable() {
@@ -431,12 +443,17 @@ import { initModals } from "./initModals.js";
         input.name += repeatableCount;
       } else if (input.type === "radio") {
         input.checked = false;
+        const oldId = input.id;
         input.name += repeatableCount;
         input.id += repeatableCount;
+        // Keep the radio's label `for` pointing at the renamed id
+        const label = clone.querySelector(`[for="${oldId}"]`);
+        if (label) label.setAttribute("for", input.id);
       }
     });
 
     items[items.length - 1].after(clone);
+    updateDeleteButtons();
     validateStepWithoutOverlays();
     initModals();
     // repeatableItem.after(repeatableItem.cloneNode(true));
@@ -449,6 +466,7 @@ import { initModals } from "./initModals.js";
     loadDataFromLocalStorage();
     hideConditionalElements();
     showActiveStep();
+    updateDeleteButtons();
     validateStepWithoutOverlays();
     initModals();
   }
