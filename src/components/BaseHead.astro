@@ -98,7 +98,7 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
 
 {/* Speculation Rules: prerender same-origin links for snappier navigation */}
 <script type="speculationrules" is:inline>
-  {`{
+  {
     "prerender": [{
       "where": {
         "and": [
@@ -109,7 +109,7 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
       },
       "eagerness": "moderate"
     }]
-  }`}
+  }
 </script>
 
 {/* --- Analytics & consent (site-wide, third-party) --- */}
