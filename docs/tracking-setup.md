@@ -71,15 +71,23 @@ keys there to match.
 
 ## Step 5 — GA4 (Zaraz → Tools → add **Google Analytics 4**)
 
-1. Paste the **Measurement ID**.
+1. Paste the **Measurement ID**. (No API Secret needed — Zaraz's GA4 tool sends
+   server-side from the edge using just the Measurement ID; there is no
+   Measurement Protocol secret field.)
 2. Assign the tool to the **`analytics`** consent purpose.
-3. Actions:
-   - **Pageview** → trigger: the built-in *Pageview* trigger.
-   - **Conversion `lead_form_submit`** → new action of type *Event*, trigger:
-     Match rule `Event Name` **equals** `lead_form_submit`. Map:
-     - `value` → `{{ client.value }}`
-     - `currency` → `{{ client.currency }}` (the code sends `EUR`)
-     - (optional) user-provided email for enhanced conversions → `{{ client.email }}`
+3. Triggers are created separately under **Zaraz → Triggers**, then selected in
+   the action's *Firing Triggers*. Create a trigger `lead_form_submit`:
+   Match rule → variable **Event Name**, operator **Equals**, value
+   `lead_form_submit`.
+4. Actions:
+   - **Pageview** → Action Type *Page view*, trigger: the built-in *Pageview*.
+   - **Conversion** → Action Type *Event*, *Firing Trigger*: `lead_form_submit`;
+     **Event Name** field: literal `lead_form_submit`; **Mark as conversion**: ON.
+     - **Do NOT enable "Include Event Properties"** — that would forward the
+       hashed email to your Analytics property. Instead send only the two params
+       you want: `value` → `{{ client.value }}`, `currency` → `{{ client.currency }}`.
+     - GA4 must never receive `email_sha256`. (Hashed email is for the Meta /
+       Google Ads *conversion* tools, not the Analytics property.)
 
 ## Step 6 — Meta Pixel + Conversions API (Zaraz → Tools → add **Facebook Pixel**)
 
@@ -88,10 +96,19 @@ keys there to match.
 2. Assign the tool to the **`marketing`** consent purpose.
 3. Actions:
    - **PageView** → trigger: *Pageview*.
-   - **`Lead`** (standard event) → trigger: `Event Name` equals `lead_form_submit`.
-     Map `value` → `{{ client.value }}`, `currency` → `{{ client.currency }}`,
-     and email → `{{ client.email }}` for Advanced Matching / CAPI (Zaraz hashes
-     it server-side).
+   - **`Lead`** (standard event) → trigger: `lead_form_submit`.
+     Map `value` → `{{ client.value }}`, `currency` → `{{ client.currency }}`.
+     For advanced matching, map the email field (`em`) → `{{ client.email_sha256 }}`.
+     **This value is already SHA-256 hashed** (done client-side) — make sure the
+     tool treats it as pre-hashed and does not hash it again. Verify in Meta
+     Events Manager → Test Events that the email parameter shows as matched; if it
+     doesn't, the component is re-hashing — tell the dev and we'll adjust.
+
+> **Hashed email is cross-platform.** The same `email_sha256` (SHA-256 of the
+> trimmed + lowercased email, produced in `src/scripts/analytics.js`) works for
+> Meta Custom Audiences/CAPI **and** Google Ads Enhanced Conversions / Customer
+> Match when you add Google Ads later — map its email field to
+> `{{ client.email_sha256 }}` the same way. Raw email never leaves the browser.
 
 ## Step 7 — Do NOT create ad conversions for these
 

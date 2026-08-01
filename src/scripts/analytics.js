@@ -31,3 +31,27 @@ export function trackEvent(name, props = {}) {
     if (typeof console !== "undefined") console.warn("trackEvent failed", err);
   }
 }
+
+// SHA-256 → lowercase hex, via the Web Crypto API. Returns undefined if crypto
+// is unavailable (e.g. non-secure context) so callers can degrade gracefully.
+export async function sha256Hex(input) {
+  try {
+    if (!input || typeof crypto === "undefined" || !crypto.subtle) return undefined;
+    const bytes = new TextEncoder().encode(input);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    return Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  } catch {
+    return undefined;
+  }
+}
+
+// Normalize an email the way Meta and Google both expect (trim + lowercase),
+// then SHA-256 it. The resulting hash matches across Meta Custom Audiences /
+// CAPI and Google Customer Match / Enhanced Conversions, so raw email never
+// needs to leave the browser.
+export async function hashEmail(email) {
+  if (!email) return undefined;
+  return sha256Hex(String(email).trim().toLowerCase());
+}
