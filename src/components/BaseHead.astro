@@ -113,6 +113,16 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
 </script>
 
 {/* --- Analytics & consent (site-wide, third-party) --- */}
+{/*
+  GA4 and Meta (Pixel + Conversions API) are loaded server-side by Cloudflare
+  Zaraz, which Cloudflare auto-injects once the domain is proxied — there is no
+  tag-loader here on purpose (the old client-side GTM container + Google Consent
+  Mode gtag defaults were removed as part of the Zaraz migration).
+
+  Umami stays client-side: it's self-hosted and cookieless, so it runs without
+  consent. Cookiebot remains the consent UI; the bridge below relays its choices
+  to Zaraz's consent purposes so Zaraz tools only fire with the right consent.
+*/}
 <script defer src="https://umami.paulwicke.com/script.js" data-website-id="0b06d9ab-7a86-4977-9e81-3f1931717e3f" is:inline></script>
 <script is:inline>
   window.addEventListener("CookiebotOnDialogInit", function () {
@@ -121,33 +131,24 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
   });
 </script>
 <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="88d955d0-3b6f-4434-a22c-3286e17ac641" data-blockingmode="auto" type="text/javascript" is:inline></script>
-<script data-cookieconsent="ignore" is:inline>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag("consent", "default", {
-    ad_personalization: "denied",
-    ad_storage: "denied",
-    ad_user_data: "denied",
-    analytics_storage: "denied",
-    functionality_storage: "denied",
-    personalization_storage: "denied",
-    security_storage: "granted",
-    wait_for_update: 500,
-  });
-  gtag("set", "ads_data_redaction", true);
-  gtag("set", "url_passthrough", false);
-</script>
+
+{/*
+  Cookiebot → Zaraz consent bridge.
+  Maps Cookiebot categories to Zaraz consent purposes. The purpose IDs below
+  ("analytics", "marketing") must match the Purpose IDs you create in
+  Zaraz → Consent. Runs on both events so it works regardless of load order.
+*/}
 <script is:inline>
-  (function (w, d, s, l, i) {
-    w[l] = w[l] || [];
-    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-    var f = d.getElementsByTagName(s)[0],
-      j = d.createElement(s),
-      dl = l != "dataLayer" ? "&l=" + l : "";
-    j.async = true;
-    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-    f.parentNode.insertBefore(j, f);
-  })(window, document, "script", "dataLayer", "GTM-N8TXTKR");
+  (function () {
+    function syncConsentToZaraz() {
+      if (!window.zaraz || !window.zaraz.consent) return;
+      if (!window.Cookiebot || !window.Cookiebot.consent) return;
+      window.zaraz.consent.set({
+        analytics: !!window.Cookiebot.consent.statistics,
+        marketing: !!window.Cookiebot.consent.marketing,
+      });
+    }
+    window.addEventListener("CookiebotOnConsentReady", syncConsentToZaraz);
+    document.addEventListener("zarazConsentAPIReady", syncConsentToZaraz);
+  })();
 </script>

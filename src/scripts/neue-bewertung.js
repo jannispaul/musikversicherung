@@ -1,5 +1,7 @@
 // Custom submit handler for the "Neue Bewertung" (review) form.
-// Submits via fetch to the make.com webhook and toggles success/error states.
+// Submits via fetch to the automations webhook and toggles success/error states.
+import { trackEvent } from "./analytics.js";
+
 let form = document.querySelector("form");
 const formContent = document.querySelector("[data-name='form']");
 const successEl = document.querySelector("[data-name='success']");
@@ -25,6 +27,9 @@ form.addEventListener("submit", function (event) {
         formContent.style.display = "none";
         errorEl.style.display = "none";
         successEl.style.display = "block";
+
+        // Engagement signal only — do NOT map this to a Meta/GA ad conversion.
+        trackEvent("review_submit");
       }
     }) // If there is an error log it to console and reidrect to fehler page
     ["catch"](function (error) {

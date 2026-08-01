@@ -1,0 +1,150 @@
+# Tracking setup — Cloudflare Zaraz migration runbook
+
+This is the exact manual checklist to finish the tracking migration. The **code
+side is already done** (see "What the code already does" below); everything here
+is dashboard configuration that can't live in the repo.
+
+> **Sequencing — read first.** The client-side GTM container and Google Consent
+> Mode defaults were **removed** from `BaseHead.astro`. Until Cloudflare Zaraz is
+> live, GA4/Meta will not load (Umami keeps working). Therefore:
+>
+> **Do NOT merge this branch to `master` until steps 1–6 below are done and
+> verified.** Deploy to Strato happens on push to `master`. Configure Cloudflare
+> first, verify with Zaraz Debug mode on the staging/preview, then merge.
+
+---
+
+## Values you need to have ready
+
+| Value | Where to get it | Used in |
+|---|---|---|
+| GA4 **Measurement ID** (`G-XXXXXXX`) | GA4 → Admin → Data streams | Zaraz GA4 tool |
+| Meta **Pixel ID** | Meta Events Manager → Data sources | Zaraz Meta Pixel tool |
+| Meta **Conversions API access token** | Events Manager → Settings → Conversions API → Generate token | Zaraz Meta CAPI (enter in Cloudflare only — never share/commit it) |
+
+---
+
+## Step 1 — Put the domain behind Cloudflare (Strato stays the origin)
+
+1. Create a free account at cloudflare.com → **Add a site** → `musikversicherung.com`.
+2. Let Cloudflare scan and **import DNS records**. **Verify every record** before
+   continuing — especially **MX/mail** records and any subdomains (Strato mail,
+   `automations.arise.so` is a different domain and unaffected). A missing record
+   here is the one real risk of this move.
+3. Cloudflare shows two **nameservers**. In the **Strato** domain panel, replace
+   the current nameservers with Cloudflare's. Propagation is usually < 1 h.
+4. Keep the DNS record for the web root **proxied (orange cloud)** — Zaraz only
+   works on proxied hostnames. Origin hosting stays on Strato; Cloudflare just
+   proxies HTTP and answers DNS.
+
+*Rollback:* switch the nameservers back at Strato.
+
+## Step 2 — Enable Zaraz
+
+Cloudflare dashboard → **Zaraz**. Auto-inject is on by default (no script tag
+needed — it's injected at the edge). Confirm **Auto-inject Zaraz script** is
+enabled under Zaraz → Settings.
+
+## Step 3 — Privacy settings (Zaraz → Settings → Privacy)
+
+- **Trim IP addresses**: ON (GDPR).
+- **Hide referrer**, **Remove query params** as desired (query params include your
+  UTM/campaign params — leave OFF if you need campaign attribution).
+
+## Step 4 — Consent purposes (Zaraz → Consent) — **required for the bridge**
+
+`BaseHead.astro` relays Cookiebot's choices to Zaraz via a bridge that references
+two **purpose IDs**. Create them with these **exact IDs**:
+
+| Purpose ID (must match code) | Name shown to users | Maps from Cookiebot |
+|---|---|---|
+| `analytics` | Statistik / Analyse | `Cookiebot.consent.statistics` |
+| `marketing` | Marketing | `Cookiebot.consent.marketing` |
+
+The bridge lives in `src/components/BaseHead.astro` ("Cookiebot → Zaraz consent
+bridge"). If you use different purpose IDs in Zaraz, update the `zaraz.consent.set`
+keys there to match.
+
+> Cookiebot stays the visible consent UI. Because Cookiebot's auto-blocking never
+> sees the edge-injected Zaraz, gating **must** happen through these purposes.
+> Assign each tool below to the right purpose so it only fires with consent.
+
+## Step 5 — GA4 (Zaraz → Tools → add **Google Analytics 4**)
+
+1. Paste the **Measurement ID**.
+2. Assign the tool to the **`analytics`** consent purpose.
+3. Actions:
+   - **Pageview** → trigger: the built-in *Pageview* trigger.
+   - **Conversion `lead_form_submit`** → new action of type *Event*, trigger:
+     Match rule `Event Name` **equals** `lead_form_submit`. Map:
+     - `value` → `{{ client.value }}`
+     - `currency` → `{{ client.currency }}` (the code sends `EUR`)
+     - (optional) user-provided email for enhanced conversions → `{{ client.email }}`
+
+## Step 6 — Meta Pixel + Conversions API (Zaraz → Tools → add **Facebook Pixel**)
+
+1. Paste the **Pixel ID**, and the **Conversions API token** (enables server-side
+   CAPI — better match quality, resilient to blockers).
+2. Assign the tool to the **`marketing`** consent purpose.
+3. Actions:
+   - **PageView** → trigger: *Pageview*.
+   - **`Lead`** (standard event) → trigger: `Event Name` equals `lead_form_submit`.
+     Map `value` → `{{ client.value }}`, `currency` → `{{ client.currency }}`,
+     and email → `{{ client.email }}` for Advanced Matching / CAPI (Zaraz hashes
+     it server-side).
+
+## Step 7 — Do NOT create ad conversions for these
+
+The code also emits `review_submit` and `claim_submit`. **Do not** map them to
+Meta/GA *conversions*:
+- `claim_submit` — optimising ads toward people who file claims is harmful.
+- `review_submit` — reviewers are existing customers, useless for prospecting.
+
+They're fine to keep as plain GA4 events for your own funnel visibility, or just
+leave them to Umami. Track them only if you want internal volume numbers.
+
+## Step 8 — Verify before merging
+
+1. Zaraz → Settings → set a **Debug key**.
+2. Open the site (proxied hostname) with the debug key; open the Zaraz debug
+   console. Confirm: Pageview fires; submitting a test Anfrage fires
+   `lead_form_submit` with a numeric `value` and `currency: EUR`; GA4 realtime and
+   Meta Test Events both receive it.
+3. Toggle consent in Cookiebot and confirm tools stop/start accordingly (the
+   bridge is working).
+4. Only then merge this branch → `master`.
+
+---
+
+## What the code already does (no action needed)
+
+- `src/scripts/analytics.js` — `trackEvent(name, props)` calls `zaraz.track()`
+  when Zaraz is present, falls back to `dataLayer.push({event, ...})` pre-Zaraz,
+  and mirrors to Umami. Wrapped so tracking can never break the UI.
+- **Lead** — `anfrage.js` fires `lead_form_submit` **on real submit success**
+  (not on hover, as before) with `{ value, currency: "EUR", email, insurance }`.
+  `value` is the commission estimate (insured sum × premium rate × 12% provision).
+- **Review** — `neue-bewertung.js` fires `review_submit` on success.
+- **Claim** — `multi-step-form.js` fires `claim_submit` on success.
+- **BaseHead** — client GTM + Consent Mode gtag removed; Umami + Cookiebot kept;
+  Cookiebot→Zaraz consent bridge added.
+
+## Datenschutz — verify with your DPO before `master`
+
+`src/partials/datenschutz.html` was updated. Have legal confirm:
+- **§6 Formularverarbeitung** — now describes the Cloudflare Workers processor
+  (was the stale Make.com text). Confirm whether the Worker uses any **email
+  sub-processor** (e.g. a mail-delivery service) that must also be named.
+- **§8 Cloudflare / §9 GA4 / §10 Meta / §11 Umami** — added. Verify the legal
+  entities and addresses (Cloudflare Germany GmbH / Cloudflare, Inc.; Google
+  Ireland; Meta Platforms Ireland; and that Umami's self-hosted, cookieless
+  description matches your instance).
+- A US-transfer / third-country note for Google + Meta (Art. 49 / DPF) may be
+  advisable — confirm wording.
+
+## Optional later
+
+- Move **Umami** itself into Zaraz too (one less client request), or leave it —
+  it's cookieless and independent, so keeping it client-side is fine.
+- Add micro-conversions (phone/email/WhatsApp clicks) via `trackEvent` on those
+  elements if you later want them.

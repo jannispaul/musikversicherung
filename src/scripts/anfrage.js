@@ -1,4 +1,5 @@
 import { initModals } from "./initModals.js";
+import { trackEvent } from "./analytics.js";
 
 // Used on anfrage.html
 // Modified multi-step-form script
@@ -190,6 +191,11 @@ import { initModals } from "./initModals.js";
           errorElement.style.display = "none";
           success.style.display = "block";
 
+          // Fire the lead conversion only on a genuinely successful submit.
+          // `value` is our commission estimate (see getLeadValue); `email`
+          // enables Meta CAPI / GA4 enhanced-conversion matching in Zaraz.
+          trackEvent("lead_form_submit", { currency: "EUR", ...getLeadValue() });
+
           // Clear saved formdata from localstorage
           localStorage.removeItem(formName);
 
@@ -223,33 +229,18 @@ import { initModals } from "./initModals.js";
     }, 3600);
   }
 
-  // Conversion data needs to be added before sumbit since google tag manager liststens for click on button, not submit event
-  submitButtons.forEach((button) => {
-    button.addEventListener("focus", () => {
-      console.log("focused"); // only triggered on focus
-      addConversionData();
-    });
-
-    button.addEventListener("mouseover", () => {
-      console.log("mouse over"); // triggered on hover
-      addConversionData();
-    });
-  });
-
   /**
-   * Adds conversion data to the global dataLayer object for analytics.
+   * Computes the lead conversion value from the current form data.
    *
-   * This function calculates the lead value based on form data and pushes an event
-   * to the dataLayer for tracking purposes. It uses the 'Email' and 'Versicherung'
-   * fields from the formData to determine the specific insurance type and calculate
-   * the lead value accordingly. The calculated lead value, along with the email, is
-   * added to the dataLayer under the event name 'lead_form_submit'.
-
+   * The value we care about for ad bidding is our commission, not the insured
+   * sum: (insured sum) × (premium rate) × (provision rate). Uses the 'Email'
+   * and 'Versicherung' fields to pick the insurance type and sum the insured
+   * value accordingly.
+   *
+   * @returns {{ value: number, email: string, insurance: string }}
    */
-
-  function addConversionData() {
-    let formData = new FormData(form);
-    if (!window.dataLayer || !formData) return;
+  function getLeadValue() {
+    const formData = new FormData(form);
 
     const email = formData.get("Email");
     const insurance = formData.get("Versicherung");
@@ -258,7 +249,6 @@ import { initModals } from "./initModals.js";
     const provisionFactor = 0.12; // 12% provision
 
     formData.entries().forEach((entry) => {
-      // console.log(entry[0], entry[1]);
       if (entry[0].includes("Instrumentenwert")) {
         sinfonimaValue += parseInt(entry[1]);
       }
@@ -268,13 +258,13 @@ import { initModals } from "./initModals.js";
     // Versicherungssumme grob ist abhängig von der Versicherungssumme und Versicherungstyp
     let insuranceFactor = insurance === "SINFONIMA" || value > "50000" ? 0.012 : 0.015;
 
-    // Sum up all values in values array
     let leadValue = value * insuranceFactor * provisionFactor || 0;
 
-    window.dataLayer.push({
+    return {
       value: Math.round(leadValue * 100) / 100,
       email: email,
-    });
+      insurance: insurance,
+    };
   }
   //
   // Conditional logic

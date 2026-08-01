@@ -1,4 +1,6 @@
 // Used on schaden-melden.html
+import { trackEvent } from "./analytics.js";
+
 (() => {
   //
   // Variables
@@ -204,6 +206,10 @@
 
           // Clear saved formdata from localstorage
           localStorage.removeItem(formName);
+
+          // Internal ops signal only — never map this to a Meta/GA ad
+          // conversion (optimising toward claim filers would be harmful).
+          trackEvent("claim_submit");
 
           // Hide form and show success
           form.style.display = "none";
