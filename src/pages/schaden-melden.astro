@@ -28,6 +28,11 @@ const seo = {
 
 <Layout {...seo}>
   <style is:global is:inline set:html={pageCss} slot="head"></style>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://unpkg.com/@uploadcare/blocks@0.17.1/web/file-uploader-regular.min.css"
+  />
   <Fragment set:html={mainHtml} />
   <script type="module" src="https://unpkg.com/@uploadcare/blocks@0.17.1/web/file-uploader-regular.min.js" is:inline></script>
   <script>
