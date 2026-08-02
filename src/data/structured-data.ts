@@ -49,9 +49,9 @@ export function organizationLd(): string {
         founder: { "@type": "Person", name: "Heiner Blaskewitz" },
         address: {
           "@type": "PostalAddress",
-          streetAddress: "Bahnhofstr. 35",
-          postalCode: "29614",
-          addressLocality: "Soltau",
+          streetAddress: "Wennigser Str. 63",
+          postalCode: "30890",
+          addressLocality: "Barsinghausen",
           addressCountry: "DE",
         },
         areaServed: { "@type": "GeoShape", name: "Worldwide" },
