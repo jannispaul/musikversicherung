@@ -4,8 +4,15 @@ Marketing website for **Musikversicherung.com** (SINFONIMA & I'M SOUND instrumen
 insurance), built with [Astro](https://astro.build/).
 
 This project was migrated from a scraped Webflow export to a maintainable,
-componentised Astro codebase. It renders as a fully static site and is deployed
-to the Strato server via SFTP by a GitHub Actions workflow.
+componentised Astro codebase. It renders as a fully static site and is hosted on
+**Cloudflare Pages**, which builds directly from the `master` branch.
+
+> **Hosting note:** the site previously ran on Strato shared hosting (SFTP
+> deploy). Once DNS moved to Cloudflare (for Zaraz edge tagging), Strato stopped
+> serving the webspace — Strato does not support its webspace with external
+> nameservers. Hosting therefore moved to Cloudflare Pages. Strato mail (rzone)
+> is still used, so the `MX` / SPF / DKIM / `autoconfig` DNS records must stay
+> **DNS-only (grey cloud)** in Cloudflare.
 
 ## Requirements
 
@@ -43,25 +50,54 @@ committed.
 
 ## Deployment
 
-Deployment is automated by **`.github/workflows/deploy.yml`**:
+The site is hosted on **Cloudflare Pages** with the Git integration. Pages is
+connected to this repo and, on every push to `master`, runs `npm ci` +
+`npm run build` and publishes `./dist`. No deploy workflow lives in the repo —
+Cloudflare builds it. Preview deployments are created automatically for other
+branches (e.g. `staging`).
 
-1. On every push to `master` (or manual `workflow_dispatch`), the workflow checks
-   out the repo, installs dependencies with `npm ci`, and runs `npm run build`.
-2. The generated `dist/` folder is uploaded over SFTP to the Strato server using
-   [`Creepios/sftp-action`](https://github.com/Creepios/sftp-action), the same
-   deployment mechanism used previously.
+Pages build settings:
 
-### Required GitHub secrets
+| Setting        | Value           |
+| -------------- | --------------- |
+| Build command  | `npm run build` |
+| Output directory | `dist`        |
+| `NODE_VERSION` | `24`            |
 
-Reused from the previous workflow — no new secrets are needed:
+`public/_headers` sets long-lived caching for hashed assets on Pages (the
+Apache-only `.htaccess` is ignored by Pages; compression is automatic).
 
-| Secret         | Purpose                        |
-| -------------- | ------------------------------ |
-| `FTP_SERVER`   | SFTP host                      |
-| `FTP_USERNAME` | SFTP username                  |
-| `FTP_PASSWORD` | SFTP password                  |
+### Branches
 
-The upload target is `./musikversicherung/` on the server (unchanged).
+| Branch                   | Purpose                                                        |
+| ------------------------ | -------------------------------------------------------------- |
+| `master`                 | Production. Cloudflare Pages builds this. No Strato deploy.     |
+| `staging`                | Pre-prod base; gets an automatic Pages preview deployment.     |
+| `old-webflow-site`       | Archive of the pre-Astro Webflow/Vite site (reference only).   |
+| `strato-deploy-fallback` | Break-glass: `master` plus the Strato SFTP deploy workflows.   |
+
+### Reverting to the old Strato SFTP deploy
+
+If hosting ever needs to move back to Strato (e.g. a parent-company
+requirement):
+
+1. Switch the domain's nameservers back to Strato so the webspace serves again.
+2. Merge the fallback branch to restore the GitHub Actions → Strato deploy:
+
+   ```bash
+   git merge strato-deploy-fallback   # re-adds deploy.yml + staging.yml
+   ```
+
+   These workflows build `dist/` and upload it over SFTP (target
+   `./musikversicherung/`, staging `./musikversicherung-staging/`) via
+   [`Creepios/sftp-action`](https://github.com/Creepios/sftp-action). They need
+   these GitHub secrets (unchanged from before):
+
+   | Secret         | Purpose      |
+   | -------------- | ------------ |
+   | `FTP_SERVER`   | SFTP host    |
+   | `FTP_USERNAME` | SFTP username |
+   | `FTP_PASSWORD` | SFTP password |
 
 ## Project structure
 
@@ -98,8 +134,9 @@ The upload target is `./musikversicherung/` on the server (unchanged).
 │       ├── webflow.css      # Original Webflow/Client-First stylesheet (base)
 │       ├── global.css       # Hoisted base styles + CSS-only mobile nav
 │       └── main.css         # Imports the three files above (loaded globally)
-└── .github/workflows/
-    └── deploy.yml          # Build + SFTP deploy
+├── public/_headers          # Cloudflare Pages caching rules for hashed assets
+└── astro.config.mjs         # (deploy is via Cloudflare Pages Git integration —
+                             #  no workflow in-repo; see Deployment above)
 ```
 
 ### How pages are assembled
