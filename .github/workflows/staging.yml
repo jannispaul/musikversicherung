@@ -1,0 +1,59 @@
+name: Build and Deploy (Staging)
+
+# Builds the Astro site and deploys the generated `dist/` output to the STAGING
+# directory on the Strato server over SFTP. Mirrors deploy.yml but targets
+# ./musikversicherung-staging/ so it never overwrites the live production site
+# that lives at ./musikversicherung/.
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+# Avoid overlapping staging deploys stepping on each other.
+concurrency:
+  group: deploy-staging-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Build Astro and upload to SFTP (staging)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "./dist" ] || [ ! -f "./dist/index.html" ]; then
+            echo "❌ Error: dist/ was not produced"
+            exit 1
+          fi
+          echo "✅ dist/ built successfully"
+          ls -la ./dist
+
+      - name: Upload files to SFTP (staging)
+        uses: Creepios/sftp-action@v1.0.3
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          port: 22
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localPath: "./dist/"
+          remotePath: "./musikversicherung-staging/"
+
+      - name: Done
+        run: echo "✅ Deployed dist/ to ./musikversicherung-staging/ on the server"
