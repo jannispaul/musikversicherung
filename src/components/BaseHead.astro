@@ -134,21 +134,34 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
 
 {/*
   Cookiebot → Zaraz consent bridge.
-  Maps Cookiebot categories to Zaraz consent purposes. The purpose IDs below
-  ("analytics", "marketing") must match the Purpose IDs you create in
-  Zaraz → Consent. Runs on both events so it works regardless of load order.
+  Relays Cookiebot's statistics/marketing choices to Zaraz's consent purposes.
+  Zaraz assigns each purpose a random ID, so we resolve the ID by matching the
+  purpose NAME ("analytics" / "marketing") — set those names in Zaraz → Consent.
+  Re-syncs on every Cookiebot change and regardless of Zaraz/Cookiebot load order.
 */}
 <script is:inline>
   (function () {
     function syncConsentToZaraz() {
       if (!window.zaraz || !window.zaraz.consent) return;
       if (!window.Cookiebot || !window.Cookiebot.consent) return;
-      window.zaraz.consent.set({
+      var wanted = {
         analytics: !!window.Cookiebot.consent.statistics,
         marketing: !!window.Cookiebot.consent.marketing,
+      };
+      var purposes = window.zaraz.consent.purposes || {};
+      var payload = {};
+      Object.keys(purposes).forEach(function (id) {
+        var n = purposes[id] && purposes[id].name;
+        // name may be a plain string or a localized object like { en: "analytics" }
+        var name = typeof n === "string" ? n : n && (n.en || n[Object.keys(n)[0]]);
+        var key = String(name || "").toLowerCase();
+        if (Object.prototype.hasOwnProperty.call(wanted, key)) payload[id] = wanted[key];
       });
+      if (Object.keys(payload).length) window.zaraz.consent.set(payload);
     }
     window.addEventListener("CookiebotOnConsentReady", syncConsentToZaraz);
+    window.addEventListener("CookiebotOnAccept", syncConsentToZaraz);
+    window.addEventListener("CookiebotOnDecline", syncConsentToZaraz);
     document.addEventListener("zarazConsentAPIReady", syncConsentToZaraz);
   })();
 </script>
