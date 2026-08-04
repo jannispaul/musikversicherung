@@ -1,0 +1,14 @@
+# Cloudflare Pages headers (replaces the caching rules in .htaccess, which Pages
+# ignores). Compression is automatic on Pages, so only cache-control is set here.
+#
+# Astro fingerprints everything under /_astro/ with a content hash, so those can
+# be cached immutably forever. Path-versioned media gets the same long TTL.
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
