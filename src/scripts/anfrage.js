@@ -1,5 +1,5 @@
 import { initModals } from "./initModals.js";
-import { trackEvent, hashEmail } from "./analytics.js";
+import { trackEvent } from "./analytics.js";
 
 // Used on anfrage.html
 // Modified multi-step-form script
@@ -192,17 +192,15 @@ import { trackEvent, hashEmail } from "./analytics.js";
           success.style.display = "block";
 
           // Fire the lead conversion only on a genuinely successful submit.
-          // `value` is our commission estimate (see getLeadValue). The email is
-          // hashed client-side (SHA-256) so raw PII never leaves the browser;
-          // the hash feeds Meta CAPI now and Google Ads enhanced conversions /
-          // Customer Match later. The GA4 Analytics tool must NOT receive it.
+          // Named "Lead" (Meta's standard event): Zaraz's Facebook tool
+          // auto-forwards every zaraz.track() to the Conversions API, so this one
+          // call IS the Meta Lead conversion — no separate Meta action needed.
+          // Keep the payload minimal (value + currency) so no PII lands in Meta's
+          // custom_data. GA4 fires off the same event via its Zaraz trigger.
+          // (hashEmail() stays in analytics.js for when Google Ads / advanced
+          // matching is wired up.)
           const lead = getLeadValue();
-          trackEvent("lead_form_submit", {
-            value: lead.value,
-            currency: "EUR",
-            insurance: lead.insurance,
-            email_sha256: await hashEmail(lead.email),
-          });
+          trackEvent("Lead", { value: lead.value, currency: "EUR" });
 
           // Clear saved formdata from localstorage
           localStorage.removeItem(formName);
