@@ -91,9 +91,64 @@ function reviewNodes(list: Review[]) {
   }));
 }
 
+/**
+ * The two tariffs, priced as the site prices them: monthly "ab" figures.
+ *
+ * `minPrice` — not `price` — is what "ab 4,69 € im Monat" actually means. The
+ * qualifier is part of the fact ([wiki/business-facts.md] Product), so dropping
+ * it in the machine-readable copy would state a premium the product does not
+ * charge.
+ */
+function tariffOffers() {
+  const tariff = (name: string, description: string, from: string) => ({
+    "@type": "Offer",
+    name,
+    description,
+    priceCurrency: "EUR",
+    url: `${SITE.url}/anfrage`,
+    offeredBy: { "@id": ORG_ID },
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      minPrice: from,
+      priceCurrency: "EUR",
+      unitText: "Monat",
+    },
+  });
+
+  return {
+    "@type": "AggregateOffer",
+    priceCurrency: "EUR",
+    // Lowest monthly premium across both tariffs; shown on the homepage as
+    // "ab 4,69€ / Monat". No `highPrice`: premiums scale with the insured
+    // value and no upper figure is published.
+    lowPrice: "4.69",
+    offerCount: 2,
+    url: `${SITE.url}/anfrage`,
+    offeredBy: { "@id": ORG_ID },
+    offers: [
+      tariff(
+        "SINFONIMA Instrumentenversicherung",
+        "Versicherung für klassische Instrumente",
+        "4.69",
+      ),
+      tariff(
+        "I'M SOUND Equipmentversicherung",
+        "Rundumschutz für elektronische Instrumente und Musikequipment",
+        "6.25",
+      ),
+    ],
+  };
+}
+
 interface ProductLdOptions {
   /** Attach the full individual review list (heavy — only for /reviews). */
   includeReviews?: boolean;
+  /**
+   * Emit the tariff prices. Only true on pages that actually show them —
+   * schema never asserts what the page does not display. The homepage shows
+   * "ab 4,69€ / Monat"; /reviews shows no price at all.
+   */
+  includeOffers?: boolean;
 }
 
 /**
@@ -101,8 +156,23 @@ interface ProductLdOptions {
  * AggregateRating sourced from the live reviews. Google shows review snippets
  * for Product (not Service/Organization), so the rating lives here — never on
  * the Organization.
+ *
+ * The tariffs sit inside an `AggregateOffer`, deliberately:
+ *
+ *  - The published figures are "ab" (from) prices, so they are `minPrice` in a
+ *    `UnitPriceSpecification`, never a definite `price`. A flat `price` would
+ *    assert a fixed premium the product does not have.
+ *  - `AggregateOffer` plus the absence of a definite price keeps these pages in
+ *    Google's *product snippet* class (review stars, which is what we want)
+ *    rather than the *merchant listing* class, which is a shopping feature that
+ *    expects `shippingDetails` and `hasMerchantReturnPolicy`. Neither exists for
+ *    an insurance policy, so neither may be asserted.
+ *  - No `availability`: an insurance policy is not inventory.
  */
-export function productLd({ includeReviews = false }: ProductLdOptions = {}): string {
+export function productLd({
+  includeReviews = false,
+  includeOffers = false,
+}: ProductLdOptions = {}): string {
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -119,42 +189,9 @@ export function productLd({ includeReviews = false }: ProductLdOptions = {}): st
       bestRating: "5",
       worstRating: "1",
     },
-    offers: [
-      {
-        "@type": "Offer",
-        name: "SINFONIMA Instrumentenversicherung",
-        description: "Versicherung für klassische Instrumente",
-        price: "4.69",
-        priceCurrency: "EUR",
-        availability: "https://schema.org/InStock",
-        url: `${SITE.url}/anfrage`,
-        offeredBy: { "@id": ORG_ID },
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          price: "4.69",
-          priceCurrency: "EUR",
-          unitText: "Monat",
-        },
-      },
-      {
-        "@type": "Offer",
-        name: "I'M SOUND Equipmentversicherung",
-        description: "Rundumschutz für elektronische Instrumente und Musikequipment",
-        price: "6.25",
-        priceCurrency: "EUR",
-        availability: "https://schema.org/InStock",
-        url: `${SITE.url}/anfrage`,
-        offeredBy: { "@id": ORG_ID },
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          price: "6.25",
-          priceCurrency: "EUR",
-          unitText: "Monat",
-        },
-      },
-    ],
   };
 
+  if (includeOffers) schema.offers = tariffOffers();
   if (includeReviews) schema.review = reviewNodes(reviews);
 
   return ld(schema);
@@ -185,10 +222,15 @@ interface ArticleLdOptions {
   description: string;
   /** Absolute canonical URL of the article page. */
   url: string;
+  /**
+   * ISO date (YYYY-MM-DD). Must match the date visibly rendered on the page
+   * (the `.content_date` div) — never assert a date the page does not show.
+   */
+  datePublished?: string;
 }
 
 /** An Article node, for editorial/knowledge pages like /wissen. */
-export function articleLd({ headline, description, url }: ArticleLdOptions): string {
+export function articleLd({ headline, description, url, datePublished }: ArticleLdOptions): string {
   return ld({
     "@context": "https://schema.org",
     "@type": "Article",
@@ -197,6 +239,7 @@ export function articleLd({ headline, description, url }: ArticleLdOptions): str
     inLanguage: "de",
     image: SITE.defaultOgImage,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    ...(datePublished ? { datePublished } : {}),
     author: { "@id": ORG_ID },
     publisher: { "@id": ORG_ID },
   });

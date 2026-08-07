@@ -42,7 +42,7 @@ const seo = {
   "robots": "index,follow",
   // Insurance offering as a Product (ratings sourced live from ./reviews).
   // Organization + WebSite are emitted site-wide from BaseHead.
-  "jsonld": [productLd()]
+  "jsonld": [productLd({ includeOffers: true })]
 };
 ---
 

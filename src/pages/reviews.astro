@@ -21,6 +21,8 @@ const renderedHtml = mainHtml
 
 const seo = {
   jsonld: [
+    // No `includeOffers`: /reviews shows no price, and schema may not assert
+    // what the page does not display (wiki/aeo-rules.md §4).
     productLd({ includeReviews: true }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },
