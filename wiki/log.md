@@ -14,6 +14,54 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-07 — Sitemap gains per-page lastmod from git
+
+**Changed:**
+
+- `aeo-rules.md` §6 — new rule tying sitemap `lastmod` to the existing
+  no-fake-freshness discipline, including why the naive implementation is worse
+  than none.
+- `aeo-rules.md` §8 — recorded why the sitemap is `sitemap-index.xml` +
+  `sitemap-0.xml` and why it must not be renamed; one `> **OPEN:**` on a
+  possible `/sitemap.xml` redirect.
+
+**Why:** owner asked why the sitemap is at `sitemap-0.xml` and whether a flat
+`sitemap.xml` would be better. Answer: the filename is `@astrojs/sitemap`
+behaviour (always an index + numbered chunks, split at 45,000 URLs), it is
+standard, and renaming costs more than it gains. The audit did surface a real
+gap next to it — the sitemap carried **no `lastmod` at all**, on any of the 23
+URLs. Owner then directed: implement it from git last-commit time per file
+(owner, 2026-08-07).
+
+**Site changes (`npm run build` passing, 26 pages):**
+
+- `scripts/git-lastmod.mjs` **new** — per-route lookup returning the newest
+  commit date across that page's own `src/pages/<route>.astro` and
+  `src/partials/<route>.html`. Shared layouts, components and page CSS are
+  excluded by design: a `Layout.astro` edit is not a content change to 23
+  pages, and counting it would recreate the auto-bump on a slower clock.
+  Emits **nothing** when the date cannot be trusted (uncommitted page, no git,
+  shallow clone).
+- `scripts/unshallow-git.mjs` **new**, wired as `prebuild` — Cloudflare Pages
+  clones shallow, which makes every path resolve to one commit. Fixed in-repo
+  rather than via the Pages dashboard build command, so it cannot be forgotten.
+  Best-effort; a fetch failure warns and the build continues without `lastmod`.
+- `astro.config.mjs` — `serialize` hook on the sitemap integration.
+- `README.md` — Build hooks table and a new "Sitemap" section.
+
+**Verified:** 22 of 23 URLs carry distinct, real dates; `/lp/imsound` correctly
+has none (still uncommitted). All 22 parse as ISO 8601, none future-dated; both
+sitemap files well-formed per `xmllint`. The shallow-clone path was tested
+end-to-end against a real `--depth=1` clone: dates suppressed with a warning
+while shallow, then real distinct dates after `npm run prebuild` unshallowed it.
+
+**Source:** owner instruction (2026-08-07); Cloudflare Pages shallow-clone
+behaviour and the `git fetch --unshallow` workaround — Quartz and Zudoku deploy
+docs plus Cloudflare community threads, retrieved 2026-08-07;
+`@astrojs/sitemap` 3.7.3 option types (`node_modules/@astrojs/sitemap/dist/index.d.ts`).
+
+---
+
 ## 2026-08-07 — Product offers reshaped: merchant listing → product snippet
 
 **Changed:**

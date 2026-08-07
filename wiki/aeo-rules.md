@@ -313,6 +313,19 @@ price-or-cover page.
   a fact and finding it unchanged is not a modification. Auto-bumping dates to
   look fresh is a fabrication under [CLAUDE.md](../CLAUDE.md) §4, and engines
   that compare visible text across crawls discount sources that do it.
+- **Sitemap `lastmod` follows the same rule** (implemented 2026-08-07,
+  `scripts/git-lastmod.mjs`). It is derived per page from the newest git commit
+  touching that page's own `.astro` file or `.html` partial — never a build
+  timestamp, and shared layouts, components and stylesheets deliberately do not
+  count, since editing `Layout.astro` does not modify 23 pages' content.
+  **Where no trustworthy date exists, no `lastmod` is emitted at all.** That
+  covers an uncommitted page, a missing git binary, and — the case that
+  actually bites — a shallow clone, where every path resolves to the one
+  fetched commit and all 23 pages would claim the same date. Cloudflare Pages
+  clones shallow by default; `npm run prebuild` unshallows first. Do not
+  "simplify" this to `lastmod: new Date()`: Google discounts the signal
+  permanently for sites whose dates move on every deploy, so the lazy version
+  is worse than no `lastmod`.
 - **The corpus needs a review cadence.** The entire `/wissen` set was published
   June–July 2024. On cost and coverage topics, material more than about two
   years old is discounted by both readers and models, and — more importantly —
@@ -403,6 +416,17 @@ costs you:
   that list and the pages' `robots` directives must agree. They currently do —
   three pages: `/berufshaftpflicht`, `/neue-bewertung`, `/lp/berufsmusiker`.
   (Note: [README.md](../README.md) still says "two". The config is right.)
+- **The sitemap lives at `sitemap-index.xml` + `sitemap-0.xml`, not
+  `sitemap.xml`** — `@astrojs/sitemap` always emits an index plus numbered
+  chunks (split at 45,000 URLs; 23 URLs = one chunk). This is standard, Google
+  supports it, and `robots.txt` points at the index, which is how crawlers find
+  it. **Do not rename these for tidiness:** the only route to a flat
+  `sitemap.xml` is hand-rolling the sitemap, which drops the `NOINDEX_PATHS`
+  filter above into manual maintenance — the exact drift this section warns
+  about — and churns URLs already submitted to Search Console.
+  > **OPEN:** whether to add `/sitemap.xml` → `/sitemap-index.xml` as a 301 in
+  > `public/_redirects`, for tools that probe the conventional path instead of
+  > reading `robots.txt`. Additive and zero-risk, but not yet decided.
 - **Never serve different content to bots than to humans.** Cloaking destroys
   citation trust, and here it would also mean showing a regulator-facing page
   and a bot-facing page that disagree.

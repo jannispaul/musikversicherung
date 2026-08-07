@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/unshallow-git.mjs",
     "build": "astro build",
     "postbuild": "node scripts/inline-critical.mjs",
     "preview": "astro preview",
