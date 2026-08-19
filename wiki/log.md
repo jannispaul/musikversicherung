@@ -14,6 +14,33 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-19 — Review pipeline is broken; filed as its own page
+
+**Changed:**
+
+- `reviews-pipeline.md` **new** — the full chain from the `/neue-bewertung`
+  form through the `automations` Worker, the GitHub commit and the Pages
+  rebuild to the baked-in cards and JSON-LD; where it breaks; what to do about
+  it; the status of the dormant Make scenario.
+- `index.md` — new row for the page.
+- `business-facts.md` — the review count/average row now carries a warning that
+  the figures are frozen as of 2026-05-27, pointing at the new page.
+
+**Why:** owner noticed recent reviews are not showing on the site and asked for
+the data flow and the fault (owner, 2026-08-19). Root cause: the `automations`
+Worker still writes `dist/reviews.json`, the pre-migration path. The Worker-side
+fix was committed 2026-07-30 but never deployed; the live Worker dates from
+2026-06-05. The notification mail still goes out first, so a mail arriving is
+not evidence the review landed.
+
+**Source:** `src/partials/neue-bewertung.html:1` and `src/scripts/neue-bewertung.js`
+(form target); deployed Worker bundle `handleMvReview` and Cloudflare API
+`modified_on` 2026-06-05, both read 2026-08-19; `automations` repo commit
+`05537ba`; this repo's `b78da23` (2026-08-19 14:58, writes `dist/reviews.json`)
+and `5289eb7`; Make API scenario 1174328, read 2026-08-19.
+
+**No site changes** — investigation only; nothing in `src/` touched.
+
 ## 2026-08-07 — Sitemap gains per-page lastmod from git
 
 **Changed:**

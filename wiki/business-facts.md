@@ -75,6 +75,11 @@ marketing copy.
 | Quote path | `/anfrage` | `structured-data.ts` `tariffOffers()` |
 | Reviews | 1082, average 4,96 / 5 (computed at build) | `public/reviews.json` via `src/data/reviews.ts` |
 
+The review figures are **frozen as of 2026-05-27**: new submissions stopped
+reaching `public/reviews.json` after the Astro migration. Both the cause and the
+fix are in [reviews-pipeline.md](reviews-pipeline.md). Until it is fixed, treat
+1082 / 4,96 as an undercount, not as current.
+
 Prices are **"ab" (from) monthly figures.** They are meaningless without that
 qualifier and must never be quoted as flat prices — in prose or in schema. The
 JSON-LD encodes them as `minPrice`; see [aeo-rules.md](aeo-rules.md) §4,
