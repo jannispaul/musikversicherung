@@ -62,11 +62,36 @@ Worker, **not** from Make.
 
 Consequences, all now cleared:
 
-- Exactly one review was lost — the 2026-08-19 one, replayed in `d4a9dd5`.
-  Nothing between 2026-05-31 and 2026-07-30 was affected: the pipeline saw no
-  submissions in that window (no `Add review from …` commits on any branch).
-- Each submission pushed to `master`, so Pages rebuilt for nothing.
+- **Seven reviews were lost in total** — one via the Worker (2026-08-19,
+  replayed in `d4a9dd5`) and six via Make between 2026-06-02 and 2026-07-15
+  (replayed in `51f671f`). See "Two failure modes" below: they were lost for
+  different reasons and had to be found in different places.
+- Each Worker submission pushed to `master`, so Pages rebuilt for nothing.
 - `dist/reviews.json` had become tracked in git despite being gitignored.
+
+### Two failure modes, not one
+
+The first pass found only the Worker's loss and wrongly concluded it was the
+only one, by reasoning from `Add review from …` commits. **That reasoning is
+invalid**: a commit exists only where the Worker's GitHub write ran at all.
+Reviews the *Make* scenario processed never touch git, so absence of a commit
+proves nothing.
+
+| | Worker-era loss | Make-era loss |
+| --- | --- | --- |
+| When | after the Worker took over the form | before it, through 2026-07-15 |
+| Count | 1 | 6 |
+| Written to | `dist/reviews.json` (gitignored) | Strato `reviews.json` + Google Sheet |
+| Evidence | a git commit | **only the notification mail** |
+
+The Make-era six were written to Strato's `reviews.json`, which the site
+stopped serving when it moved to Cloudflare Pages, and to a Google Sheet owned
+by a different Google account. Neither is reachable from the repo, so nothing
+in git or on the live site could have revealed them.
+
+**The notification mail is the only artefact every path produces.** It is
+therefore the register of record for "was a review submitted?" — see
+"Verifying it, next time".
 
 ## What was done, 2026-08-19
 
@@ -74,8 +99,12 @@ Consequences, all now cleared:
    Its live vars now read `GITHUB_REVIEWS_PATH: "public/reviews.json"`. The
    same deploy also shipped the mv-anfrage spam filters committed 2026-08-08,
    undeployed for the same reason.
-2. **Replayed the lost review** into `public/reviews.json`: 1082 → 1083
-   entries, average unchanged at 4,96.
+2. **Replayed the seven lost reviews** into `public/reviews.json`: 1082 → 1083
+   (the Worker's, `d4a9dd5`), then → **1089** with the six Make-era ones
+   (`51f671f`). Average 4,96 → **4,97**. Text, name and rating are verbatim
+   from the notification mails; timestamps are the mail's local Berlin time
+   converted to UTC (+2h CEST in June/July, checked against entries that
+   survived), with seconds `:00` because the mail records only minutes.
 3. **Normalised `public/reviews.json`** to the Worker's own output shape
    (`JSON.stringify(list, null, 2)`). It previously carried a flatter Make-era
    layout, so the Worker's next write would have reformatted all 1083 entries
@@ -83,8 +112,12 @@ Consequences, all now cleared:
 4. **Untracked `dist/reviews.json`.**
 5. **Deactivated Make scenario 1174328** (below).
 
-Verified live: `/reviews` and the homepage both render 1083 and 4,96, the new
-review appears on both, and the Product JSON-LD carries `reviewCount: 1083`.
+Verified live: `/reviews` renders 1089 and 4,97, all restored reviews appear,
+and the Product JSON-LD carries `reviewCount: 1089` with 1089 `Review` nodes.
+
+> Check the visible count and the JSON-LD **from the same response**. Fetching
+> them in separate requests can hit different edge-cache states and shows a
+> phantom mismatch — it did twice during this work.
 
 ## Make scenario 1174328 — deactivated
 
@@ -98,9 +131,25 @@ contradicting source of truth for the same corpus. It did not produce the
 
 ## Verifying it, next time
 
-Compare the newest entry in `public/reviews.json` against the newest
-notification mail. **Do not** treat a mail as proof: it is sent before the
-commit, which is exactly how this stayed invisible for seven weeks.
+Compare `public/reviews.json` against the **notification mails**, which are the
+register of record. **Do not** treat a mail as proof that a review landed: it
+is sent before the commit, which is exactly how this stayed invisible for
+seven weeks. And do not reason from git commits — Make-era reviews never
+produced one.
+
+Finding the mails is itself a trap. They arrive at `jannis@arise.so` and are
+filed in **Trash**, and the mail client's search behaves differently per mode:
+
+- Keyword search covers all folders but **caps at 20 results and does not
+  page** — it silently omitted three of these reviews.
+- Structured filters (`from:`, `subject:`) **skip Trash**, so they returned
+  nothing at all for the review mails.
+
+What works: a filtered search scoped explicitly to the folder
+(`subject:Bewertung` in `jannis@arise.so:Trash`), which lists all 27 and pages
+properly. Then reconcile by count: non-test mails in a period must equal
+corpus entries in that period. That arithmetic is what turned "one lost" into
+"seven lost".
 
 ## Related
 

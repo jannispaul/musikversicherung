@@ -73,14 +73,15 @@ marketing copy.
 | Tariff 1 | **SINFONIMA Instrumentenversicherung** — classical instruments, from **4,69 € / Monat** | `structured-data.ts` `tariffOffers()`; homepage copy |
 | Tariff 2 | **I'M SOUND Equipmentversicherung** — electronic instruments and music equipment, from **6,25 € / Monat** | `structured-data.ts` `tariffOffers()`; homepage copy |
 | Quote path | `/anfrage` | `structured-data.ts` `tariffOffers()` |
-| Reviews | 1083, average 4,96 / 5 (computed at build) | `public/reviews.json` via `src/data/reviews.ts` |
+| Reviews | 1089, average 4,97 / 5 (computed at build) | `public/reviews.json` via `src/data/reviews.ts` |
 
 The review figures were frozen at 1082 between 2026-05-27 and 2026-08-19,
-because new submissions stopped reaching `public/reviews.json` after the Astro
-migration. Fixed 2026-08-19; the pipeline and the fault are documented in
-[reviews-pipeline.md](reviews-pipeline.md). The count is live again, so it
-moves — read it from the file, never from memory or from an older wiki
-revision.
+because new submissions stopped reaching `public/reviews.json`. Seven lost
+reviews were recovered from the notification mails on 2026-08-19, taking the
+count to 1089 and the average from 4,96 to 4,97; the pipeline and both failure
+modes are documented in [reviews-pipeline.md](reviews-pipeline.md). The count
+is live again, so it moves — read it from the file, never from memory or from
+an older wiki revision.
 
 Prices are **"ab" (from) monthly figures.** They are meaningless without that
 qualifier and must never be quoted as flat prices — in prose or in schema. The

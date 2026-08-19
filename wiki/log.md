@@ -41,6 +41,44 @@ and `5289eb7`; Make API scenario 1174328, read 2026-08-19.
 
 **No site changes** — investigation only; nothing in `src/` touched.
 
+## 2026-08-19 — Six more lost reviews found and restored; count 1089
+
+**Changed:**
+
+- `reviews-pipeline.md` — corrected: **seven** reviews were lost, not one. New
+  "Two failure modes" section (Worker-era vs Make-era, and why each left a
+  different trace); "What was done" and the verified-live figures updated;
+  "Verifying it, next time" rewritten with the mail-search traps that hid the
+  six.
+- `business-facts.md` — review row 1083 → **1089**, average 4,96 → **4,97**.
+- `aeo-rules.md` — the same figures in the ratings-are-live rule.
+
+**Why:** owner said more reviews looked missing and asked for a check (owner,
+2026-08-19). He was right. The earlier "exactly one lost" claim rested on
+`Add review from …` commits, which only exist where the Worker ran; the six
+reviews Make processed never touched git.
+
+**How they were found:** the notification mails are the one artefact every path
+produces. Keyword search caps at 20 results and does not page (it omitted
+three); structured filters skip Trash, where the mails live (they returned
+nothing). A filtered search scoped to `jannis@arise.so:Trash` listed all 27,
+and the counts then reconcile exactly: 25 non-test mails since 2025-12 minus
+the six missing equals the 17 entries the corpus held.
+
+**Restored** (site commit `51f671f`, verbatim from the mails): UZZE
+(2026-06-02), Christian (06-19), Gaby Weihmayer (06-20), Karin (06-24),
+Kerstin Zuther (07-03), 17 Hippies (07-15). Timestamps are mail-local Berlin
+time converted to UTC, seconds `:00` — the mail records only minutes.
+
+**Verified:** one fetch of `/reviews` shows 1089, 4,97, `reviewCount: 1089` and
+1089 `Review` nodes; all six render.
+
+> **OPEN:** two Make-era smoke-test entries ("TEST – Migration Smoke", "TEST –
+> Smoke 2") were correctly never published, but the exact seconds of the six
+> restored timestamps are unrecoverable from mail. If the Strato `reviews.json`
+> or the Make Google Sheet is ever reachable again, the precise values are
+> there.
+
 ## 2026-08-19 — Review pipeline repaired; count live again at 1083
 
 **Changed:**
