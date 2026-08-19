@@ -83,6 +83,47 @@ else if (Proberaum==='Ja' && Bewohnt==='Nein' && flow==='online')
     else                    Sicherheit='sicher',   success = online
 ```
 
+## Submit guard (double-submit / duplicate leads)
+
+Fixed 2026-08-19 in `src/scripts/anfrage.js` + `src/styles/global.css`.
+
+**Symptom:** duplicate leads — the notification email arrived twice and two
+identical rows landed in the Airtable `Anfragen` table.
+
+**Cause:** two separate POSTs from two clicks. There was no double-submit guard
+of any kind. The loading block in `submitForm` queried `[data-form='submit']`,
+but the buttons are `data-form="submit-btn"` — 0 matches, so it never ran and
+the button gave no feedback for the 4–10 s the Worker takes (Airtable create +
+Strato SMTP). Every further click ran another `fetch`.
+
+**Fix:**
+
+- `isSubmitting` module flag; `submitForm` returns early while it is set. The
+  flag is latched **after** `validateStep()` passes, so failing validation never
+  locks the user out.
+- `setSubmitPending(pending)` toggles an `is-submitting` class and `aria-busy`
+  on every `[data-form='submit-btn']` and swaps the label to "Sendet…"
+  (original stashed in `dataset.labelBeforeSubmit`).
+- `.button.is-submitting { pointer-events: none; opacity: .5 }` in `global.css`
+  (which loads after `webflow.css`).
+- Released on every non-success terminal path: the `!response.ok` branch (which
+  previously did nothing at all) and `.catch` both call `setSubmitPending(false)`
+  and show `[data-form='error']`. On success it stays latched — the form is
+  hidden, so there is nothing left to resubmit.
+
+**Do not add `pointer-events: none` to `.disabled`.** That class is applied by
+`validateStepWithoutOverlays` whenever the current step is invalid, and clicking
+the greyed button is exactly how the user gets `reportValidity()` to raise the
+native validation bubble. The two classes must stay separate.
+
+The `keypress`/Enter path goes through the same `handleClicksAndEnter`
+dispatcher, so the flag covers keyboard submits too.
+
+> **Still open (automations repo, not this one):** make the Worker idempotent.
+> `src/lib/dedupe.ts` and the `DEDUPE` KV binding exist but are imported by no
+> handler. Also: Make scenario `2250214` is still active and still writes to the
+> same Airtable base/table (last execution 2026-08-02, so not the cause here).
+
 ## Known issues / gaps (candidates for the fix)
 
 1. **`incomplete` never leaves the online layout.** *Verified in dev.* When the flow

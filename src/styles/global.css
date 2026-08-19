@@ -335,3 +335,13 @@ a:not(> *) {
     transform: translateY(0%);
   }
 }
+
+/* --- Submit button pending state ------------------------------------------ */
+/* Set by anfrage.js while a form submission is in flight. Kept separate from
+   webflow.css's `.button.disabled` (invalid step), which must stay clickable so
+   clicking it can raise the browser's native validation messages. */
+.button.is-submitting,
+.button.is-submitting:hover {
+  pointer-events: none;
+  opacity: 0.5;
+}

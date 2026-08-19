@@ -35,6 +35,11 @@ import { trackEvent } from "./analytics.js";
   // Start at the first step
   let currentStep = 0;
 
+  // True from the moment a submit passes validation until the request settles.
+  // Guards against double submits: every extra click on the submit button used
+  // to fire another fetch, producing duplicate leads and duplicate emails.
+  let isSubmitting = false;
+
   //
   // Functions
   //
@@ -143,9 +148,30 @@ import { trackEvent } from "./analytics.js";
     return formData;
   }
 
+  // Put the submit buttons into (or out of) their pending state.
+  // `is-submitting` is deliberately a separate class from `disabled`:
+  // `disabled` marks an invalid step and must stay clickable, because clicking
+  // it is how the user triggers reportValidity() and learns what is wrong.
+  function setSubmitPending(pending) {
+    isSubmitting = pending;
+    submitButtons.forEach((button) => {
+      button.classList.toggle("is-submitting", pending);
+      button.setAttribute("aria-busy", pending ? "true" : "false");
+      if (pending) {
+        button.dataset.labelBeforeSubmit = button.textContent;
+        button.textContent = "Sendet...";
+      } else if (button.dataset.labelBeforeSubmit) {
+        button.textContent = button.dataset.labelBeforeSubmit;
+      }
+    });
+  }
+
   // Submit form
   function submitForm(e) {
     //   e.preventDefault();
+
+    // A request is already in flight — ignore further clicks / Enter presses
+    if (isSubmitting) return;
 
     let formData = new FormData(form);
 
@@ -159,11 +185,9 @@ import { trackEvent } from "./analytics.js";
     //   console.log(`${pair[0]}, ${pair[1]}`);
     // }
 
-    const status = document.querySelector("[data-form='submit']");
-    if (status) {
-      status.innerHTML = "Sendet...";
-      status.disabled = true; // Add form .submitting state class for styling
-    }
+    // Latch only after validation passed, so a failed validation never locks
+    // the user out of retrying.
+    setSubmitPending(true);
 
     // Submit object as json
     const requestOptions = {
@@ -211,10 +235,19 @@ import { trackEvent } from "./analytics.js";
           setTimeout(() => {
             playSuccessLottie(); //
           }, 300);
+          // Stays latched: the form is hidden, there is nothing left to resubmit.
+        } else {
+          // Non-2xx: tell the user and let them try again, rather than leaving
+          // the page unchanged (which is what invited the second click).
+          console.error("Error: ", response.status, response.statusText);
+          setSubmitPending(false);
+          success.style.display = "none";
+          errorElement.style.display = "block";
         }
       }) // If there is an error log it to console and reidrect to fehler page
       ["catch"](function (error) {
         console.error("Error: ", error);
+        setSubmitPending(false);
         success.style.display = "none";
         errorElement.style.display = "block";
       });
