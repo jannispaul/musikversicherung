@@ -1,7 +1,11 @@
 # Reviews pipeline — form to page
 
 How a customer review gets from `/neue-bewertung` onto `/reviews` and the
-homepage, and where the chain is currently broken.
+homepage.
+
+**Status: fixed 2026-08-19.** The chain below is the one now running. The
+break it recovered from is kept in "Where it broke" — it explains why the
+corpus has a two-month hole and why a notification mail is not proof.
 
 The review corpus is a load-bearing asset: it feeds the count and average in
 [business-facts.md](business-facts.md), the `aggregateRating` and `review`
@@ -35,7 +39,7 @@ argument against competitors who show three testimonials
 **The email is sent before the commit.** A notification mail therefore proves
 only that step 2a ran — never that the review landed.
 
-## Where it broke
+## Where it broke (resolved 2026-08-19)
 
 The Worker writes to the path in its `GITHUB_REVIEWS_PATH` var. Pre-migration
 that was `dist/reviews.json` (the Webflow-era build directory, SFTP'd to
@@ -56,32 +60,47 @@ the seed commit `5289eb7`. The notification mail for it arrived at 14:58 and
 matches the Worker's `buildNotificationText` byte for byte — it came from the
 Worker, **not** from Make.
 
-Consequences:
+Consequences, all now cleared:
 
-- Reviews submitted after 2026-07-30 do not reach the site. One lost so far.
-- Each submission still pushes to `master`, so Pages rebuilds for nothing.
-- `dist/reviews.json` is now tracked in git despite being gitignored.
+- Exactly one review was lost — the 2026-08-19 one, replayed in `d4a9dd5`.
+  Nothing between 2026-05-31 and 2026-07-30 was affected: the pipeline saw no
+  submissions in that window (no `Add review from …` commits on any branch).
+- Each submission pushed to `master`, so Pages rebuilt for nothing.
+- `dist/reviews.json` had become tracked in git despite being gitignored.
 
-## Make scenario 1174328 — dormant, not dead
+## What was done, 2026-08-19
 
-`MV.com Review 23-03-08` (`eu1.make.com/39723/scenarios/1174328`) is still
-`isActive: true` (Make API, read 2026-08-19). It is webhook-triggered and the
-form no longer points at it, so it does not fire — 4 lifetime executions. Its
-write targets are a Google Sheet and Strato SFTP (`reviews.json` +
-`new-reviews.json`), both obsolete since the move to Cloudflare Pages. It did
-not produce the 2026-08-19 mail.
+1. **Deployed the `automations` Worker** (127 tests + typecheck green first).
+   Its live vars now read `GITHUB_REVIEWS_PATH: "public/reviews.json"`. The
+   same deploy also shipped the mv-anfrage spam filters committed 2026-08-08,
+   undeployed for the same reason.
+2. **Replayed the lost review** into `public/reviews.json`: 1082 → 1083
+   entries, average unchanged at 4,96.
+3. **Normalised `public/reviews.json`** to the Worker's own output shape
+   (`JSON.stringify(list, null, 2)`). It previously carried a flatter Make-era
+   layout, so the Worker's next write would have reformatted all 1083 entries
+   in the same commit as one new review. Its commits are now one-entry diffs.
+4. **Untracked `dist/reviews.json`.**
+5. **Deactivated Make scenario 1174328** (below).
 
-> **OPEN:** whether to deactivate 1174328 outright. Leaving an active scenario
-> pointed at a dead host is harmless today but is a second, contradicting
-> source of truth for the same corpus.
+Verified live: `/reviews` and the homepage both render 1083 and 4,96, the new
+review appears on both, and the Product JSON-LD carries `reviewCount: 1083`.
 
-## Fixing it
+## Make scenario 1174328 — deactivated
 
-Deploy the `automations` Worker from its current `master` (the code fix is
-already committed there). Then, in this repo, replay the lost review into
-`public/reviews.json` and untrack `dist/reviews.json`. Verify by comparing the
-newest entry in `public/reviews.json` against the newest notification mail —
-not by trusting that a mail arrived.
+`MV.com Review 23-03-08` (`eu1.make.com/39723/scenarios/1174328`) was still
+`isActive: true` and was **deactivated on 2026-08-19**. It was already inert —
+webhook-triggered, and the form has pointed at the Worker since May, giving it
+4 lifetime executions — but its write targets (a Google Sheet, plus
+`reviews.json` and `new-reviews.json` over Strato SFTP) made it a second,
+contradicting source of truth for the same corpus. It did not produce the
+2026-08-19 mail; that came from the Worker.
+
+## Verifying it, next time
+
+Compare the newest entry in `public/reviews.json` against the newest
+notification mail. **Do not** treat a mail as proof: it is sent before the
+commit, which is exactly how this stayed invisible for seven weeks.
 
 ## Related
 

@@ -28,7 +28,7 @@ Vermittlerregister D-M9T4-N9R8F-69 — imprints read 2026-08-04). The portfolio:
 They sell **the identical SINFONIMA / I'M SOUND products** through the same
 risk carrier as this site. This is the real head-to-head competitor. Their
 moat is domain portfolio + 30-years claim; their weakness is thin review
-evidence (3–4 testimonials vs. our 1082 baked-in reviews) and duplicated
+evidence (3–4 testimonials vs. our 1000+ baked-in reviews) and duplicated
 effort across domains.
 
 > Do not imitate the multi-domain tactic. It fragments entity signals,
@@ -90,8 +90,8 @@ effort across domains.
 
 ## Where we already beat them
 
-- **1082 reviews, avg 4.96, computed at build** into Product schema
-  ([business-facts.md](business-facts.md)) — no competitor shows more than a
+- **1000+ reviews, avg 4.96, computed at build** into Product schema (exact
+  count in [business-facts.md](business-facts.md)) — no competitor shows more than a
   handful of testimonials; none has review-rich structured data.
 - **Modern static site** (fast, clean canonical structure) vs. their dated
   PHP-era sites (instrumentenversicherung.de still routes via

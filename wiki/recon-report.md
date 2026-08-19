@@ -17,7 +17,7 @@ insurers but by **one competing Mannheimer Generalagentur (Rendsburg, Reidt)
 running ~8 exact-match domains** that sell the identical SINFONIMA / I'M SOUND
 products. Beating them is not a domain fight — it is won by being the **one
 coherent, verifiable, review-rich entity** with deeper coverage of the buyer's
-question space. Our structural advantages (1082 baked-in reviews, modern fast
+question space. Our structural advantages (1000+ baked-in reviews, modern fast
 site, real /wissen cluster) are exactly the ones their portfolio cannot match
 per-domain.
 
@@ -31,7 +31,7 @@ per-domain.
 | musik-versicherungen.de | Just agency (Bad Essen) | Musik-Versicherungen.de – Instrumentenversicherungen für die Musikwelt | Die Instrumentenversicherung vom Marktführer. GANZ SICHER. | 3 product lines × 7 target-group pages, FAQ, blog | Marken-Diplom; "Marktführer" claim; no reviews | 1× | "Jetzt Preis berechnen", "Unverbindliches Angebot anfragen" |
 | allianz.de (page) | Allianz | Instrumentenversicherung: Musikinstrumente versichern \| Allianz | Instrumenten­versicherung | one deep page, depth-3 URL; question H2s; Smart/Komfort/Premium table; FAQ | brand; policy PDFs | ~2 | "Jetzt berechnen", "Zur Beratung" |
 | mannheimer.de/klassische-musik | Risk carrier | Instrumentenversicherung SINFONIMA - Mannheimer Versicherung AG | Musikinstrumentenversicherung SINFONIMA | product page among special lines; FAQ; downloads | brand only | 0 | "Jetzt Beitrag berechnen", "Agentur finden" |
-| **musikversicherung.com (us)** | Blaskewitz / Falk agency | Instrumentenversicherung ohne Selbstbeteiligung \| SINFONIMA & IM SOUND (70 chars) | Die richtige Versicherung für deine Instrumente | 11-spoke /wissen hub, FAQ page, reviews page, 2 LPs | 1082 reviews avg 4.96 in schema; register no. in Impressum only | 0 sitewide (3 subpages only) | "Anfrage" paths |
+| **musikversicherung.com (us)** | Blaskewitz / Falk agency | Instrumentenversicherung ohne Selbstbeteiligung \| SINFONIMA & IM SOUND (70 chars) | Die richtige Versicherung für deine Instrumente | 11-spoke /wissen hub, FAQ page, reviews page, 2 LPs | 1000+ reviews avg 4.96 in schema; register no. in Impressum only | 0 sitewide (3 subpages only) | "Anfrage" paths |
 
 ## Common patterns — what every winner shares
 

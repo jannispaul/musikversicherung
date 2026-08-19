@@ -41,6 +41,35 @@ and `5289eb7`; Make API scenario 1174328, read 2026-08-19.
 
 **No site changes** — investigation only; nothing in `src/` touched.
 
+## 2026-08-19 — Review pipeline repaired; count live again at 1083
+
+**Changed:**
+
+- `reviews-pipeline.md` — status header (fixed), the outage section retitled as
+  resolved, a "What was done" section, the Make scenario section rewritten as
+  deactivated (its `> **OPEN:**` resolved), and a "Verifying it, next time"
+  note.
+- `business-facts.md` — review row 1082 → **1083**, with the freeze recorded as
+  history and an instruction to read the count from the file, since it moves
+  again.
+- `aeo-rules.md`, `competitors.md`, `recon-report.md` — hardcoded "1082" in
+  live claims replaced: the exact figure now lives only in `business-facts.md`,
+  the rest say "1000+". Prevents the same drift recurring with every review.
+- `index.md` — the `reviews-pipeline.md` row now describes a fixed pipeline.
+
+**Why:** owner asked for the fix to be carried out, not just documented (owner,
+2026-08-19).
+
+**Done:** deployed the `automations` Worker (127 tests + typecheck green
+first), so it targets `public/reviews.json`; replayed the dropped review;
+normalised `public/reviews.json` to the Worker's output format so its future
+commits are one-entry diffs; untracked `dist/reviews.json`; deactivated Make
+scenario 1174328. Site commit `d4a9dd5`.
+
+**Verified:** `/reviews` and the homepage both serve 1083 and 4,96 live, the
+restored review renders on both, and the Product JSON-LD carries
+`reviewCount: 1083` (fetched 2026-08-19).
+
 ## 2026-08-07 — Sitemap gains per-page lastmod from git
 
 **Changed:**

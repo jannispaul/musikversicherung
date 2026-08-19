@@ -187,9 +187,10 @@ adds only the breadcrumb there, to avoid a duplicate FAQPage.
   documented at `src/data/structured-data.ts:99` — Google shows review snippets
   for Product. Do not move `aggregateRating` onto the org node.
 - **Ratings come from live data.** `aggregateRating` is computed at build time
-  by `src/data/reviews.ts` from `public/reviews.json` (1082 reviews, average
-  4.96 as of 2026-08-04), so it cannot go stale. Never hardcode a rating value
-  or count.
+  by `src/data/reviews.ts` from `public/reviews.json` (1083 reviews, average
+  4.96 as of 2026-08-19 — the file grows, so read the count from it, not from
+  here), so it cannot go stale. Never hardcode a rating value or count. How new
+  reviews reach that file: [reviews-pipeline.md](reviews-pipeline.md).
 - **Reuse `@id`s; never mint a parallel entity.** A second, slightly different
   organisation node splits the entity and weakens every claim attached to it.
 - **Never assert in schema what is not visible on the page.** No invisible
