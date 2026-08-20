@@ -14,47 +14,65 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
-## 2026-08-20 — Auslandsreisen PDFs 404; broken-asset audit filed
+## 2026-08-20 — Auslandsreisen PDFs restored; broken-asset audit filed
 
 **Changed:**
 
 - `broken-assets.md` **new** — the three local asset references in `src/` with
-  no file under `public/`, out of 123 audited. The two Auslandsreisen PDFs
-  linked from the `/faqs` answer, and `/images/mv-logo.jpg` used by twelve
-  pages' client-injected Article schema. Cause, ranking impact, the fix, the
-  open owner questions, and a re-runnable audit command.
+  no file under `public/`, out of 123 audited. Cause, ranking impact, the fix,
+  the recovery recipe, the shallow-clone trap, and the audit command.
 - `index.md` — new row for the page.
-- `keywords.md` — the English cluster row now marks its owning URL as 404 and
-  links the new page.
-- `recon-report.md` — Phase 0 lead names the three broken assets.
+- `keywords.md` — the English cluster row records the 404 window and the restore.
+- `recon-report.md` — Phase 0 lead names the three assets and their status.
+
+**Site change (same session):** both PDFs restored to
+`public/assets/63f2893134fa326a6838c84d/`, byte-identical to the historical
+blobs. No markup touched.
 
 **Why:** owner reported that the Auslandsreisen Ratgeber in the `/faqs`
-accordion returns 404 in both German and English (owner, 2026-08-20). It does:
-neither PDF is in the repo. Widened to a full asset audit on the assumption
-that a migration that dropped two files dropped others; it dropped one more.
+accordion returns 404 in both German and English (owner, 2026-08-20). Widened
+to a full asset audit on the assumption that whatever dropped two files dropped
+others; it dropped one more.
 
 **Findings worth keeping:**
 
-- The PDFs were lost in the **Webflow → scraped-export** step, not the Astro
-  rebuild. `origin/old-webflow-site` carries the same single
-  `Beschwerdeverfahren.pdf` under `dist/assets/` and neither Auslandsreisen
-  file, and no copy exists anywhere in this repo's history.
-- The English PDF was an indexed, ranking URL — 6.7k impressions / 11 clicks
-  in the 16-month GSC window — so this is lost ranking, not only a dead link.
-  Restoring both files at their exact existing paths repairs the FAQ answer and
-  the indexed URL together.
-- The PDFs cannot be reconstructed here: they are insurer advisory documents
-  ([CLAUDE.md](../CLAUDE.md) §4 bars rewriting them), and this environment's
-  egress proxy blocks both the Webflow CDN and archive.org, so the originals
-  are unreachable. Blocked on the owner.
+- **Cause: an automated Webflow re-export, not the Astro migration.** Both PDFs
+  were added 2025-04-25 (`c238048`) and deleted 2025-09-01 03:51 UTC
+  (`6834273`), both `github-actions[bot]` / "Updated site from Webflow". The
+  deleting commit removed exactly two files — these two — while leaving
+  `dist/faqs.html` still linking to both. Live 404 for close to a year.
+- The English PDF was an indexed, ranking URL — 6.7k impressions / 11 clicks in
+  the 16-month GSC window — so this was lost ranking, not only a dead link.
+  Restoring at the identical path repairs the FAQ answer and the indexed URL
+  together.
+- **The files are the insurer's own:** "SINFONIMA® — Empfehlungen zu
+  Auslandsreisen mit dem Musikinstrument", 2. aktualisierte Auflage, and the
+  English "Tips on travelling abroad with your musical instrument", Revised 2nd
+  edition. Both 32 pages, produced April 2018. Nothing was authored or rewritten
+  here.
+- **The shallow-clone trap, and a correction.** This session first reported the
+  files as unrecoverable and blamed the Webflow scrape for never capturing
+  them. That was wrong, and it was wrong because the clone is shallow — history
+  reached back only to 2025-09-23, after the deletion. The owner pushed back
+  ("die dateien gab es mal"); `git fetch --unshallow` turned 56 commits into
+  214 and both blobs were there. **Unshallow before concluding anything from
+  history**, and treat a shallow `git log` as no evidence at all. Unshallowing
+  also revealed `staging` and `strato-deploy-fallback`, two branches the
+  session never had.
 - Unrelated finding, left unfixed: the twelve `*.inline.js` files inject an
   `Article` node client-side that duplicates the server-side `articleLd()`
   output, names a `Person` author against the organisation `articleLd()` names,
-  uses the www host, and points `publisher.logo` at the missing image.
+  uses the www host, and points `publisher.logo` at the missing
+  `mv-logo.jpg` — which, unlike the PDFs, is nowhere in history.
 
-**Source:** `src/partials/faqs.html:19`; `public/assets/63f2893134fa326a6838c84d/`
-and `public/images/`, listed 2026-08-20; `git ls-tree -r origin/old-webflow-site`,
-2026-08-20; `src/partials/wissen/*.inline.js:27` and
+**Verified:** `npm run build` passes; both PDFs ship in `dist/assets/…`; every
+`.pdf` href in the built `dist/faqs.html` resolves; `git hash-object` on both
+restored files matches the historical blob shas.
+
+**Source:** `src/partials/faqs.html:19`; `git rev-list --objects --all` and
+`git log --diff-filter=AD` over the unshallowed repo, 2026-08-20; `pdfinfo` /
+`pdftotext` on the recovered files, 2026-08-20;
+`src/partials/wissen/*.inline.js:27` and
 `src/partials/berufshaftpflicht.inline.js:27`; GSC figures via
 [keywords.md](keywords.md) (`raw/gsc/…-2026-08-04/`); owner, 2026-08-20.
 
