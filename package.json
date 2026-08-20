@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/unshallow-git.mjs",
+    "prebuild": "node scripts/unshallow-git.mjs && node scripts/check-assets.mjs",
     "build": "astro build",
     "postbuild": "node scripts/inline-critical.mjs",
     "preview": "astro preview",

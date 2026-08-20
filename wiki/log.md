@@ -14,6 +14,80 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-20 (2) — Typo, logo, and the asset check as a build gate
+
+**Changed:**
+
+- `broken-assets.md` — all three assets now marked fixed; new §3 documents the
+  build gate; the typo and logo OPENs resolved; recovery recipe de-duplicated
+  into §3.
+- `index.md`, `recon-report.md` — status updated to fixed.
+- `aeo-rules.md` §4 — new standing rule: an image asserted in schema must
+  resolve, enforced by the gate.
+
+**Site changes (same session):**
+
+- `src/partials/faqs.html` — "Was ist bei Auslandsrei**en** zu beachten?" →
+  "Auslandsrei**sen**". Single occurrence site-wide. It is the
+  `itemprop="name"` of a `schema.org/Question` node, so the visible heading and
+  the machine-readable assertion are corrected together.
+- `public/images/mv-logo.jpg` **new** — the missing publisher logo.
+- `scripts/check-assets.mjs` **new**, wired into `prebuild`.
+- `scripts/render-logo.mjs` **new** — regenerates the logo from the wordmark;
+  not part of the build.
+
+**Why:** owner ruled on all three open items at once (owner, 2026-08-20): fix
+the typo, supplied the logo, and "ja audit als prebuild gate".
+
+**How the logo was produced — no brand asset was invented.** The owner supplied
+the logo as an image, but it never reached the filesystem, so it could not be
+committed directly. It did not need to be: the site already carries the same
+wordmark as inline SVG in `src/components/Logo.astro` — the mark the header and
+footer render, with the brand colours `#6B46C1` (Musikversicherung) and
+`#D6BCFA` (.com), matching the supplied file. The JPG is rendered from that SVG
+via headless Chromium: white ground, mark centred at 73% width, 1200×468 (the
+2.56:1 framing of the supplied file), JPEG q92. The renderer is committed as
+`scripts/render-logo.mjs` so the provenance stays checkable — it is not wired
+into any build, and re-running it reproduces the committed file byte for byte
+(verified 2026-08-20). Playwright is not a project dependency; the script
+resolves a local or global install and exits with instructions if it finds
+neither.
+
+> **OPEN:** if the owner's own `mv-logo.jpg` file differs from this render in
+> framing or dimensions, drop the original into `public/images/` and it wins.
+> The render is a faithful reconstruction from the authoritative vector, not a
+> claim to be the original file.
+
+**The gate.** `scripts/check-assets.mjs` requires every `/assets/…` and
+`/images/…` reference in `src/` to resolve to a file in `public/`, and fails
+the build otherwise, naming each missing path and the file referencing it.
+Three design points worth keeping:
+
+- It matches on the **path**, so the absolute
+  `https://www.musikversicherung.com/images/mv-logo.jpg` URLs in the
+  `inline.js` schema are covered.
+- It **expands string prefix constants** first. `BaseHead.astro` composes the
+  favicon and touch-icon hrefs from `const ASSET = "/assets/<site-id>"`; without
+  expansion those two icons would sit outside the check, and the bare prefix
+  would be reported as a missing file. Caught in testing, which is the reason
+  the expansion exists.
+- **An empty scan fails.** If the scanner matches nothing it exits non-zero
+  rather than reporting a clean site — a broken checker must never read as a
+  passing one.
+
+**Verified:** each of the favicon, one Auslandsreisen PDF and `mv-logo.jpg`
+removed in turn — the gate failed and named the right file every time, and
+passed on the clean tree (124 references). Full `npm run build` passes with the
+gate in place; the corrected question and the logo both ship in `dist/`, and
+every `/assets/` and `/images/` href in the built HTML resolves against `dist/`.
+
+**Source:** owner, 2026-08-20 (typo ruling, logo, gate ruling);
+`src/components/Logo.astro` (wordmark and brand colours);
+`src/components/BaseHead.astro:39` (the prefix constant);
+`src/partials/faqs.html`; test runs 2026-08-20.
+
+---
+
 ## 2026-08-20 — Auslandsreisen PDFs restored; broken-asset audit filed
 
 **Changed:**
