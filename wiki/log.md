@@ -14,6 +14,52 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-20 — Auslandsreisen PDFs 404; broken-asset audit filed
+
+**Changed:**
+
+- `broken-assets.md` **new** — the three local asset references in `src/` with
+  no file under `public/`, out of 123 audited. The two Auslandsreisen PDFs
+  linked from the `/faqs` answer, and `/images/mv-logo.jpg` used by twelve
+  pages' client-injected Article schema. Cause, ranking impact, the fix, the
+  open owner questions, and a re-runnable audit command.
+- `index.md` — new row for the page.
+- `keywords.md` — the English cluster row now marks its owning URL as 404 and
+  links the new page.
+- `recon-report.md` — Phase 0 lead names the three broken assets.
+
+**Why:** owner reported that the Auslandsreisen Ratgeber in the `/faqs`
+accordion returns 404 in both German and English (owner, 2026-08-20). It does:
+neither PDF is in the repo. Widened to a full asset audit on the assumption
+that a migration that dropped two files dropped others; it dropped one more.
+
+**Findings worth keeping:**
+
+- The PDFs were lost in the **Webflow → scraped-export** step, not the Astro
+  rebuild. `origin/old-webflow-site` carries the same single
+  `Beschwerdeverfahren.pdf` under `dist/assets/` and neither Auslandsreisen
+  file, and no copy exists anywhere in this repo's history.
+- The English PDF was an indexed, ranking URL — 6.7k impressions / 11 clicks
+  in the 16-month GSC window — so this is lost ranking, not only a dead link.
+  Restoring both files at their exact existing paths repairs the FAQ answer and
+  the indexed URL together.
+- The PDFs cannot be reconstructed here: they are insurer advisory documents
+  ([CLAUDE.md](../CLAUDE.md) §4 bars rewriting them), and this environment's
+  egress proxy blocks both the Webflow CDN and archive.org, so the originals
+  are unreachable. Blocked on the owner.
+- Unrelated finding, left unfixed: the twelve `*.inline.js` files inject an
+  `Article` node client-side that duplicates the server-side `articleLd()`
+  output, names a `Person` author against the organisation `articleLd()` names,
+  uses the www host, and points `publisher.logo` at the missing image.
+
+**Source:** `src/partials/faqs.html:19`; `public/assets/63f2893134fa326a6838c84d/`
+and `public/images/`, listed 2026-08-20; `git ls-tree -r origin/old-webflow-site`,
+2026-08-20; `src/partials/wissen/*.inline.js:27` and
+`src/partials/berufshaftpflicht.inline.js:27`; GSC figures via
+[keywords.md](keywords.md) (`raw/gsc/…-2026-08-04/`); owner, 2026-08-20.
+
+---
+
 ## 2026-08-19 — Review pipeline is broken; filed as its own page
 
 **Changed:**
