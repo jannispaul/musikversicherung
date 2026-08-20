@@ -205,6 +205,10 @@ adds only the breadcrumb there, to avoid a duplicate FAQPage.
 - Schema supports extraction; it does not replace it. A fact that exists only in
   JSON-LD and not in readable body copy will rarely be quoted. **Say it in prose
   and mark it up.**
+- **An image asserted in schema must resolve.** `publisher.logo`, `image` and
+  friends are factual assertions like any other; a 404 behind one is a broken
+  claim. `npm run prebuild` now fails the build on any referenced-but-missing
+  asset — see [broken-assets.md](broken-assets.md) §3.
 
 ### Offers: product snippet, not merchant listing (settled 2026-08-07)
 
