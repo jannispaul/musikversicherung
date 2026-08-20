@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/wissen.html?raw";
-import { collectionPageLd, breadcrumbLd } from "../data/structured-data";
+import { collectionPageLd, listedPages, breadcrumbLd } from "../data/structured-data";
 
 const seo = {
   "jsonld": [
@@ -10,6 +10,7 @@ const seo = {
       description:
         "Alle wichtigen Detailinformationen zur Instrumentenversicherung und Absicherung von Equipment vom Experten für dich aufbereitet.",
       url: "https://musikversicherung.com/wissen",
+      lists: listedPages(mainHtml),
     }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },

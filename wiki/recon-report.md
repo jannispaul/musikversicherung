@@ -174,18 +174,21 @@ The 16-month export ([keywords.md](keywords.md)) re-weights the phases:
 
 ### Phase 1 progress (2026-08-05)
 
-> **OPEN — this section does not match the code (found 2026-08-20).** The
-> Klavier rebuild described below is not on `master`: the title and H1 are
-> still "Instrumentenversicherung für Klaviere", not "Klavier versichern:
-> Versicherung für Klavier & E-Piano"; the partial contains no `<table>`; and
-> until 2026-08-20 no page passed `datePublished` to `articleLd()` at all, so
-> "datePublished in the Article schema" was true of the builder but of no page.
-> Either the work was never merged or it was reverted. Verified against
-> `src/pages/wissen/instrumentenversicherung-fur-klaviere.astro` and
-> `src/partials/wissen/instrumentenversicherung-fur-klaviere.html`,
-> 2026-08-20. Do not treat the paragraph below as a record of shipped work
-> until this is resolved. (`datePublished` is now genuinely shipping on all
-> eleven articles — see [aeo-rules.md](aeo-rules.md) §4.)
+> **STALE — this section describes work done elsewhere (owner, 2026-08-20).**
+> The Klavier rebuild below is not on `master` and never was: the title and H1
+> are still "Instrumentenversicherung für Klaviere", the partial contains no
+> `<table>`, and no page passed `datePublished` to `articleLd()` until
+> 2026-08-20. Asked about it, the owner's answer was that **this is a different
+> project** — so the paragraph is a record of another codebase, filed here by
+> mistake. Treat nothing below as shipped on musikversicherung.com. Verified
+> against `src/pages/wissen/instrumentenversicherung-fur-klaviere.astro` and
+> `src/partials/wissen/instrumentenversicherung-fur-klaviere.html`, 2026-08-20.
+>
+> Left in place rather than deleted: whoever wrote it may still want the plan.
+> But the Phase 1 items it claims as done are **not** done here, and the
+> priority list above should be read with that in mind. (`datePublished` is now
+> genuinely shipping on all eleven articles — see
+> [aeo-rules.md](aeo-rules.md) §4.)
 
 
 The Klavier spoke (`/wissen/instrumentenversicherung-fur-klaviere`) rebuilt

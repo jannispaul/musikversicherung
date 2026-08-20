@@ -83,6 +83,8 @@ export function organizationLd(): string {
         "@type": "Person",
         "@id": AUTHOR_ID,
         name: "Heiner Blaskewitz",
+        // Exactly as the author box on every /wissen article renders it.
+        jobTitle: "Versicherungsfachmann (BWV)",
       },
       {
         "@type": "WebSite",
@@ -237,11 +239,56 @@ export function breadcrumbLd(trail: Crumb[]): string {
   });
 }
 
+/** One entry of a hub page's visible list. */
+export interface ListedPage {
+  url: string;
+  name: string;
+}
+
+/**
+ * The pages a hub visibly links, read out of the hub's own markup at build
+ * time — never hand-maintained, so the list cannot drift from what the page
+ * shows (wiki/aeo-rules.md §4, §5).
+ *
+ * Matches the card anchors of `src/partials/wissen.html`, in render order.
+ */
+export function listedPages(hubHtml: string, base = SITE.url): ListedPage[] {
+  const cards = hubHtml.matchAll(
+    /<a href="(\/[^"]*)"[^>]*class="wissen_item[^"]*"[^>]*>([\s\S]*?)<\/a>/g,
+  );
+  const pages: ListedPage[] = [];
+  for (const [, href, inner] of cards) {
+    const title = inner.match(/<div class="wissen_item-content"><div>([\s\S]*?)<\/div>/);
+    if (!title) continue;
+    pages.push({
+      url: `${base}${href}`,
+      name: decodeEntities(title[1].replace(/\s+/g, " ").trim()),
+    });
+  }
+  return pages;
+}
+
+/** The handful of entities Webflow's export actually emits in card titles. */
+function decodeEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&#x27;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
 interface CollectionPageLdOptions {
   name: string;
   description: string;
   /** Absolute canonical URL of the hub page. */
   url: string;
+  /**
+   * The articles the hub lists, from `listedPages()`. Emitted as an ordered
+   * ItemList so the hub-and-spoke structure is machine-readable; every entry
+   * is a link the page visibly renders, so this asserts nothing new.
+   */
+  lists?: ListedPage[];
 }
 
 /**
@@ -253,7 +300,12 @@ interface CollectionPageLdOptions {
  * asserts, and schema states only what the page shows
  * (wiki/aeo-rules.md §4).
  */
-export function collectionPageLd({ name, description, url }: CollectionPageLdOptions): string {
+export function collectionPageLd({
+  name,
+  description,
+  url,
+  lists,
+}: CollectionPageLdOptions): string {
   return ld({
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -263,6 +315,20 @@ export function collectionPageLd({ name, description, url }: CollectionPageLdOpt
     inLanguage: "de",
     isPartOf: { "@id": WEBSITE_ID },
     publisher: { "@id": ORG_ID },
+    ...(lists?.length
+      ? {
+          mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: lists.length,
+            itemListElement: lists.map((page, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              url: page.url,
+              name: page.name,
+            })),
+          },
+        }
+      : {}),
   });
 }
 
