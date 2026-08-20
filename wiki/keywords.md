@@ -30,7 +30,7 @@ provided by the owner 2026-08-04. Companion pages:
 | Streicher/Geige/Cello/Harfe (34 queries) | 3.5k | 2 | 48 | none | spoke gap |
 | Bläser/Sax/Trompete/Klarinette (34 queries) | 2.8k | 2 | 44 | none | spoke gap |
 | Vergleich ("instrumentenversicherung vergleich" 1.4k @ 19) | 2.5k | 12 | 23 | none | see note below |
-| English ("travel insurance for musical instruments" 0.9k @ 52; PDF `Tips-on-travelling-abroad.pdf` drew 6.7k imp / 11 clicks) | 2.4k | 0 | 57 | a PDF — **now 404**, see [broken-assets.md](broken-assets.md) | language decision OPEN |
+| English ("travel insurance for musical instruments" 0.9k @ 52; PDF `Tips-on-travelling-abroad.pdf` drew 6.7k imp / 11 clicks) | 2.4k | 0 | 57 | a PDF — 404 from 2025-09-01, **restored 2026-08-20** ([broken-assets.md](broken-assets.md)) | language decision OPEN |
 | Klavier/Piano ("klavier versichern" 1.1k @ **4.7, 0 clicks**) | 1.6k | 0 | 5.6 | `/wissen/instrumentenversicherung-fur-klaviere` | pure CTR fix |
 | Kosten/Preis ("wie viel kostet…?" 280 @ 5.1) | 1.5k | 2 | 42 | `/wissen/was-kostet-eine-instrumentenversicherung` (pos 41) | table + snippet |
 | Gitarre/Bass (12 queries) | 1.4k | 0 | 31 | none | spoke gap |

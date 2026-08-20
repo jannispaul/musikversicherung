@@ -59,12 +59,13 @@ claim, wording, or scope and need a decision first
 
 ### Phase 0 — measurement and breakage first (this week)
 
-**Also open, found 2026-08-20:** three assets the site references do not
-exist — both Auslandsreisen PDFs linked from the `/faqs` answer, and the
-`mv-logo.jpg` in twelve pages' client-injected Article schema. The English PDF
-was earning 6.7k impressions before the migration. Account, cause and fix in
-[broken-assets.md](broken-assets.md). **[owner — must supply the two original
-PDFs.]**
+**Found and mostly fixed 2026-08-20:** three assets the site references did
+not exist. Both Auslandsreisen PDFs linked from the `/faqs` answer were deleted
+by an automated "Updated site from Webflow" commit on 2025-09-01 and had been
+404 for a year — including the English PDF earning 6.7k impressions. **Both
+recovered from git history and restored.** Still open: `mv-logo.jpg` in twelve
+pages' client-injected Article schema. Full account:
+[broken-assets.md](broken-assets.md).
 
 0. **Fix the www 404 — partially done 2026-08-05.** Owner bound the www host;
    it now returns **200** (serves the site) instead of 404. Duplicate-host
