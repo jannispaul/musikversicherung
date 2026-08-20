@@ -131,28 +131,15 @@ committed JPG byte for byte (verified 2026-08-20).
 > This is a faithful reconstruction from the authoritative vector, not a claim
 > to be the original file.
 
-### Still open — the schema around it
+### The schema around it — fixed 2026-08-20
 
-The dead logo was one symptom of a larger problem in those same twelve files,
-and the rest of it stands:
+The dead logo was one symptom of the client-injected `Article` node in those
+twelve files. That whole mechanism is gone: the schema is built by
+`articleLd()` at build time and ships in the HTML. Details and the author
+ruling: [aeo-rules.md](aeo-rules.md) §4.
 
-- The node is **injected by script into `<head>` after load**, against the
-  standing rule that schema is added through the builders in
-  `src/data/structured-data.ts` and the page's `seo.jsonld` array
-  ([aeo-rules.md](aeo-rules.md) §4).
-- It duplicates the `Article` node that `articleLd()` already emits server-side
-  for every `/wissen` page.
-- It names **`author: Person "Heiner Blaskewitz"`**, while `articleLd()` names
-  the organisation — the exact question [aeo-rules.md](aeo-rules.md) §4 records
-  as an open owner decision. Two of our own nodes currently disagree about who
-  wrote the page.
-- It uses the **www** host, which the rest of the site canonicalises away
-  ([recon-report.md](recon-report.md), Phase 0).
-
-> **OPEN:** retire the client-injected `Article` schema in the twelve
-> `inline.js` files in favour of the server-side `articleLd()` builder, which
-> resolves the dead logo, the duplicate node, the host mismatch and the author
-> contradiction at once. Needs the author ruling first.
+`/images/mv-logo.jpg` is still in use — it is now the site-wide `#logo`, which
+previously pointed at the 256×256 touch icon.
 
 ---
 

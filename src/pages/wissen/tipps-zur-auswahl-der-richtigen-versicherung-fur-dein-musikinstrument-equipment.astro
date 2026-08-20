@@ -2,11 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment.html?raw";
 import { articleLd, breadcrumbLd } from "../../data/structured-data";
-import pageJs from "../../partials/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment.inline.js?raw";
 
 const seo = {
   "jsonld": [
-    articleLd({ headline: "Tipps zur Auswahl der richtigen Instrumentenversicherung", description: "Erfahre, wie du die passende Instrumentenversicherung für dein Instrument oder Equipment auswählst – die richtige Deckung für sorgenfreies Musizieren.", url: "https://musikversicherung.com/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment" }),
+    articleLd({ headline: "Tipps zur Auswahl der richtigen Instrumentenversicherung", description: "Erfahre, wie du die passende Instrumentenversicherung für dein Instrument oder Equipment auswählst – die richtige Deckung für sorgenfreies Musizieren.", url: "https://musikversicherung.com/wissen/tipps-zur-auswahl-der-richtigen-versicherung-fur-dein-musikinstrument-equipment", image: "/assets/63f2893134fa326a6838c84d/63f39eaef9d92456dc7e7510_slider-03.avif", datePublished: "2024-06-06", author: "Heiner Blaskewitz" }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },
       { name: "Wissen", item: "https://musikversicherung.com/wissen" },
@@ -30,5 +29,4 @@ const seo = {
 
 <Layout {...seo}>
   <Fragment set:html={mainHtml} />
-  <script is:inline set:html={pageJs}></script>
 </Layout>

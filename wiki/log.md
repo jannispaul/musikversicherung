@@ -14,6 +14,98 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-20 (3) — Article schema consolidated server-side
+
+**Changed:**
+
+- `aeo-rules.md` §4 — `#heiner-blaskewitz` and `#logo` added to the entity
+  table; `collectionPageLd()` recorded; new standing rule that schema is never
+  built in client-side JavaScript; the dates gap closed; the author question
+  settled.
+- `business-facts.md` — the named-author OPEN resolved; new row recording the
+  author credit; founder citation re-pointed.
+- `broken-assets.md` §2 — the schema half of the logo finding is now fixed.
+- `recon-report.md` — the 2026-08-05 "Phase 1 progress" paragraph flagged: the
+  Klavier rebuild it describes is **not on `master`**.
+
+**Site changes (same session):** twelve `src/partials/**/*.inline.js` deleted;
+`articleLd()` gained `image`, `dateModified` and `author`; a shared `Person`
+node added to the org graph; `#logo` re-pointed from the touch icon to the
+wordmark; the `/wissen` hub moved from `Article` to a new `collectionPageLd()`.
+
+**Found while verifying, and fixed: the `/wissen` hub claimed `Article`.** Not
+part of the injected-schema problem — it came in with the site-wide JSON-LD
+work on 2026-07-31 — but it is the same class of error. The hub is a listing:
+no `.content_date`, no author box, no lead image, so an `Article` node asserted
+three things the page does not show. It now emits `CollectionPage`.
+
+> **OPEN:** whether the hub's `CollectionPage` should carry `hasPart` listing
+> the eleven spokes. Every one of them is visibly linked on the page, so it
+> asserts nothing new and would make the hub/spoke structure machine-readable
+> — but it is a list that has to stay in sync by hand. Not added.
+
+**Why:** owner ruled that the schema should be generated at build time and ship
+statically (owner, 2026-08-20), closing the item left open earlier that day.
+
+**What the injected schema actually was.** Eleven `/wissen` pages plus
+`/berufshaftpflicht` built an `Article` node in JS and appended it to `<head>`
+after load. It was not merely redundant:
+
+- It **duplicated** the server-side `Article` from `articleLd()`, so every
+  article page carried two Article nodes.
+- The two **disagreed on the author** — injected said `Person "Heiner
+  Blaskewitz"`, server-side said the organisation.
+- It used the **www host** the rest of the site canonicalises away.
+- Its `publisher.logo` pointed at `/images/mv-logo.jpg`, which did not exist
+  until earlier the same day.
+- On **`/berufshaftpflicht` it never ran at all**: the file has no
+  `[data-element="article-image"]`, so `document.querySelector(...).src` threw
+  and the script died before appending anything. That page has emitted no
+  Article schema since the migration. It is also noindex and is not an article,
+  so nothing replaced it — the file was simply deleted.
+
+**What was salvaged rather than dropped.** The injected node carried three
+facts the server-side builder did not, all now passed explicitly per page:
+
+- **`image`** — the article's own lead image, not the generic OG image. The OG
+  image is not rendered anywhere on a `/wissen` page; the article image is, so
+  it is the one schema may assert (§4).
+- **`datePublished` / `dateModified`** — see the dates section in
+  [aeo-rules.md](aeo-rules.md) §4.
+- **`author`** — see the author section there.
+
+**One entity, not two.** The org's `founder` and the article author are the
+same human, so both now reference a single `Person` node at
+`${SITE.url}/#heiner-blaskewitz` instead of appearing as two lookalike
+inline objects.
+
+**`#logo` re-pointed.** With the injected node gone, `mv-logo.jpg` had no
+referrer. Rather than orphan the file the owner had just supplied, it became
+the org's `logo`, replacing the 256×256 `touchicon.png` — a wordmark is what
+`logo` means, and it is the same mark the header and footer render.
+
+> **OPEN:** the article images are all `.avif`. Google documents AVIF support
+> for Google Images, but the structured-data image guidance historically lists
+> JPEG/PNG/WebP/GIF/BMP/SVG. No JPEG or WebP derivative of these images exists
+> in `public/assets/`. Not changed — asserting the image the page actually
+> shows is the rule — but worth a Rich Results Test before assuming the
+> property is being read.
+
+**Verified:** `npm run build` passes with the asset gate. A validator over all
+25 built pages with JSON-LD confirms: exactly one `Article` node per `/wissen`
+page (was two), zero anywhere else including `/berufshaftpflicht` and the
+`/wissen` hub, every `@id` reference resolves to
+a node defined on the same page, every `datePublished` equals the date the page
+renders in `.content_date`, and every schema `image` both exists in `dist/` and
+appears in that page's HTML. No page injects into `<head>` any more.
+
+**Source:** the twelve deleted `*.inline.js` files (read before deletion);
+`src/partials/wissen/*.html` (`.content_date` and the author box);
+`src/data/structured-data.ts`; build output under `dist/`, all 2026-08-20;
+owner, 2026-08-20.
+
+---
+
 ## 2026-08-20 (2) — Typo, logo, and the asset check as a build gate
 
 **Changed:**

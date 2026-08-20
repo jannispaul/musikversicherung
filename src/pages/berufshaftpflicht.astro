@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import mainHtml from "../partials/berufshaftpflicht.html?raw";
-import pageJs from "../partials/berufshaftpflicht.inline.js?raw";
 
 const seo = {
   "title": "Berufshaftpflicht | Musikversicherung.com",
@@ -22,5 +21,4 @@ const seo = {
 
 <Layout {...seo}>
   <Fragment set:html={mainHtml} />
-  <script is:inline set:html={pageJs}></script>
 </Layout>

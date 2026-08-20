@@ -28,7 +28,8 @@ Everything in this section is verified from the site's own imprint
 | Site name | Musikversicherung.com | `src/data/site.ts:4` |
 | Schema type | `InsuranceAgency` (a `LocalBusiness` subtype) | `structured-data.ts:41` |
 | Responsible person (§5 TMG, §55 RStV) | Heiner Blaskewitz | `impressum.html` |
-| Listed as founder in schema | Heiner Blaskewitz | `structured-data.ts:49` |
+| Listed as founder in schema | Heiner Blaskewitz | `structured-data.ts:64`, via the shared `Person` node at `structured-data.ts:27` |
+| Credited as author of every `/wissen` article | Heiner Blaskewitz | the author box in `src/partials/wissen/*.html`; same `Person` node in schema |
 | Agency | Mannheimer Generalagentur im Continentale Versicherungsverbund, Nico Falk | `impressum.html` |
 | Address | Wennigser Str. 63, 30890 Barsinghausen, DE | `impressum.html`, `structured-data.ts:50-56` |
 | Phone (site-wide) | +49 172 511 3611 | `src/data/site.ts:7-8` |
@@ -150,11 +151,15 @@ guessed at. Do not "fix" them unilaterally; each changes a public claim.
 > simply missing from `articleLd()`. Piping them into `datePublished` asserts
 > nothing new. See [aeo-rules.md](aeo-rules.md) §4 and §6.
 
-> **OPEN:** Named author for `/wissen` articles. `articleLd()` credits the
-> organisation. Attributing articles to a named person (Heiner Blaskewitz is the
-> registered intermediary and § 5 TMG responsible person) is a real authority
-> signal, but it puts a real person's name on specific content — owner's call.
-> See [aeo-rules.md](aeo-rules.md) §4.
+> **RESOLVED 2026-08-20 — Named author for `/wissen` articles.** All eleven
+> articles credit `Person` Heiner Blaskewitz, through the shared
+> `#heiner-blaskewitz` node that is also the org's `founder`. This was filed as
+> an owner's call on the premise that only the organisation was credited — but
+> the client-injected schema had been asserting the person on every article all
+> along, so the decision was already live and merely contradicted the
+> server-side node. Consolidating forced a pick; the person wins because every
+> article visibly says so in its "Über den Author" box. Reasoning and how to
+> reverse it: [aeo-rules.md](aeo-rules.md) §4.
 
 > **OPEN:** AI training-crawler policy (GPTBot, Google-Extended, CCBot).
 > `public/robots.txt` currently allows everything. Search-index and
