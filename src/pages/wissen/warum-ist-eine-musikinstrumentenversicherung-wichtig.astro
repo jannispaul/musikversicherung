@@ -2,11 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/warum-ist-eine-musikinstrumentenversicherung-wichtig.html?raw";
 import { articleLd, breadcrumbLd } from "../../data/structured-data";
-import pageJs from "../../partials/wissen/warum-ist-eine-musikinstrumentenversicherung-wichtig.inline.js?raw";
 
 const seo = {
   "jsonld": [
-    articleLd({ headline: "Warum ist eine Musikinstrumentenversicherung wichtig?", description: "Warum eine Musikinstrumentenversicherung für Musiker unverzichtbar ist: Schutz bei Diebstahl und Beschädigung – sorgenfrei bei Auftritten, Proben und auf Tour.", url: "https://musikversicherung.com/wissen/warum-ist-eine-musikinstrumentenversicherung-wichtig" }),
+    articleLd({ headline: "Warum ist eine Musikinstrumentenversicherung wichtig?", description: "Warum eine Musikinstrumentenversicherung für Musiker unverzichtbar ist: Schutz bei Diebstahl und Beschädigung – sorgenfrei bei Auftritten, Proben und auf Tour.", url: "https://musikversicherung.com/wissen/warum-ist-eine-musikinstrumentenversicherung-wichtig", image: "/assets/63f2893134fa326a6838c84d/63f39eaeea65990093e63a74_slider-01.avif", datePublished: "2024-06-04", author: "Heiner Blaskewitz" }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },
       { name: "Wissen", item: "https://musikversicherung.com/wissen" },
@@ -30,5 +29,4 @@ const seo = {
 
 <Layout {...seo}>
   <Fragment set:html={mainHtml} />
-  <script is:inline set:html={pageJs}></script>
 </Layout>

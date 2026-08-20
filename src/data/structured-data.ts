@@ -19,13 +19,28 @@ export const ORG_ID = `${SITE.url}/#organization`;
 export const WEBSITE_ID = `${SITE.url}/#website`;
 export const PRODUCT_ID = `${SITE.url}/#product`;
 const LOGO_ID = `${SITE.url}/#logo`;
+/**
+ * The one Person node on the site. The agency's founder and the author
+ * credited on every /wissen page are the same human, so they share an `@id`
+ * rather than appearing as two lookalike entities (wiki/aeo-rules.md §4).
+ */
+export const AUTHOR_ID = `${SITE.url}/#heiner-blaskewitz`;
 
-const LOGO_URL = `${SITE.url}/assets/63f2893134fa326a6838c84d/63f3e2ae508ba1ff759ac321_touchicon.png`;
+// The wordmark, not the 256x256 touch icon that stood here before: `logo` is
+// meant to be the brand mark, and this is the same one the header and footer
+// render (src/components/Logo.astro). Rendered by scripts/render-logo.mjs.
+const LOGO_URL = `${SITE.url}/images/mv-logo.jpg`;
 const EMAIL = "info@musikversicherung.com";
 
 /** JSON-serialise a schema object for injection into a <script> tag. */
 function ld(obj: Record<string, unknown>): string {
   return JSON.stringify(obj);
+}
+
+/** Site-relative paths become absolute; absolute URLs pass through. */
+function absoluteUrl(path?: string): string | undefined {
+  if (!path) return undefined;
+  return path.startsWith("http") ? path : `${SITE.url}${path}`;
 }
 
 /**
@@ -46,7 +61,7 @@ export function organizationLd(): string {
         image: SITE.defaultOgImage,
         telephone: SITE.phoneLabel,
         email: EMAIL,
-        founder: { "@type": "Person", name: "Heiner Blaskewitz" },
+        founder: { "@id": AUTHOR_ID },
         address: {
           "@type": "PostalAddress",
           streetAddress: "Wennigser Str. 63",
@@ -63,6 +78,11 @@ export function organizationLd(): string {
           availableLanguage: ["de", "en"],
         },
         sameAs: ["https://www.facebook.com/instrumentenversicherung/"],
+      },
+      {
+        "@type": "Person",
+        "@id": AUTHOR_ID,
+        name: "Heiner Blaskewitz",
       },
       {
         "@type": "WebSite",
@@ -217,30 +237,88 @@ export function breadcrumbLd(trail: Crumb[]): string {
   });
 }
 
+interface CollectionPageLdOptions {
+  name: string;
+  description: string;
+  /** Absolute canonical URL of the hub page. */
+  url: string;
+}
+
+/**
+ * A CollectionPage node, for hub pages that list other pages rather than
+ * carrying an article of their own.
+ *
+ * `/wissen` used to claim `Article` here. It is a listing: no publication
+ * date, no author box, no lead image — none of the things an Article node
+ * asserts, and schema states only what the page shows
+ * (wiki/aeo-rules.md §4).
+ */
+export function collectionPageLd({ name, description, url }: CollectionPageLdOptions): string {
+  return ld({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    description,
+    url,
+    inLanguage: "de",
+    isPartOf: { "@id": WEBSITE_ID },
+    publisher: { "@id": ORG_ID },
+  });
+}
+
 interface ArticleLdOptions {
   headline: string;
   description: string;
   /** Absolute canonical URL of the article page. */
   url: string;
   /**
+   * The article's own lead image, as written in the partial — site-relative
+   * (`/assets/…`) or absolute. Falls back to the site OG image.
+   *
+   * Prefer the real one: the OG image is not rendered anywhere on a /wissen
+   * page, and schema states what the page shows (wiki/aeo-rules.md §4).
+   */
+  image?: string;
+  /**
    * ISO date (YYYY-MM-DD). Must match the date visibly rendered on the page
    * (the `.content_date` div) — never assert a date the page does not show.
    */
   datePublished?: string;
+  /**
+   * ISO date (YYYY-MM-DD). Pass only when the content actually changed after
+   * publication; equal to `datePublished` says nothing and is left off
+   * (wiki/aeo-rules.md §6 — never auto-bump this to look fresh).
+   */
+  dateModified?: string;
+  /**
+   * Named author. Pass the person the page credits in its "Über den Author"
+   * block; omit on pages that credit no one, which attributes to the
+   * organisation instead.
+   */
+  author?: "Heiner Blaskewitz";
 }
 
 /** An Article node, for editorial/knowledge pages like /wissen. */
-export function articleLd({ headline, description, url, datePublished }: ArticleLdOptions): string {
+export function articleLd({
+  headline,
+  description,
+  url,
+  image,
+  datePublished,
+  dateModified,
+  author,
+}: ArticleLdOptions): string {
   return ld({
     "@context": "https://schema.org",
     "@type": "Article",
     headline,
     description,
     inLanguage: "de",
-    image: SITE.defaultOgImage,
+    image: absoluteUrl(image) ?? SITE.defaultOgImage,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     ...(datePublished ? { datePublished } : {}),
-    author: { "@id": ORG_ID },
+    ...(dateModified ? { dateModified } : {}),
+    author: { "@id": author ? AUTHOR_ID : ORG_ID },
     publisher: { "@id": ORG_ID },
   });
 }

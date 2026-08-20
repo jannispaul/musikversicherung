@@ -2,11 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/instrumentenversicherung-fur-klaviere.html?raw";
 import { articleLd, breadcrumbLd } from "../../data/structured-data";
-import pageJs from "../../partials/wissen/instrumentenversicherung-fur-klaviere.inline.js?raw";
 
 const seo = {
   "jsonld": [
-    articleLd({ headline: "Instrumentenversicherung für Klaviere", description: "Klavier, Flügel oder E-Piano: Wir erzählen dir alles über die passende Versicherung für Tasteninstrumente.", url: "https://musikversicherung.com/wissen/instrumentenversicherung-fur-klaviere" }),
+    articleLd({ headline: "Instrumentenversicherung für Klaviere", description: "Klavier, Flügel oder E-Piano: Wir erzählen dir alles über die passende Versicherung für Tasteninstrumente.", url: "https://musikversicherung.com/wissen/instrumentenversicherung-fur-klaviere", image: "/assets/63f2893134fa326a6838c84d/6661daedccb6ba32d811157d_wissen-klavier.avif", datePublished: "2024-06-10", dateModified: "2024-08-05", author: "Heiner Blaskewitz" }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },
       { name: "Wissen", item: "https://musikversicherung.com/wissen" },
@@ -30,5 +29,4 @@ const seo = {
 
 <Layout {...seo}>
   <Fragment set:html={mainHtml} />
-  <script is:inline set:html={pageJs}></script>
 </Layout>

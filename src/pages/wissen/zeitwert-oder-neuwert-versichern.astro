@@ -2,11 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/zeitwert-oder-neuwert-versichern.html?raw";
 import { articleLd, breadcrumbLd } from "../../data/structured-data";
-import pageJs from "../../partials/wissen/zeitwert-oder-neuwert-versichern.inline.js?raw";
 
 const seo = {
   "jsonld": [
-    articleLd({ headline: "Instrumentenversicherung: Zeitwert oder Neuwert versichern?", description: "Neu- oder Zeitwert eines Instruments versichern? Tipps zur richtigen Wahl der Versicherungssumme.", url: "https://musikversicherung.com/wissen/zeitwert-oder-neuwert-versichern" }),
+    articleLd({ headline: "Instrumentenversicherung: Zeitwert oder Neuwert versichern?", description: "Neu- oder Zeitwert eines Instruments versichern? Tipps zur richtigen Wahl der Versicherungssumme.", url: "https://musikversicherung.com/wissen/zeitwert-oder-neuwert-versichern", image: "/assets/63f2893134fa326a6838c84d/666224e66a3146354744983b_wissen-2.avif", datePublished: "2024-06-12", author: "Heiner Blaskewitz" }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },
       { name: "Wissen", item: "https://musikversicherung.com/wissen" },
@@ -28,5 +27,4 @@ const seo = {
 
 <Layout {...seo}>
   <Fragment set:html={mainHtml} />
-  <script is:inline set:html={pageJs}></script>
 </Layout>

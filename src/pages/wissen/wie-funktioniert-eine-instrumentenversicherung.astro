@@ -2,11 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/wie-funktioniert-eine-instrumentenversicherung.html?raw";
 import { articleLd, breadcrumbLd } from "../../data/structured-data";
-import pageJs from "../../partials/wissen/wie-funktioniert-eine-instrumentenversicherung.inline.js?raw";
 
 const seo = {
   "jsonld": [
-    articleLd({ headline: "Wie funktioniert eine Instrumentenversicherung?", description: "Wie schützt eine Instrumentenversicherung Deine wertvollen Instrumente?", url: "https://musikversicherung.com/wissen/wie-funktioniert-eine-instrumentenversicherung" }),
+    articleLd({ headline: "Wie funktioniert eine Instrumentenversicherung?", description: "Wie schützt eine Instrumentenversicherung Deine wertvollen Instrumente?", url: "https://musikversicherung.com/wissen/wie-funktioniert-eine-instrumentenversicherung", image: "/assets/63f2893134fa326a6838c84d/66768804f809d1dbccbfc202_wissen-kids-3.avif", datePublished: "2024-07-21", author: "Heiner Blaskewitz" }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },
       { name: "Wissen", item: "https://musikversicherung.com/wissen" },
@@ -28,5 +27,4 @@ const seo = {
 
 <Layout {...seo}>
   <Fragment set:html={mainHtml} />
-  <script is:inline set:html={pageJs}></script>
 </Layout>

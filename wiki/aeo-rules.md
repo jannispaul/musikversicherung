@@ -173,11 +173,18 @@ A connected `@graph` keyed by stable `@id`s so entities relate across pages:
 | `@id` | Type | Scope |
 | --- | --- | --- |
 | `#organization` | `InsuranceAgency` | site-wide, every page via `BaseHead` |
+| `#heiner-blaskewitz` | `Person` | site-wide; the org's `founder` **and** the `/wissen` author are one node, not two lookalikes (added 2026-08-20) |
 | `#website` | `WebSite` | site-wide |
 | `#product` | `Product` | homepage and `/reviews` (offers on the homepage only — see below) |
+| `#logo` | `ImageObject` | site-wide; `/images/mv-logo.jpg`, the wordmark the header and footer render |
 
-Plus per-page builders: `breadcrumbLd()` (BreadcrumbList) and `articleLd()`
-(Article, on `/wissen/*`). `/faqs` carries `schema.org/FAQPage` as inline
+Plus per-page builders: `breadcrumbLd()` (BreadcrumbList), `articleLd()`
+(Article, on the eleven `/wissen/*` articles) and `collectionPageLd()`
+(CollectionPage, on the `/wissen` hub — added 2026-08-20; the hub used to
+claim `Article`, which asserted a date, an author and a lead image that a
+listing page does not have).
+
+ `/faqs` carries `schema.org/FAQPage` as inline
 microdata in `src/partials/faqs.html`; `src/pages/faqs.astro:7` deliberately
 adds only the breadcrumb there, to avoid a duplicate FAQPage.
 
@@ -199,7 +206,13 @@ adds only the breadcrumb there, to avoid a duplicate FAQPage.
   violation.
 - **Add schema through the builders** in `src/data/structured-data.ts` and the
   `jsonld` array in the page's `seo` object — never by pasting a `<script>` into
-  a partial.
+  a partial, and **never by building a node in client-side JavaScript.**
+  Schema is resolved at build time and ships in the HTML, full stop. Until
+  2026-08-20 twelve pages injected a second `Article` node into `<head>` after
+  load; it contradicted the server-side node on author and host, and on
+  `/berufshaftpflicht` it threw on a missing selector and emitted nothing at
+  all. §9's rule — if it is not in the HTML the server returns, assume no
+  answer engine sees it — governs schema exactly as it governs prose.
 - **Validate before shipping** any schema change: Google Rich Results Test plus
   schema.org validator.
 - Schema supports extraction; it does not replace it. A fact that exists only in
@@ -245,22 +258,51 @@ shipping and return-policy fields.
   `includeOffers`, default `false`. The homepage shows "ab 4,69€ / Monat" and
   passes `true`; `/reviews` shows no price and must not.
 
-### Known gap — dates
+### Dates — closed 2026-08-20
 
-`articleLd()` emits no `datePublished` or `dateModified`, yet **every `/wissen`
-page already displays a real publish date** in a `.content_date` div above the
-H1 (verified 2026-08-04; range 02.06.2024–30.07.2024). The facts exist and are
-published — they are simply not machine-readable.
+`articleLd()` now emits `datePublished`, and `dateModified` where the content
+actually changed. Every value is the date the page itself renders in its
+`.content_date` div, so schema and visible text cannot drift apart.
 
-**Fix:** pass the existing visible date through `articleLd()` as
-`datePublished`. This asserts nothing new, so it does not need an owner ruling —
-only care that each page's schema date matches the date rendered on that same
-page. See §6 for `dateModified` discipline.
+Two things worth keeping from doing it:
 
-> **OPEN:** `author` on `/wissen/*` is the organisation, not a person. A named
-> author is a genuine authority signal, but it attaches a real person's name to
-> specific content and is therefore the owner's call. See
-> [business-facts.md](business-facts.md).
+- **The visible date governs.** One article
+  (`/wissen/sind-schaden-durch-familienangehorige-mitversichert`) had a
+  client-side `date` of 2024-06-22 against a rendered date of 15.06.2024. §6
+  settles that without needing a ruling — the visible date is the assertion, so
+  2024-06-15 ships. Flagged to the owner rather than quietly averaged.
+- **`dateModified` equal to `datePublished` is left off.** It states nothing,
+  and omitting it asserts less. Only two articles carry one: the Klavier spoke
+  (2024-08-05) and `/wissen/was-deckt-eine-instrumentenversicherung-ab`
+  (2024-06-23), both carried over from the pre-Astro source. Never bump these
+  to look fresh.
+
+### Author on `/wissen/*` — settled 2026-08-20
+
+**Every `/wissen` article is authored by `Person` Heiner Blaskewitz**, via the
+shared `#heiner-blaskewitz` node.
+
+This was recorded as an open owner decision, on the understanding that
+`articleLd()` credited the organisation and a named author would be a new
+assertion. That understanding was incomplete: **the client-injected node had
+been asserting `author: Person "Heiner Blaskewitz"` on all eleven articles the
+whole time.** The two nodes disagreed with each other, and the choice was
+already live — it was never actually open.
+
+Consolidating onto one node forced a pick, and the person wins because the page
+says so: each article carries an "Über den Author" box naming Heiner
+Blaskewitz, "Versicherungsfachmann (BWV)"
+([business-facts.md](business-facts.md), published experience claims).
+Crediting the organisation would put the schema in contradiction with visible
+prose — the one thing §4 forbids outright.
+
+Reversible in one line: drop `author:` from an `articleLd()` call and that page
+attributes to `#organization` instead.
+
+> **OPEN:** whether to add `jobTitle: "Versicherungsfachmann (BWV)"` to the
+> Person node. It is visible on all eleven articles and would be a checkable
+> credential rather than an adjective (§1), but it is a claim about a real
+> person's qualifications, so it is the owner's to add.
 
 > **OPEN:** whether individual `/wissen` pages should carry `FAQPage` or `HowTo`
 > instead of / alongside `Article`, and whether `Service` should join `Product`.

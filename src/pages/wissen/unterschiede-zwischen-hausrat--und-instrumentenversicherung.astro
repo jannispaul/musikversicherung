@@ -2,11 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import mainHtml from "../../partials/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung.html?raw";
 import { articleLd, breadcrumbLd } from "../../data/structured-data";
-import pageJs from "../../partials/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung.inline.js?raw";
 
 const seo = {
   "jsonld": [
-    articleLd({ headline: "Unterschiede zwischen Hausrat- und Instrumentenversicherung", description: "Wie unterscheiden sich Hausrat- und Instrumentenversicherung? Schützt eine Hausratversicherung auch Musikinstrumente? Vorteile einer Instrumentenversicherung.", url: "https://musikversicherung.com/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung" }),
+    articleLd({ headline: "Unterschiede zwischen Hausrat- und Instrumentenversicherung", description: "Wie unterscheiden sich Hausrat- und Instrumentenversicherung? Schützt eine Hausratversicherung auch Musikinstrumente? Vorteile einer Instrumentenversicherung.", url: "https://musikversicherung.com/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung", image: "/assets/63f2893134fa326a6838c84d/666224e7fe183235a3bb707e_wissen-6.avif", datePublished: "2024-07-30", author: "Heiner Blaskewitz" }),
     breadcrumbLd([
       { name: "Home", item: "https://musikversicherung.com" },
       { name: "Wissen", item: "https://musikversicherung.com/wissen" },
@@ -28,5 +27,4 @@ const seo = {
 
 <Layout {...seo}>
   <Fragment set:html={mainHtml} />
-  <script is:inline set:html={pageJs}></script>
 </Layout>
