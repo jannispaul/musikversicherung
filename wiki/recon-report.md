@@ -59,6 +59,13 @@ claim, wording, or scope and need a decision first
 
 ### Phase 0 — measurement and breakage first (this week)
 
+**Also open, found 2026-08-20:** three assets the site references do not
+exist — both Auslandsreisen PDFs linked from the `/faqs` answer, and the
+`mv-logo.jpg` in twelve pages' client-injected Article schema. The English PDF
+was earning 6.7k impressions before the migration. Account, cause and fix in
+[broken-assets.md](broken-assets.md). **[owner — must supply the two original
+PDFs.]**
+
 0. **Fix the www 404 — partially done 2026-08-05.** Owner bound the www host;
    it now returns **200** (serves the site) instead of 404. Duplicate-host
    risk is mitigated by the absolute apex canonicals in `BaseHead.astro`,
