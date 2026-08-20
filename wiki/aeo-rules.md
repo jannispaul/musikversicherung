@@ -215,6 +215,18 @@ adds only the breadcrumb there, to avoid a duplicate FAQPage.
   answer engine sees it — governs schema exactly as it governs prose.
 - **Validate before shipping** any schema change: Google Rich Results Test plus
   schema.org validator.
+- **A hub's list of spokes is read from the hub's own markup**, never typed
+  out by hand. `/wissen` emits an ordered `ItemList` built by `listedPages()`
+  from the card anchors in `src/partials/wissen.html`, so the schema list and
+  the rendered cards cannot drift apart (added 2026-08-20). A hand-kept copy
+  would be a §5 consistency violation waiting to happen.
+- **Article images stay AVIF** (owner ruling, 2026-08-20). Every `/wissen` lead
+  image is `.avif` and `image` points at the file the page actually shows.
+  Google documents AVIF for Google Images; the structured-data image guidance
+  has historically listed JPEG/PNG/WebP/GIF/BMP/SVG, so it is worth confirming
+  in a Rich Results Test before relying on the property — but asserting the
+  image the page shows beats asserting one it does not, and no JPEG or WebP
+  derivative of these images exists. Do not generate one just for schema.
 - Schema supports extraction; it does not replace it. A fact that exists only in
   JSON-LD and not in readable body copy will rarely be quoted. **Say it in prose
   and mark it up.**
@@ -266,11 +278,12 @@ actually changed. Every value is the date the page itself renders in its
 
 Two things worth keeping from doing it:
 
-- **The visible date governs.** One article
+- **Schema date and visible date move together, or not at all.** One article
   (`/wissen/sind-schaden-durch-familienangehorige-mitversichert`) had a
-  client-side `date` of 2024-06-22 against a rendered date of 15.06.2024. §6
-  settles that without needing a ruling — the visible date is the assertion, so
-  2024-06-15 ships. Flagged to the owner rather than quietly averaged.
+  client-side `date` of 2024-06-22 against a rendered date of 15.06.2024.
+  Surfaced rather than averaged; **owner ruling 2026-08-20: the later date is
+  the real one.** So 2024-06-22 now ships *and the page renders 22.06.2024* —
+  correcting only the schema would have swapped one contradiction for another.
 - **`dateModified` equal to `datePublished` is left off.** It states nothing,
   and omitting it asserts less. Only two articles carry one: the Klavier spoke
   (2024-08-05) and `/wissen/was-deckt-eine-instrumentenversicherung-ab`
@@ -299,10 +312,9 @@ prose — the one thing §4 forbids outright.
 Reversible in one line: drop `author:` from an `articleLd()` call and that page
 attributes to `#organization` instead.
 
-> **OPEN:** whether to add `jobTitle: "Versicherungsfachmann (BWV)"` to the
-> Person node. It is visible on all eleven articles and would be a checkable
-> credential rather than an adjective (§1), but it is a claim about a real
-> person's qualifications, so it is the owner's to add.
+The Person node also carries `jobTitle: "Versicherungsfachmann (BWV)"`
+(owner ruling, 2026-08-20) — verbatim from the author box every article
+renders. A checkable credential, not an adjective (§1).
 
 > **OPEN:** whether individual `/wissen` pages should carry `FAQPage` or `HowTo`
 > instead of / alongside `Article`, and whether `Service` should join `Product`.

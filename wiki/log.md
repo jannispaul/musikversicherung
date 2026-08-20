@@ -14,6 +14,64 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-20 (4) — Four owner rulings; hub list and author credential added
+
+**Changed:**
+
+- `aeo-rules.md` §4 — the date case rewritten around the ruling; the `jobTitle`
+  OPEN closed; two new standing rules (hub lists are derived, not typed; article
+  images stay AVIF).
+- `recon-report.md` — the 2026-08-05 "Phase 1 progress" section re-marked from
+  "does not match the code" to **STALE: it records a different project.**
+
+**Site changes (same session):** the disputed publication date corrected in
+both places; `jobTitle` added to the Person node; the `/wissen` hub now emits an
+ordered `ItemList` of its eleven spokes, derived from its own markup.
+
+**The rulings** (owner, 2026-08-20), each answering a question raised in the
+2026-08-20 (3) entry:
+
+1. **The disputed date: the later one is right.**
+   `/wissen/sind-schaden-durch-familienangehorige-mitversichert` now publishes
+   2024-06-22 — **and the page renders 22.06.2024**, where it used to say
+   15.06.2024. Correcting only the schema would have traded a schema-vs-JS
+   contradiction for a schema-vs-page one, which is the worse of the two (§4).
+   This is the one change in this batch that alters what a reader sees.
+2. **Article images stay AVIF.** No JPEG derivative gets generated just to
+   satisfy a documentation table. Recorded as a standing rule with the caveat
+   that a Rich Results Test is still the way to confirm Google reads the
+   property.
+3. **The Klavier "Phase 1 progress" record belongs to a different project.**
+   Not a revert and not lost work — it was filed against the wrong codebase.
+   Left in place, clearly marked, because the plan may still be wanted; but
+   nothing in it counts as shipped here.
+4. **`jobTitle` and the hub list: both added.**
+
+**On the hub list.** The only real objection to `hasPart` was that it becomes a
+hand-kept list that drifts. So it is not hand-kept: `listedPages()` reads the
+card anchors out of `src/partials/wissen.html` at build time and returns them in
+render order, and `collectionPageLd()` emits them as an `ItemList`. Add or
+remove a card and the schema follows on the next build. This is the general
+rule now — a hub's spoke list is derived from the hub, never typed out
+([aeo-rules.md](aeo-rules.md) §4).
+
+`mainEntity: ItemList` rather than `hasPart`: it is self-contained (no `@id`
+references to nodes that are not on the page), and it preserves the visible
+ordering, which `hasPart` does not.
+
+**Verified:** `npm run build` passes with the asset gate. The validator over all
+25 built pages still reports no problems, now also checking the hub: the
+ItemList has one entry per rendered card, in the same order, with URLs and
+titles matching the cards character for character, every target page existing in
+`dist/`, and `numberOfItems` agreeing with the list length. `datePublished`
+still equals the rendered `.content_date` on all eleven articles — including the
+corrected one.
+
+**Source:** owner, 2026-08-20 (four rulings); `src/partials/wissen.html` (card
+markup); `src/data/structured-data.ts`; build output under `dist/`, 2026-08-20.
+
+---
+
 ## 2026-08-20 (3) — Article schema consolidated server-side
 
 **Changed:**
@@ -39,10 +97,8 @@ work on 2026-07-31 — but it is the same class of error. The hub is a listing:
 no `.content_date`, no author box, no lead image, so an `Article` node asserted
 three things the page does not show. It now emits `CollectionPage`.
 
-> **OPEN:** whether the hub's `CollectionPage` should carry `hasPart` listing
-> the eleven spokes. Every one of them is visibly linked on the page, so it
-> asserts nothing new and would make the hub/spoke structure machine-readable
-> — but it is a list that has to stay in sync by hand. Not added.
+(The hub list, the AVIF question and the author's `jobTitle` were all settled
+the same day — see the 2026-08-20 (4) entry above.)
 
 **Why:** owner ruled that the schema should be generated at build time and ship
 statically (owner, 2026-08-20), closing the item left open earlier that day.
@@ -84,12 +140,7 @@ referrer. Rather than orphan the file the owner had just supplied, it became
 the org's `logo`, replacing the 256×256 `touchicon.png` — a wordmark is what
 `logo` means, and it is the same mark the header and footer render.
 
-> **OPEN:** the article images are all `.avif`. Google documents AVIF support
-> for Google Images, but the structured-data image guidance historically lists
-> JPEG/PNG/WebP/GIF/BMP/SVG. No JPEG or WebP derivative of these images exists
-> in `public/assets/`. Not changed — asserting the image the page actually
-> shows is the rule — but worth a Rich Results Test before assuming the
-> property is being read.
+(The AVIF question was settled the same day — see the 2026-08-20 (4) entry.)
 
 **Verified:** `npm run build` passes with the asset gate. A validator over all
 25 built pages with JSON-LD confirms: exactly one `Article` node per `/wissen`
