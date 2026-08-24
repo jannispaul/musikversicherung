@@ -100,6 +100,10 @@ Implementation notes, because two of them are load-bearing:
 The DE-only IBAN pattern (`^DE\d{2}[ ]…|DE\d{20}$`) is consistent with this gate
 and was left untouched.
 
+**Backend:** the webhook/Make side has not been reviewed against this change.
+Open items are listed in
+[handoff-backend-wohnsitz-gate.md](handoff-backend-wohnsitz-gate.md).
+
 ## Flow decision (as implemented in `calculatePrice`)
 
 ```
