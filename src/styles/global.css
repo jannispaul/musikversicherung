@@ -345,3 +345,22 @@ a:not(> *) {
   pointer-events: none;
   opacity: 0.5;
 }
+
+/* --- Rich-text tables ----------------------------------------------------- */
+/* Price and comparison tables inside /wissen article bodies. */
+.text-rich-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-medium) 0;
+}
+.text-rich-text th,
+.text-rich-text td {
+  border: 1px solid var(--gradient-border-from);
+  padding: var(--space-xsmall) var(--space-small);
+  text-align: left;
+  vertical-align: top;
+}
+.text-rich-text th {
+  background-color: var(--color-surface-light);
+  font-weight: var(--font-weight-semibold);
+}
