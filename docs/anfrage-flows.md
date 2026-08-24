@@ -37,6 +37,7 @@ coverage section, secure section, `Proberaum`, `Bewohnt`, `flow`). Nothing else 
 | --- | --- | --- |
 | `Versicherung` | `SINFONIMA` (acoustic) / `IM SOUND` (electronic) | Top-level branch |
 | `Gesamtwert` | number (€) | Price + online-eligibility threshold |
+| `Wohnsitz` | `Deutschland` / `Österreich` / `Schweiz` / `Anderes Land` | Online-eligibility gate — anything but `Deutschland` forces `request` |
 | `Zahlung` | `Monatlich` / `Jaehrlich` | Pricing only |
 | `Deckung` | `Weltweit` / `Stationaer` | Pricing, only relevant > 20 000 € |
 | `flow` | `online` / `callback` | User's choice, only offered when eligible |
@@ -47,13 +48,13 @@ coverage section, secure section, `Proberaum`, `Bewohnt`, `flow`). Nothing else 
 ## The three flows
 
 ### 1. `request` — non-binding email offer / callback
-- **Entered when:** `SINFONIMA` (any value) **OR** `IM SOUND` with `Gesamtwert > 20 000` **OR** `IM SOUND`, `≤ 20 000`, but `flow = callback`.
+- **Entered when:** `SINFONIMA` (any value) **OR** `IM SOUND` with `Gesamtwert > 20 000` **OR** `IM SOUND`, `≤ 20 000`, but `flow = callback` **OR** `Wohnsitz ≠ Deutschland` (see "Residence gate" below).
 - **Form:** 3 steps. No IBAN/SEPA, no Geburtsdatum, no address, no step 4. Step-3 submit button is **"Unverbindlich anfragen"** (`data-flow="request"`). Shows `Nachricht` + `Terms` checkbox.
 - **`flow = callback` sub-case:** additionally reveals `[data-flow="callback"]` content (phone required, Erreichbarkeit) and hides `[data-flow="!callback"]`.
 - **Success:** `[data-success="request"]`.
 
 ### 2. `online` — instant cover / binding application
-- **Entered when:** `IM SOUND`, `Gesamtwert ≤ 20 000`, `flow = online`, and the proberaum/security check passes (no proberaum, or `Bewohnt = Ja`, or proberaum answered as secure).
+- **Entered when:** `IM SOUND`, `Gesamtwert ≤ 20 000`, `Wohnsitz = Deutschland`, `flow = online`, and the proberaum/security check passes (no proberaum, or `Bewohnt = Ja`, or proberaum answered as secure).
 - **Form:** reveals all `[data-flow="online"]` content — Geburtsdatum, address, proberaum address, IBAN + SEPA, and the 4th step (Vertragsgrundlage). Step 3 shows **"Weiter"** → step 4 submit **"Beitragspflichtig beantragen"**. A hidden `Beitrag` input carries the calculated price; a hidden `Sicherheit = "sicher"` input is added.
 - **List disclaimer:** if `Gesamtwert > 10 000`, show `list-disclaimer` (Excel list must follow) instead of `next-disclaimer`.
 - **Success:** `[data-success="online"]` (vorläufiger Versicherungsschutz).
@@ -63,17 +64,54 @@ coverage section, secure section, `Proberaum`, `Bewohnt`, `flow`). Nothing else 
 - Sets hidden `Sicherheit = "unsicher"`.
 - **Success:** `[data-success="incomplete"]` ("Rückfragen zum Proberaum erforderlich").
 
+## Residence gate (added 2026-08-24)
+
+**The binding online conclusion is offered for `Wohnsitz = Deutschland` only.**
+Austria, Switzerland and "Anderes Land" are routed into `request`. Owner ruling
+2026-08-24, recorded in
+[wiki/business-facts.md](../wiki/business-facts.md#online-conclusion--residence-eligibility).
+
+Implementation notes, because two of them are load-bearing:
+
+- **The `Wohnsitz` select sits on step 3, the flow choice on step 2.** The owner
+  chose to leave the field where it is rather than pull it forward, so the
+  switch happens *under* the user: picking a non-German residence on step 3
+  hides `[data-flow="online"]` (Geburtsdatum, address, IBAN/SEPA, step 4), swaps
+  the button back to "Unverbindlich anfragen" and drops the step-4 indicator.
+  `[data-name="residency-online-note"]` explains the downgrade and is shown
+  **only** when the user would otherwise qualify (`IM SOUND` ≤ 20 000 € and a
+  non-German residence) — nobody else ever saw the online option offered.
+- **An empty `Wohnsitz` must not block.** The select has no placeholder option,
+  so it reads `Deutschland` until touched. The gate is therefore
+  `Boolean(residency) && residency !== "Deutschland"`, not
+  `residency !== "Deutschland"`. Add a "Bitte auswählen" placeholder and the
+  flow choice would never appear on step 2, because at that point the field is
+  still unanswered.
+- **A previously chosen `flow = online` is cleared** when the residence blocks
+  it (`checked = false` plus removal of Webflow's `w--redirected-checked`
+  class), so the request lead is not submitted carrying `flow=online`. Falling
+  into the `request` branch also removes the hidden `Beitrag` input, as before.
+- Do **not** call `updateCustomRadioAppearence()` from inside `calculatePrice`:
+  it closes over a `const` declared further down in `initCalculator`, and
+  `calculatePrice` can run before that line (via `selectInsurance()` on a
+  `?versicherung=` URL). That would be a TDZ `ReferenceError` killing the whole
+  calculator.
+
+The DE-only IBAN pattern (`^DE\d{2}[ ]…|DE\d{20}$`) is consistent with this gate
+and was left untouched.
+
 ## Flow decision (as implemented in `calculatePrice`)
 
 ```
-if (IM SOUND && value <= 20000) {
+if (IM SOUND && value <= 20000 && residency is "" or "Deutschland") {
     show flow-choice
     if (flow === 'online')   -> online layout,  success = online
     else if (flow==='callback') -> request layout + callback items, success = request
 } else {
     hide flow-choice
-    -> request layout, success = request      // SINFONIMA, or IM SOUND > 20000
-}
+    if (residency blocks online) clear the flow radios
+    -> request layout, success = request      // SINFONIMA, IM SOUND > 20000,
+}                                             // or non-German residence
 
 // security overlay (only when flow === 'online'):
 if (IM SOUND && flow==='online' && (Proberaum==='Nein' || Bewohnt==='Ja'))

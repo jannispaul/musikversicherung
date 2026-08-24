@@ -96,6 +96,34 @@ zahlen Musiker 6,25 € monatlich für Instrumente bis 4.000 €"*
 pairing of a premium with a sum insured. No upper premium is published for
 either tariff.
 
+### Online conclusion — residence eligibility
+
+**The binding online conclusion on `/anfrage` is offered for a residence in
+Germany only.** Austria, Switzerland and every other residence go into the
+non-binding request flow and receive an offer by e-mail. *(owner ruling,
+2026-08-24.)*
+
+The owner was asked whether Austria should be online-eligible and ruled it out
+in the same exchange, so the AT question is settled, not open. Two things that
+fed the decision, both verified in the repo on 2026-08-24:
+
+- The IBAN field in the online flow accepts **German IBANs only**
+  (`pattern="^DE\d{2}[ ]…|DE\d{20}$"`, `src/partials/anfrage.html`), so an
+  Austrian applicant could not have completed it anyway.
+- The disclaimer already shown for a non-German residence says the binding
+  premium arrives in the e-mail offer (`src/partials/anfrage.html`) — which is
+  now exactly what happens for all of AT / CH / other.
+
+This narrows, and does not contradict, the note in
+[recon-report.md](recon-report.md) that a competitor advertises DE+AT residence
+and that our own eligibility had to come from the product, not from assumption.
+The mechanics of the gate live in `docs/anfrage-flows.md`.
+
+> **OPEN:** what the *policy documents* say about residence eligibility is still
+> unverified. The rule above is the owner's instruction for the form, not a
+> quoted tariff condition. Do not restate it as a cover condition in site copy
+> beyond the form's own note until a policy source is on record.
+
 ## The town — Barsinghausen
 
 The business address is in **Barsinghausen, Lower Saxony (postcode 30890)**.

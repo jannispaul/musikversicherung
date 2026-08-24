@@ -14,6 +14,26 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-24 — Online conclusion is Germany-only (owner ruling)
+
+**Changed:** [business-facts.md](business-facts.md) — new "Online conclusion —
+residence eligibility" subsection under Product, with an `OPEN` marker on the
+policy-document side. [recon-report.md](recon-report.md) — the DACH bullet now
+points at that subsection instead of leaving the eligibility question fully
+open.
+
+**Why:** the owner asked to restrict the `/anfrage` online flow by residence.
+Asked whether Austria should stay online-eligible, the owner ruled: online
+conclusion for Germany only, everyone else into the request flow. Implemented
+the same day in `src/scripts/calculator.js` + `src/partials/anfrage.html`;
+flow mechanics documented in `docs/anfrage-flows.md`.
+
+**Source:** owner, 2026-08-24. Supporting repo facts (DE-only IBAN pattern, the
+existing non-German-residence disclaimer) read from `src/partials/anfrage.html`
+on 2026-08-24.
+
+---
+
 ## 2026-08-20 (4) — Four owner rulings; hub list and author credential added
 
 **Changed:**

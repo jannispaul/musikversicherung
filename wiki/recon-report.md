@@ -164,7 +164,11 @@ The 16-month export ([keywords.md](keywords.md)) re-weights the phases:
   tariff-eligibility verification) is lowest priority for now.** Also a
   cover-eligibility question, not just SEO (sinfonima-versicherung.de notes
   DE+AT residence requirements; ours must be verified from policy docs, not
-  assumed).
+  assumed). **Partly answered 2026-08-24:** for the `/anfrage` form the owner
+  ruled the binding online conclusion is Germany-only, AT/CH/other go to the
+  request flow — see
+  [business-facts.md](business-facts.md#online-conclusion--residence-eligibility).
+  What the policy documents say about residence is still unverified.
 - **English demand exists** (2.4k imp; the travelling-abroad PDF alone drew
   6.7k imp). **Owner ruling 2026-08-05: possible, lowest priority.**
   English content stays barred meanwhile ([CLAUDE.md](../CLAUDE.md) §4).

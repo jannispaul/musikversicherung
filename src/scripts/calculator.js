@@ -25,6 +25,9 @@ function initCalculator() {
   const bewohntInputs = document.querySelectorAll("[name='Bewohnt']");
   const flowInputs = document.querySelectorAll("input[name='flow']");
 
+  const residencySelect = document.querySelector("[name='Wohnsitz']");
+  const residencyOnlineNote = document.querySelector("[data-name='residency-online-note']");
+
   const requestSuccess = document.querySelector("[data-success='request']");
   const onlineSuccess = document.querySelector("[data-success='online']");
   const incompleteSuccess = document.querySelector("[data-success='incomplete']");
@@ -55,6 +58,7 @@ function initCalculator() {
   proberaumInputs.forEach((el) => el.addEventListener("input", calculatePrice));
   bewohntInputs.forEach((el) => el.addEventListener("click", calculatePrice));
   flowInputs.forEach((el) => el.addEventListener("input", calculatePrice));
+  residencySelect?.addEventListener("change", calculatePrice);
 
   /**
    * Selects and triggers the insurance option based on URL query parameter.
@@ -88,6 +92,14 @@ function initCalculator() {
     value = parseInt(sanatizedValue.replace(".", ""));
 
     coverage = document.querySelector("input[name='Deckung']:checked")?.value;
+
+    // Online conclusion is offered for a German residence only (owner ruling
+    // 2026-08-24). Every other residence goes into the request flow.
+    // The Wohnsitz select has no placeholder option, so it reads "Deutschland"
+    // until the user changes it — an empty value must therefore not block the
+    // flow choice either, or the choice would never appear on step 2.
+    const residency = residencySelect?.value;
+    const residencyBlocksOnline = Boolean(residency) && residency !== "Deutschland";
     enteredCode = discountCodeInput?.value;
     const codes = ["jntpvoe21", "jntpvoewvu3135"]; // Obfuscated using obfuscateString function below: IMSOUND10,  IMSOUNDVUT2024 (need to be lowercase): https://www.dcode.fr/caesar-cipher
     // WHen deactivating codes make sure to delete logic further down
@@ -247,8 +259,14 @@ function initCalculator() {
     //const flowInput = document.querySelector("input[name='flow']");
     let beitragInput = document.querySelector("input[name='Beitrag']");
 
+    // Explain the downgrade, but only to users who would otherwise qualify for
+    // the online flow — everyone else never saw it offered.
+    if (residencyOnlineNote) {
+      residencyOnlineNote.style.display = insurance === "IM SOUND" && value <= 20000 && residencyBlocksOnline ? "block" : "none";
+    }
+
     // Show online flow elements and hide request flow items
-    if (value <= 20000 && insurance === "IM SOUND") {
+    if (value <= 20000 && insurance === "IM SOUND" && !residencyBlocksOnline) {
       //   console.log("Flow: (potentially) online", flow, value, insurance);
       flowChoice.style.display = "block";
       notCallbackFlowItems.forEach((item) => (item.style.display = "block"));
@@ -286,6 +304,18 @@ function initCalculator() {
         nextDisclaimerElement.style.display = "block";
       }
     } else {
+      // A non-German residence rules the online flow out for good, so drop a
+      // previously chosen "online". Without this the lead would still be
+      // submitted with flow=online while being a plain request.
+      if (residencyBlocksOnline && flow === "online") {
+        flowInputs.forEach((el) => {
+          el.checked = false;
+          // Clear Webflow's custom-radio state too, so the choice reads as
+          // unanswered when the user switches back to a German residence.
+          el.parentElement?.querySelector(".w-radio-input")?.classList.remove("w--redirected-checked");
+        });
+        flow = undefined;
+      }
       flowChoice.style.display = "none";
       //   console.log("Flow: Request", flow, value, insurance);
       // Show request flow and hide online flow
