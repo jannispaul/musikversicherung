@@ -75,6 +75,8 @@ marketing copy.
 | Tariff 2 | **I'M SOUND Equipmentversicherung** — electronic instruments and music equipment, from **6,25 € / Monat** | `structured-data.ts` `tariffOffers()`; homepage copy |
 | Quote path | `/anfrage` | `structured-data.ts` `tariffOffers()` |
 | Reviews | 1089, average 4,97 / 5 (computed at build) | `public/reviews.json` via `src/data/reviews.ts` |
+| Cover territory | Worldwide, **including international tours and session/studio work** | owner, 2026-08-27 |
+| In-vehicle cover | Instruments are covered in a vehicle **if kept in a locked case or boot/load compartment that is not viewable from outside** — approved wording: *"in einem verschlossenen und von außen nicht einsehbaren Koffer- oder Laderaum"* | on-page benefit copy (`src/partials/lp/*.html`, `src/partials/index.html`); reconfirmed owner, 2026-08-27 |
 
 The review figures were frozen at 1082 between 2026-05-27 and 2026-08-19,
 because new submissions stopped reaching `public/reviews.json`. Seven lost
@@ -225,6 +227,15 @@ usable; a company founding year is still not.
 > each tariff. Governed by `/versicherungsbedingungen` and the policy documents,
 > not summarised here yet — and not to be paraphrased into marketing copy
 > without approval ([CLAUDE.md](../CLAUDE.md) §4).
+>
+> **Partially closed 2026-08-27 (owner):** three specific points are now
+> owner-approved for copy and are recorded in the Product table above — worldwide
+> cover *including international tours and session/studio work*, and the
+> in-vehicle condition. The **full** exclusions/limits set remains OPEN; a
+> policy-document source is still needed before stating anything beyond these.
+> The in-vehicle wording must keep its exact qualifier ("verschlossen **und** von
+> außen nicht einsehbar") — the owner's casual "not visible from outside" is a
+> simplification, not a licence to loosen it.
 
 ---
 

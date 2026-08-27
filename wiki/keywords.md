@@ -25,7 +25,7 @@ provided by the owner 2026-08-04. Companion pages:
 | --- | --- | --- | --- | --- | --- |
 | Head terms ("instrumentenversicherung" 8.1k/pos 21, "musikinstrumentenversicherung" 3.7k/pos 61, + "versicherung (für) musikinstrument(e)" variants ~10k unclustered, + "…versichern" verb forms 9.7k/pos 32) | ~30k | ~30 | 25–40 | `/` (pos 21.7 avg) | the prize; homepage + hub |
 | SINFONIMA / Mannheimer brand-adjacent (56 queries: "mannheimer instrumentenversicherung" 1.7k, "sinfonima" 2.0k, "sinfonima versicherung" 1.6k …) | 12.5k | 11 | ~14 | homepage catches these; `/lp/sinfonima` itself at pos 35 | high intent, terrible CTR |
-| Equipment / I'M SOUND / Band / Proberaum ("wie versichere ich mein musikequipment?" 2.3k @ pos 6.5 **0 clicks**; "im sound versicherung" variants ~2.3k @ pos ~9.5; "equipmentversicherung" 1.1k @ 15; "musik equipment versicherung" 1.2k @ 6.6) | 12.2k | 11 | ~14 | **`/lp/imsound` — built 2026-08-05** (title "Musik-Equipment versichern ab 6,25 €/Monat \| I'M SOUND") | monitor rankings/CTR |
+| Equipment / I'M SOUND / Band / Proberaum ("wie versichere ich mein musikequipment?" 2.3k @ pos 6.5 **0 clicks**; "im sound versicherung" variants ~2.3k @ pos ~9.5; "equipmentversicherung" 1.1k @ 15; "musik equipment versicherung" 1.2k @ 6.6) | 12.2k | 11 | ~14 | **`/lp/imsound` — see OPEN below** | monitor rankings/CTR |
 | Hausrat overlap ("sind musikinstrumente durch die hausratversicherung abgedeckt?" 1.1k @ 11.2, **0 clicks**) | 3.2k | 0 | 16 | `/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung` (pos 15) | snippet + table |
 | Streicher/Geige/Cello/Harfe (34 queries) | 3.5k | 2 | 48 | none | spoke gap |
 | Bläser/Sax/Trompete/Klarinette (34 queries) | 2.8k | 2 | 44 | none | spoke gap |
@@ -82,6 +82,16 @@ dedicated Vergleich URL or strengthen the Hausrat spoke: owner call, filed in
 > **OPEN:** query→page mapping needs an API pull or per-page filtered
 > exports; the flat export can't attribute queries to URLs (e.g. whether the
 > SINFONIMA cluster lands on `/` or `/lp/sinfonima`).
+
+> **OPEN:** `/lp/imsound` is recorded above as "built 2026-08-05", but **no such
+> page exists in the repo** as of 2026-08-27 — `src/pages/lp/` holds only
+> `sinfonima.astro` and `berufsmusiker.astro`, and there is no `imsound` partial
+> or `dist/lp/imsound.html`. Either it was never committed, or it was removed
+> without a log entry. The Equipment / I'M SOUND cluster (12.2k impressions) is
+> therefore currently **unserved by a dedicated URL**. Decide whether to build
+> it (owner call) before relying on that table row. The aeo-rules §5
+> fact-location table was corrected the same day to drop its dangling
+> `/lp/imsound` reference.
 
 ---
 

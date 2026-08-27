@@ -1,0 +1,49 @@
+---
+/**
+ * Injects the build-time review data into a page's raw Webflow HTML and renders it.
+ *
+ * The review section markup — a hidden `.reviews_item` template plus the
+ * `average-rating` / `review-count` spans — is baked into several partials
+ * (the homepage, `/reviews`, and the `/lp` landing pages). Every one of those
+ * pages must have the real cards, average and count substituted in at build
+ * time. Centralising that substitution here keeps all of them in sync: it used
+ * to be duplicated inline in `index.astro` and `reviews.astro`, so when the
+ * landing pages were added they were missed and shipped an empty card list
+ * with a frozen "4,96 / 1058" placeholder.
+ *
+ * Pass `limit` for a clipped preview (homepage + landing pages show 15); omit
+ * it to render the full corpus (`/reviews`).
+ */
+import {
+  renderReviewItems,
+  reviews,
+  reviewCount,
+  averageDisplay,
+} from "../data/reviews";
+
+interface Props {
+  /** The page's raw partial HTML, containing the reviews section placeholder. */
+  html: string;
+  /** Cap the number of cards rendered. Omit to render every review. */
+  limit?: number;
+}
+
+const { html, limit } = Astro.props;
+const list = typeof limit === "number" ? reviews.slice(0, limit) : reviews;
+
+const rendered = html
+  .replace(
+    /<div class="reviews_item hide">[\s\S]*?Name um Date<\/div><\/div>/,
+    renderReviewItems(list),
+  )
+  .replace(
+    /(<span data-name="average-rating"[^>]*>)[^<]*(<\/span>)/,
+    `$1${averageDisplay}$2`,
+  )
+  .replace(
+    /(<span data-name="review-count"[^>]*>)[^<]*(<\/span>)/,
+    `$1${reviewCount}$2`,
+  );
+---
+
+<Fragment set:html={rendered} />

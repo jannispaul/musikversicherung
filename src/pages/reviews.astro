@@ -1,23 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Reviews from "../components/Reviews.astro";
 import mainHtml from "../partials/reviews.html?raw";
-import { renderReviewItems, reviewCount, averageDisplay } from "../data/reviews";
 import { productLd, breadcrumbLd } from "../data/structured-data";
-
-// Bake the reviews into the markup at build time (previously fetched client-side).
-const renderedHtml = mainHtml
-  .replace(
-    /<div class="reviews_item hide">[\s\S]*?Name um Date<\/div><\/div>/,
-    renderReviewItems(),
-  )
-  .replace(
-    /(<span data-name="average-rating"[^>]*>)[^<]*(<\/span>)/,
-    `$1${averageDisplay}$2`,
-  )
-  .replace(
-    /(<span data-name="review-count"[^>]*>)[^<]*(<\/span>)/,
-    `$1${reviewCount}$2`,
-  );
 
 const seo = {
   jsonld: [
@@ -45,5 +30,5 @@ const seo = {
 ---
 
 <Layout {...seo}>
-  <Fragment set:html={renderedHtml} />
+  <Reviews html={mainHtml} />
 </Layout>

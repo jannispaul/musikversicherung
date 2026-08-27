@@ -175,7 +175,7 @@ A connected `@graph` keyed by stable `@id`s so entities relate across pages:
 | `#organization` | `InsuranceAgency` | site-wide, every page via `BaseHead` |
 | `#heiner-blaskewitz` | `Person` | site-wide; the org's `founder` **and** the `/wissen` author are one node, not two lookalikes (added 2026-08-20) |
 | `#website` | `WebSite` | site-wide |
-| `#product` | `Product` | homepage and `/reviews` (offers on the homepage only — see below) |
+| `#product` | `Product` | homepage, `/reviews`, and both `/lp` landing pages (offers everywhere the price is shown — see below; `/reviews` is the exception) |
 | `#logo` | `ImageObject` | site-wide; `/images/mv-logo.jpg`, the wordmark the header and footer render |
 
 Plus per-page builders: `breadcrumbLd()` (BreadcrumbList), `articleLd()`
@@ -268,7 +268,9 @@ shipping and return-policy fields.
   published, so none may be invented.
 - **Offers only where prices are on the page.** `productLd()` takes
   `includeOffers`, default `false`. The homepage shows "ab 4,69€ / Monat" and
-  passes `true`; `/reviews` shows no price and must not.
+  passes `true`; the two `/lp` landing pages show both tariff figures in prose
+  ("… bei 4,69 € im Monat, … 6,25 € monatlich …") and pass `true` too (added
+  2026-08-27); `/reviews` shows no price and must not.
 
 ### Dates — closed 2026-08-20
 
@@ -345,8 +347,8 @@ reverse.
 | Phone | `src/data/site.ts:7-8`, JSON-LD `telephone` + `contactPoint`, `/kontakt`, `/impressum` |
 | Email | `src/data/site.ts:34` (entity-obfuscated), `src/data/structured-data.ts:24`, `/impressum` |
 | Postal address | JSON-LD `address` (`structured-data.ts:50`), `/impressum` |
-| Product names | JSON-LD `Product.name` + offer names, homepage, `/lp/sinfonima` |
-| Prices (4,69 € / 6,25 €) | JSON-LD `tariffOffers()` (`structured-data.ts`, as `minPrice`), homepage copy, `/lp/imsound`, `/wissen/was-kostet-…` |
+| Product names | JSON-LD `Product.name` + offer names (homepage + both `/lp` landing pages), homepage copy, `/lp/sinfonima`, `/lp/berufsmusiker` |
+| Prices (4,69 € / 6,25 €) | JSON-LD `tariffOffers()` (`structured-data.ts`, as `minPrice`; emitted on homepage + both `/lp` landing pages), homepage copy, `/lp/sinfonima` + `/lp/berufsmusiker` prose, `/wissen/was-kostet-…` |
 | Founder / responsible person | JSON-LD `founder`, `/impressum` |
 
 - **Spelling and formatting are part of consistency.** `I'M SOUND` vs.
@@ -471,16 +473,21 @@ costs you:
   must be **generated from the site at build time, never hand-maintained** — a
   hand-written copy will drift and become a §5 consistency violation, which is
   strictly worse than not having the file.
-- **Keep the sitemap honest.** `astro.config.mjs` excludes the noindex paths;
-  that list and the pages' `robots` directives must agree. They currently do —
-  three pages: `/berufshaftpflicht`, `/neue-bewertung`, `/lp/berufsmusiker`.
-  (Note: [README.md](../README.md) still says "two". The config is right.)
+- **Keep the sitemap honest.** `astro.config.mjs` excludes paths via
+  `SITEMAP_EXCLUDE_PATHS`; that list, each page's `robots`, and its `canonical`
+  must agree — a sitemap lists only canonical, indexable URLs. Three paths are
+  excluded: `/berufshaftpflicht` and `/neue-bewertung` (both `noindex`), and
+  `/lp/berufsmusiker`, which is `index,follow` but **cross-canonical to
+  `/lp/sinfonima`** (owner-approved 2026-08-27). `/lp/berufsmusiker` was briefly
+  self-canonical + indexed earlier that day before the cross-canonical replaced
+  it; see [on-page-rules.md](on-page-rules.md) §5 and [log.md](log.md).
+  README.md was corrected to match.
 - **The sitemap lives at `sitemap-index.xml` + `sitemap-0.xml`, not
   `sitemap.xml`** — `@astrojs/sitemap` always emits an index plus numbered
   chunks (split at 45,000 URLs; 23 URLs = one chunk). This is standard, Google
   supports it, and `robots.txt` points at the index, which is how crawlers find
   it. **Do not rename these for tidiness:** the only route to a flat
-  `sitemap.xml` is hand-rolling the sitemap, which drops the `NOINDEX_PATHS`
+  `sitemap.xml` is hand-rolling the sitemap, which drops the `SITEMAP_EXCLUDE_PATHS`
   filter above into manual maintenance — the exact drift this section warns
   about — and churns URLs already submitted to Search Console.
   > **OPEN:** whether to add `/sitemap.xml` → `/sitemap-index.xml` as a 301 in
