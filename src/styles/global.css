@@ -266,16 +266,18 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* Headline / link word-breaking */
+/* Headline word-breaking */
 h1,
 h2,
 h3 {
   word-break: break-word;
   font-feature-settings: "ss03";
 }
-a:not(> *) {
-  word-break: break-all;
-}
+/* Note: a former `a:not(> *) { word-break: break-all }` rule was removed here —
+   `:not(> *)` is an invalid selector (a relative combinator can't sit inside
+   `:not()`), so every browser dropped the rule and it matched nothing. It only
+   surfaced when the CSS minifier switched to lightningcss, which errors on it
+   instead of silently discarding it. Removing it changes no rendering. */
 
 /* The home "Alle Bewertungen ansehen" CTA renders as the last child of the
    reviews section with no bottom padding below it (Webflow markup quirk) —

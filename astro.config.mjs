@@ -26,6 +26,36 @@ export default defineConfig({
   // Emit flat files (kontakt.html instead of kontakt/index.html) so the output
   // mirrors the existing Strato deployment and preserves every URL.
   build: { format: "file" },
+  // CSS pipeline runs on lightningcss (Astro 7's default minifier). It is
+  // stricter than esbuild — it rejected the invalid `a:not(> *)` selector in
+  // global.css, which has since been removed.
+  //
+  // `targets` pins a broad browser range (≈ 2018+) so lightningcss keeps the
+  // vendor prefixes the migrated Webflow CSS relies on and even adds beneficial
+  // ones (`-webkit-sticky` for old Safari) instead of stripping them for a
+  // modern-only default. Versions are encoded as `major << 16`.
+  //
+  // Known, accepted delta vs the old esbuild minifier: lightningcss drops the
+  // redundant `-webkit-backdrop-filter` on the two frosted-glass rules (it treats
+  // the `-webkit-` + unprefixed pair as redundant, and vite's pipeline applies
+  // that regardless of `targets`). Impact is negligible — only Safari < 18, and
+  // only a subtle blur behind a 90%-opaque white navbar. Everything else is
+  // byte-equivalent to esbuild. To restore exact parity instead, swap the block
+  // below for `build: { cssMinify: "esbuild" }`.
+  vite: {
+    css: {
+      transformer: "lightningcss",
+      lightningcss: {
+        targets: {
+          safari: 12 << 16,
+          ios_saf: 12 << 16,
+          chrome: 64 << 16,
+          firefox: 67 << 16,
+          edge: 79 << 16,
+        },
+      },
+    },
+  },
   integrations: [
     sitemap({
       filter: (page) =>

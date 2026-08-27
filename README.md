@@ -16,7 +16,8 @@ componentised Astro codebase. It renders as a fully static site and is hosted on
 
 ## Requirements
 
-- Node.js 20+
+- Node.js 22.12+ (required by Astro 7; Cloudflare Pages builds with
+  `NODE_VERSION=24` — see Deployment)
 - npm (a `package-lock.json` is committed)
 
 ## Installation
