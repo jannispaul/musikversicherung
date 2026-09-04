@@ -419,13 +419,20 @@ company says".
 1. **The Vermittlerregister entry** (D-34VM-MMPLD-10, verifiable at
    vermittlerregister.info). An authoritative third-party public record. Almost
    no content competitor has an equivalent. Reference it and keep the details on
-   site exactly matching the register.
-2. **Google Business Profile** — feeds local results and Google's entity graph.
-   NAP must match [business-facts.md](business-facts.md) character for
-   character.
+   site exactly matching the register. **Now machine-readable** as the Person
+   node's schema `identifier` (added 2026-08-31; `structured-data.ts`).
+2. **~~Google Business Profile~~ — N/A for this site.** Ruled out by the owner
+   2026-08-31: pure online business, no local presence, no GBP
+   ([business-facts.md](business-facts.md), `sameAs` OPEN). Do not chase one.
 3. **The agency and insurer pages** (falk.mannheimer.de, Mannheimer /
-   Continentale material) — corroborates the insurer relationship.
-4. **Review platforms and musician communities** — earned, never bought.
+   Continentale material) — corroborates the insurer relationship. `Product.brand`
+   now carries the insurer's official `url` (`mannheimer.de`); a `sameAs` to the
+   Mannheimer/Continentale Wikidata items was **declined** — they are the wrong
+   entities (a former holding, and a health insurer). A **backlink from
+   falk.mannheimer.de** is the open high-value move here.
+4. **Review platforms and musician communities** — earned, never bought. An
+   independent review profile (e.g. ProvenExpert) is the top open item, since it
+   moves the self-hosted rating off-domain.
 
 **Rules:**
 

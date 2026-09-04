@@ -14,6 +14,52 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-08-31 — Off-domain entity corroboration in schema (register `identifier` + insurer `url`)
+
+**Changed:** `src/data/structured-data.ts` — Person node gains an `identifier`
+(`PropertyValue`, the DIHK-Vermittlerregister number `D-34VM-MMPLD-10`, `url` →
+vermittlerregister.info); `Product.brand` gains `url` → `mannheimer.de`.
+[business-facts.md](business-facts.md): two Identity rows added, an "External
+corroboration" note, a Soltau/Gelbe-Seiten addendum, and the `sameAs` OPEN
+rewritten (GBP ruled out, Wikidata declined). [aeo-rules.md](aeo-rules.md) §7
+priority list updated to match. No new page → no [index.md](index.md) change.
+
+**Why:** owner asked for off-domain authority moves that avoid a public-editable
+Wikidata item and don't need a GBP (pure online business). Implemented the two
+verifiable, self-hosted signals from the audit's Brand-Authority gap: the
+official register number (aeo §7 #1) as machine-readable schema, and the insurer
+brand disambiguated to its official domain. Both verified in the built HTML via
+`grep`/JSON parse; `npm run build` passes.
+
+**Source:** register number and insurer name from
+[business-facts.md](business-facts.md) / `impressum.html` (nothing invented).
+Wikidata items verified live 2026-08-31 (`Special:EntityData/*.json`): `Q1890715`
+= *former* "Mannheimer Versicherungen" holding (Allianz SE 2002–03), `Q1128861`
+= Continentale *health* insurer — both wrong entities for a `sameAs`, so declined
+per §4 rather than wired. falk.mannheimer.de and the Gelbe Seiten Soltau listing
+retrieved 2026-08-31 (data only). Owner rulings (GBP N/A; no Wikidata upkeep),
+2026-08-31.
+
+## 2026-08-31 — GEO audit run; recon snapshot filed
+
+**Changed:** new page [geo-audit-2026-08.md](geo-audit-2026-08.md); linked from
+[index.md](index.md). Client-facing `GEO-AUDIT-REPORT.md` written at repo root
+(outside `wiki/`). No rules pages changed — the audit **confirmed** existing
+rules rather than revising them.
+
+**Why:** `/geo-audit` skill run. Composite 68/100 ("Fair"): on-page and technical
+are A-grade (schema 92, technical 85, E-E-A-T 82), pulled down by Brand Authority
+(22) — the site is near-invisible off-domain. Surfaced three actionable items
+(non-extractable `/wissen` leads; still-zero tables; no Bing/IndexNow) and three
+owner-decision OPENs (Wikidata-not-Wikipedia as the entity anchor; an independent
+review profile; answer-first rewrites needing approved cover wording).
+
+**Source:** live `curl`/`WebFetch` of the production site + two GEO research
+sub-agents (brand-mentions, platform-readiness), all 2026-08-31; cross-checked
+against served HTML. No business facts invented (CLAUDE.md §4). Note filed:
+`WebFetch` strips `<script>`/microdata, so schema must be verified with `curl`,
+not a markdown proxy.
+
 ## 2026-08-27 — `/lp/berufsmusiker` cross-canonicalised to `/lp/sinfonima`
 
 **Changed:** `src/pages/lp/berufsmusiker.astro` (`canonical` → `.../lp/sinfonima`;
