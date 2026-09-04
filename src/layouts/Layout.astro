@@ -2,6 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
+import StickyCta from "../components/StickyCta.astro";
 
 interface Props {
   title: string;
@@ -36,12 +37,16 @@ const { lang = "de", bodyClass, ...head } = Astro.props;
       <Navbar />
       <slot />
       <Footer />
+      <StickyCta />
     </div>
 
-    {/* Site-wide behaviour: query-param persistence + umami event tracking. */}
+    {/* Site-wide behaviour: query-param persistence, umami event tracking,
+        sticky mobile CTA, and the footer cookie-settings trigger. */}
     <script>
       import "../scripts/params.js";
       import "../scripts/track.js";
+      import "../scripts/sticky-cta.js";
+      import "../scripts/cookie-settings.js";
     </script>
   </body>
 </html>
