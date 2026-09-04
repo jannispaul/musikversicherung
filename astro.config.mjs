@@ -23,6 +23,13 @@ const lastmodFor = createGitLastmod();
 export default defineConfig({
   site: "https://musikversicherung.com",
   trailingSlash: "never",
+  // Dev/preview server port. Honours the PORT env var (set by the preview
+  // harness's `autoPort`) so concurrent local dev servers don't collide on
+  // 4321; falls back to Astro's default when PORT is unset. Astro's CLI does
+  // not read PORT on its own — without this it just auto-increments off a busy
+  // 4321, which the launch.json port then no longer matches. Build output is
+  // unaffected (static `astro build` never starts a server).
+  server: { port: process.env.PORT ? Number(process.env.PORT) : 4321 },
   // Emit flat files (kontakt.html instead of kontakt/index.html) so the output
   // mirrors the existing Strato deployment and preserves every URL.
   build: { format: "file" },
