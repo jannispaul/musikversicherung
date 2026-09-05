@@ -14,6 +14,28 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-09-05 — `/wissen` content pass shipped to production (owner sign-off)
+
+**Changed:** owner reviewed the pass in dev mode and signed off; branch
+`agent/wissen-article-structure-c37d83` fast-forward-merged into `master`
+(`d85926d..33b563e`) and pushed to `origin/master`, which Cloudflare Workers
+Builds deploys to production. Closes the handoff's gate (item 1).
+
+Shipped in this deploy: the AEO content pass on all 11 `/wissen` spokes
+(answer-first leads, question H2s, "Das Wichtigste in Kürze" summary boxes, the
+four comparison/price tables, the both-date footer line + `dateModified`), the
+two "Marktführer" superlative removals, the new `noindex` `/lp/imsound` landing
+page, and `d85926d` (schema entity corroboration + GEO-audit snapshot) which had
+been sitting on local `master` unpushed.
+
+**Why:** owner, 2026-09-05 — "checked and looks good. commit, merge and push."
+
+**Source:** owner sign-off, 2026-09-05. Push was explicit (`git push origin
+master:master`) because local `master` tracks `origin/staging` — a bare push
+would miss production. Left as still-open work:
+the annual fact re-verification against policy documents (no policy PDFs in
+`raw/` yet); H1s/titles/slugs untouched by the pass.
+
 ## 2026-09-05 — `/lp/imsound` set to `noindex` (owner ruling: thin/duplicate content)
 
 **Changed:** `/lp/imsound` (the new I'M SOUND landing page added on branch

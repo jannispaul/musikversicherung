@@ -80,8 +80,11 @@ and the three **price/comparison tables** (#1–#3), where prose became table ce
 
 ## Open items / decisions still needed
 
-1. **Owner sign-off is the gate to merge.** Nothing here goes to `master` until
-   the articles are read. That is the whole point of this handoff.
+1. **RESOLVED 2026-09-05 — owner signed off; shipped.** The owner reviewed the
+   pass in dev mode, approved it, and the branch was fast-forward-merged into
+   `master` (`d85926d..33b563e`) and pushed to `origin/master` for the Cloudflare
+   production deploy. See [wiki/log.md](../wiki/log.md) `2026-09-05` ("shipped to
+   production").
 2. **The last-updated date value (`04.09.2026`)** stands for "revised in this
    pass." It is a hardcoded string in each partial and the matching
    `dateModified` in each `.astro`. **If the merge slips materially, bump both**
