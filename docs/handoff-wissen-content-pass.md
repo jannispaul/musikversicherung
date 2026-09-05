@@ -102,8 +102,25 @@ and the three **price/comparison tables** (#1–#3), where prose became table ce
    sticky-CTA + schema `identifier` all present; superlatives clean). The
    branch→`master` merge is now clean. Full record: [wiki/log.md](../wiki/log.md)
    `2026-09-05`.
-4. **`5da82ab` also carries an "I'M SOUND LP" change** beyond `/wissen` — review
-   it on its own terms; it is not covered by this checklist.
+4. **`5da82ab` also adds a whole new `/lp/imsound` landing page** beyond
+   `/wissen` — review it on its own terms; it is not covered by the per-article
+   checklist. It is **not on `master`** (a genuinely new indexable page: 244
+   lines across `src/pages/lp/imsound.astro`, `src/partials/lp/imsound.{html,css}`),
+   built by cloning the sibling `/lp/sinfonima` pattern for the equipment product.
+   **What it does *not* do (checked 2026-09-05):** it introduces no fabricated
+   figures — the `20.000 €` online-conclusion cap, the "grob fahrlässig bis
+   20.000 Euro" cover statement, the Selbstbeteiligung/weltweit cover bullets and
+   the "beste Versicherung in dieser Branche" line (a **customer testimonial**
+   quote, not the site's own superlative) all already appear on `index.html` and
+   the sibling `/lp/sinfonima` + `/lp/berufsmusiker` pages. So it reuses
+   established live-corpus wording rather than authoring new regulated claims.
+   **Worth the owner confirming:** that the reused figures are correct *for the
+   I'M SOUND / equipment tariff specifically* (esp. the `20.000 €` online cap and
+   the grob-fahrlässig `20.000 €` cover), not merely carried over from SINFONIMA;
+   and that the testimonial is a real, sourced review ([CLAUDE.md](../CLAUDE.md)
+   §4 — testimonials must not be invented). Three `/wissen` articles now link to
+   it in prose: `die-passende-police-…`, `instrumentenversicherung-fur-klaviere`,
+   and `tipps-zur-auswahl-…`.
 5. **Superlative sweep (verified clean 2026-09-04):** the banned terms are gone —
    `grep -rioE "marktführer|günstigste[rns]?|führend[a-z]*" src/partials/wissen/`
    returns nothing. (Use word boundaries, not a bare `beste` — that matches
