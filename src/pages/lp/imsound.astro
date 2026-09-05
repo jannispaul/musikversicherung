@@ -16,7 +16,14 @@ const seo = {
   "twitterDescription": "Die I’M SOUND Equipmentversicherung schützt elektronische Instrumente und Musikequipment weltweit – auch im Proberaum und Auto. Bis 20.000 € online abschließen.",
   "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
   "twitterCard": "summary_large_image",
-  "robots": "index,follow"
+  // noindex,follow: /lp/imsound clones the SINFONIMA LP pattern and reuses the
+  // same copy, so it reads as thin/duplicate content and is kept out of the
+  // index (owner ruling 2026-09-05). It stays live + crawlable as a campaign/ad
+  // landing page (follow), and is excluded from the sitemap in astro.config.
+  // The self-canonical stays: this is the I'M SOUND (equipment) product, a
+  // different product from SINFONIMA, so it must NOT cross-canonical to
+  // /lp/sinfonima the way /lp/berufsmusiker does.
+  "robots": "noindex,follow"
 };
 ---
 

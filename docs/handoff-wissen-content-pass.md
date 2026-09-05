@@ -104,9 +104,14 @@ and the three **price/comparison tables** (#1–#3), where prose became table ce
    `2026-09-05`.
 4. **`5da82ab` also adds a whole new `/lp/imsound` landing page** beyond
    `/wissen` — review it on its own terms; it is not covered by the per-article
-   checklist. It is **not on `master`** (a genuinely new indexable page: 244
-   lines across `src/pages/lp/imsound.astro`, `src/partials/lp/imsound.{html,css}`),
-   built by cloning the sibling `/lp/sinfonima` pattern for the equipment product.
+   checklist. It is **not on `master`** (a new page, 244 lines across
+   `src/pages/lp/imsound.astro`, `src/partials/lp/imsound.{html,css}`), built by
+   cloning the sibling `/lp/sinfonima` pattern for the equipment product.
+   **RESOLVED 2026-09-05 (owner ruling):** it is now `noindex,follow` (self-
+   canonical) and excluded from the sitemap — a clone reusing the same copy would
+   be thin/duplicate content if indexed. It stays live + crawlable as a
+   campaign/ad landing page. See [wiki/log.md](../wiki/log.md) `2026-09-05` and
+   [aeo-rules.md](../wiki/aeo-rules.md) §8.
    **What it does *not* do (checked 2026-09-05):** it introduces no fabricated
    figures — the `20.000 €` online-conclusion cap, the "grob fahrlässig bis
    20.000 Euro" cover statement, the Selbstbeteiligung/weltweit cover bullets and

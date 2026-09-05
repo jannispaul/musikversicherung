@@ -14,6 +14,28 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-09-05 — `/lp/imsound` set to `noindex` (owner ruling: thin/duplicate content)
+
+**Changed:** `/lp/imsound` (the new I'M SOUND landing page added on branch
+`agent/wissen-article-structure-c37d83`) is now `robots: "noindex,follow"` with
+its self-canonical kept, and added to `SITEMAP_EXCLUDE_PATHS` in
+`astro.config.mjs`. Updated [aeo-rules.md](aeo-rules.md) §8 — the sitemap
+exclusion list is now four paths (`/berufshaftpflicht`, `/neue-bewertung`,
+`/lp/imsound` = `noindex`; `/lp/berufsmusiker` = `index,follow` cross-canonical).
+
+**Why:** owner ruling — the page clones the `/lp/sinfonima` pattern and reuses
+the same copy, so it would read as thin/duplicate content if indexed. Kept
+`noindex,follow` (live + crawlable as a campaign/ad landing page, link equity
+still flows) rather than cross-canonical: unlike `/lp/berufsmusiker` (the same
+SINFONIMA product for a different audience), `/lp/imsound` is the I'M SOUND
+*equipment* product — a different product — so cross-canonicalising it to
+`/lp/sinfonima` would be a false signal. Self-canonical + noindex is the honest
+combination.
+
+**Source:** owner, 2026-09-05. Code: `src/pages/lp/imsound.astro`,
+`astro.config.mjs`. Verified in built HTML this session (`<meta name="robots"
+content="noindex,follow">` present; `/lp/imsound` absent from `sitemap-0.xml`).
+
 ## 2026-09-05 — Reconciled `agent/wissen-article-structure-c37d83` with `master`
 
 **Changed:** merged `master` into the `/wissen` content-pass branch (worktree

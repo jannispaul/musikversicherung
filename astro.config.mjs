@@ -5,7 +5,7 @@ import { createGitLastmod, routeFromUrl } from "./scripts/git-lastmod.mjs";
 
 // Paths excluded from the generated sitemap. A sitemap should list only
 // canonical, indexable URLs, so this covers two cases:
-//   - noindex pages (`/berufshaftpflicht`, `/neue-bewertung`);
+//   - noindex pages (`/berufshaftpflicht`, `/neue-bewertung`, `/lp/imsound`);
 //   - `/lp/berufsmusiker`, which is crawlable (index,follow) but cross-canonical
 //     to `/lp/sinfonima` — advertising a non-canonical URL in the sitemap would
 //     send Search Console a mixed signal.
@@ -14,6 +14,7 @@ const SITEMAP_EXCLUDE_PATHS = [
   "/berufshaftpflicht",
   "/neue-bewertung",
   "/lp/berufsmusiker",
+  "/lp/imsound",
 ];
 
 // Real per-page modification dates, read from git. Never a build timestamp —

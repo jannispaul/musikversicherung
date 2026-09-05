@@ -506,13 +506,18 @@ costs you:
   strictly worse than not having the file.
 - **Keep the sitemap honest.** `astro.config.mjs` excludes paths via
   `SITEMAP_EXCLUDE_PATHS`; that list, each page's `robots`, and its `canonical`
-  must agree — a sitemap lists only canonical, indexable URLs. Three paths are
-  excluded: `/berufshaftpflicht` and `/neue-bewertung` (both `noindex`), and
-  `/lp/berufsmusiker`, which is `index,follow` but **cross-canonical to
-  `/lp/sinfonima`** (owner-approved 2026-08-27). `/lp/berufsmusiker` was briefly
-  self-canonical + indexed earlier that day before the cross-canonical replaced
-  it; see [on-page-rules.md](on-page-rules.md) §5 and [log.md](log.md).
-  README.md was corrected to match.
+  must agree — a sitemap lists only canonical, indexable URLs. Four paths are
+  excluded: `/berufshaftpflicht`, `/neue-bewertung` and `/lp/imsound` (all
+  `noindex`), and `/lp/berufsmusiker`, which is `index,follow` but
+  **cross-canonical to `/lp/sinfonima`** (owner-approved 2026-08-27).
+  `/lp/berufsmusiker` was briefly self-canonical + indexed earlier that day
+  before the cross-canonical replaced it; see
+  [on-page-rules.md](on-page-rules.md) §5 and [log.md](log.md). README.md was
+  corrected to match. `/lp/imsound` differs from `/lp/berufsmusiker`: it is the
+  I'M SOUND (equipment) product — a *different* product from SINFONIMA — so it is
+  `noindex,follow` on a **self-canonical**, not cross-canonical to sinfonima
+  (owner ruling 2026-09-05: a clone of the SINFONIMA LP reusing the same copy,
+  kept out of the index as thin/duplicate content).
 - **The sitemap lives at `sitemap-index.xml` + `sitemap-0.xml`, not
   `sitemap.xml`** — `@astrojs/sitemap` always emits an index plus numbered
   chunks (split at 45,000 URLs; 23 URLs = one chunk). This is standard, Google
