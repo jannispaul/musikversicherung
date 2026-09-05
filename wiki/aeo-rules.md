@@ -182,7 +182,7 @@ A connected `@graph` keyed by stable `@id`s so entities relate across pages:
 | `#organization` | `InsuranceAgency` | site-wide, every page via `BaseHead` |
 | `#heiner-blaskewitz` | `Person` | site-wide; the org's `founder` **and** the `/wissen` author are one node, not two lookalikes (added 2026-08-20) |
 | `#website` | `WebSite` | site-wide |
-| `#product` | `Product` | homepage and `/reviews` (offers on the homepage only — see below) |
+| `#product` | `Product` | homepage, `/reviews`, and both `/lp` landing pages (offers everywhere the price is shown — see below; `/reviews` is the exception) |
 | `#logo` | `ImageObject` | site-wide; `/images/mv-logo.jpg`, the wordmark the header and footer render |
 
 Plus per-page builders: `breadcrumbLd()` (BreadcrumbList), `articleLd()`
@@ -275,7 +275,9 @@ shipping and return-policy fields.
   published, so none may be invented.
 - **Offers only where prices are on the page.** `productLd()` takes
   `includeOffers`, default `false`. The homepage shows "ab 4,69€ / Monat" and
-  passes `true`; `/reviews` shows no price and must not.
+  passes `true`; the two `/lp` landing pages show both tariff figures in prose
+  ("… bei 4,69 € im Monat, … 6,25 € monatlich …") and pass `true` too (added
+  2026-08-27); `/reviews` shows no price and must not.
 
 ### Dates — closed 2026-08-20
 
@@ -366,8 +368,8 @@ reverse.
 | Phone | `src/data/site.ts:7-8`, JSON-LD `telephone` + `contactPoint`, `/kontakt`, `/impressum` |
 | Email | `src/data/site.ts:34` (entity-obfuscated), `src/data/structured-data.ts:24`, `/impressum` |
 | Postal address | JSON-LD `address` (`structured-data.ts:50`), `/impressum` |
-| Product names | JSON-LD `Product.name` + offer names, homepage, `/lp/sinfonima` |
-| Prices (4,69 € / 6,25 €) | JSON-LD `tariffOffers()` (`structured-data.ts`, as `minPrice`), homepage copy, `/lp/imsound`, `/wissen/was-kostet-…` |
+| Product names | JSON-LD `Product.name` + offer names (homepage + both `/lp` landing pages), homepage copy, `/lp/sinfonima`, `/lp/berufsmusiker` |
+| Prices (4,69 € / 6,25 €) | JSON-LD `tariffOffers()` (`structured-data.ts`, as `minPrice`; emitted on homepage + both `/lp` landing pages), homepage copy, `/lp/sinfonima` + `/lp/berufsmusiker` prose, `/wissen/was-kostet-…` |
 | Founder / responsible person | JSON-LD `founder`, `/impressum` |
 
 - **Spelling and formatting are part of consistency.** `I'M SOUND` vs.
@@ -441,13 +443,20 @@ company says".
 1. **The Vermittlerregister entry** (D-34VM-MMPLD-10, verifiable at
    vermittlerregister.info). An authoritative third-party public record. Almost
    no content competitor has an equivalent. Reference it and keep the details on
-   site exactly matching the register.
-2. **Google Business Profile** — feeds local results and Google's entity graph.
-   NAP must match [business-facts.md](business-facts.md) character for
-   character.
+   site exactly matching the register. **Now machine-readable** as the Person
+   node's schema `identifier` (added 2026-08-31; `structured-data.ts`).
+2. **~~Google Business Profile~~ — N/A for this site.** Ruled out by the owner
+   2026-08-31: pure online business, no local presence, no GBP
+   ([business-facts.md](business-facts.md), `sameAs` OPEN). Do not chase one.
 3. **The agency and insurer pages** (falk.mannheimer.de, Mannheimer /
-   Continentale material) — corroborates the insurer relationship.
-4. **Review platforms and musician communities** — earned, never bought.
+   Continentale material) — corroborates the insurer relationship. `Product.brand`
+   now carries the insurer's official `url` (`mannheimer.de`); a `sameAs` to the
+   Mannheimer/Continentale Wikidata items was **declined** — they are the wrong
+   entities (a former holding, and a health insurer). A **backlink from
+   falk.mannheimer.de** is the open high-value move here.
+4. **Review platforms and musician communities** — earned, never bought. An
+   independent review profile (e.g. ProvenExpert) is the top open item, since it
+   moves the self-hosted rating off-domain.
 
 **Rules:**
 
@@ -495,16 +504,21 @@ costs you:
   must be **generated from the site at build time, never hand-maintained** — a
   hand-written copy will drift and become a §5 consistency violation, which is
   strictly worse than not having the file.
-- **Keep the sitemap honest.** `astro.config.mjs` excludes the noindex paths;
-  that list and the pages' `robots` directives must agree. They currently do —
-  three pages: `/berufshaftpflicht`, `/neue-bewertung`, `/lp/berufsmusiker`.
-  (Note: [README.md](../README.md) still says "two". The config is right.)
+- **Keep the sitemap honest.** `astro.config.mjs` excludes paths via
+  `SITEMAP_EXCLUDE_PATHS`; that list, each page's `robots`, and its `canonical`
+  must agree — a sitemap lists only canonical, indexable URLs. Three paths are
+  excluded: `/berufshaftpflicht` and `/neue-bewertung` (both `noindex`), and
+  `/lp/berufsmusiker`, which is `index,follow` but **cross-canonical to
+  `/lp/sinfonima`** (owner-approved 2026-08-27). `/lp/berufsmusiker` was briefly
+  self-canonical + indexed earlier that day before the cross-canonical replaced
+  it; see [on-page-rules.md](on-page-rules.md) §5 and [log.md](log.md).
+  README.md was corrected to match.
 - **The sitemap lives at `sitemap-index.xml` + `sitemap-0.xml`, not
   `sitemap.xml`** — `@astrojs/sitemap` always emits an index plus numbered
   chunks (split at 45,000 URLs; 23 URLs = one chunk). This is standard, Google
   supports it, and `robots.txt` points at the index, which is how crawlers find
   it. **Do not rename these for tidiness:** the only route to a flat
-  `sitemap.xml` is hand-rolling the sitemap, which drops the `NOINDEX_PATHS`
+  `sitemap.xml` is hand-rolling the sitemap, which drops the `SITEMAP_EXCLUDE_PATHS`
   filter above into manual maintenance — the exact drift this section warns
   about — and churns URLs already submitted to Search Console.
   > **OPEN:** whether to add `/sitemap.xml` → `/sitemap-index.xml` as a 301 in

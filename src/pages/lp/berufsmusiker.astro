@@ -1,28 +1,40 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Reviews from "../../components/Reviews.astro";
 import mainHtml from "../../partials/lp/berufsmusiker.html?raw";
 import pageCss from "../../partials/lp/berufsmusiker.css?raw";
+import { productLd } from "../../data/structured-data";
 
 const seo = {
-  "title": "Instrumentenversicherung für Berufsmusiker",
-  "description": "Musikinstrumente, Equipment und Zubehör online versichern  ✅ weltweiter Schutz  ✅ auch im Auto ✅   SINFONIMA & IM SOUND ab 4,69 €",
-  "canonical": "https://musikversicherung.com/lp/berufsmusiker",
+  "title": "Instrumentenversicherung für Berufsmusiker | SINFONIMA",
+  "description": "Instrumentenversicherung für Berufsmusiker: weltweiter Schutz bei Auftritten, im Proberaum und auf Reisen – ohne Selbstbeteiligung, ab 4,69 € im Monat.",
+  // Cross-canonical to /lp/sinfonima: this page is the same SINFONIMA product
+  // for a different audience (near-duplicate of sinfonima), so ranking signals
+  // consolidate there. The page stays live + crawlable (index,follow) as a
+  // campaign/ad landing page and is excluded from the sitemap in astro.config.
+  // Flip back to the self URL if it ever becomes a genuinely distinct page.
+  "canonical": "https://musikversicherung.com/lp/sinfonima",
   "lang": "de",
-  "ogTitle": "Instrumentenversicherung für Berufsmusiker",
-  "ogDescription": "Musikinstrumente, Equipment und Zubehör online versichern  ✅ weltweiter Schutz  ✅ auch im Auto ✅   SINFONIMA & IM SOUND ab 4,69 €",
+  "ogTitle": "Instrumentenversicherung für Berufsmusiker | SINFONIMA",
+  "ogDescription": "Instrumentenversicherung für Berufsmusiker: weltweiter Schutz bei Auftritten, im Proberaum und auf Reisen – ohne Selbstbeteiligung, ab 4,69 € im Monat.",
   "ogImage": "https://musikversicherung.com/images/og-image.jpg",
   "ogType": "website",
-  "twitterTitle": "Instrumentenversicherung für Berufsmusiker",
-  "twitterDescription": "Musikinstrumente, Equipment und Zubehör online versichern  ✅ weltweiter Schutz  ✅ auch im Auto ✅   SINFONIMA & IM SOUND ab 4,69 €",
+  "twitterTitle": "Instrumentenversicherung für Berufsmusiker | SINFONIMA",
+  "twitterDescription": "Instrumentenversicherung für Berufsmusiker: weltweiter Schutz bei Auftritten, im Proberaum und auf Reisen – ohne Selbstbeteiligung, ab 4,69 € im Monat.",
   "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
   "twitterCard": "summary_large_image",
-  "robots": "noindex,nofollow"
+  "robots": "index,follow",
+  // Insurance offering as a Product. The page shows the live rating/count and
+  // the two tariff prices ("4,69 € im Monat" / "6,25 € monatlich"), so both the
+  // aggregateRating and the offers are backed by visible content, same as the
+  // homepage. Organization + WebSite come site-wide from BaseHead.
+  "jsonld": [productLd({ includeOffers: true })]
 };
 ---
 
 <Layout {...seo}>
   <style is:global is:inline set:html={pageCss} slot="head"></style>
-  <Fragment set:html={mainHtml} />
+  <Reviews html={mainHtml} limit={15} />
   <script>
       import "../../scripts/accordion.js";
   </script>

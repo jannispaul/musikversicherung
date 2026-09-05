@@ -1,0 +1,24 @@
+{
+  // Cloudflare Workers config for the CI deploy step (`wrangler deploy`).
+  //
+  // WHY THIS FILE EXISTS
+  // The site is a fully pre-rendered, static Astro build. Cloudflare hosts it
+  // as a static-assets Worker (Workers Builds), whose deploy command is
+  // `wrangler deploy`. Without a wrangler config, `wrangler deploy` runs its
+  // Astro auto-config (`astro add cloudflare`), which installs the SSR adapter
+  // and generates a config whose `name` is taken from package.json
+  // (`@pixelpink/musikversicherung`) — an invalid Worker name — and the build
+  // then fails. This file pins the real settings so no auto-config runs and the
+  // site stays static.
+  //
+  // Deliberately NO `main` field: we serve static assets only, so no Worker
+  // script / on-demand rendering is involved. Do not add the @astrojs/cloudflare
+  // adapter — that would switch the site to SSR. See README "Deployment".
+  "name": "musikversicherung",
+  "compatibility_date": "2026-08-30",
+  "assets": {
+    // Astro's static build output. `public/_headers` (copied here at build) is
+    // honoured by Workers static assets, same as it was on Pages.
+    "directory": "./dist"
+  }
+}

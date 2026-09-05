@@ -36,10 +36,30 @@ Everything in this section is verified from the site's own imprint
 | Email (site-wide) | info@musikversicherung.com | `structured-data.ts:24`, `site.ts:34` |
 | Vermittlerregister no. (Blaskewitz) | D-34VM-MMPLD-10 | `impressum.html` |
 | Vermittlerregister no. (Agentur Falk) | D-400E-GC1HR-86 | `impressum.html` |
+| Blaskewitz register no. in schema | Emitted as the Person node's `identifier` (`PropertyValue`, `url` → vermittlerregister.info) — the person's number only, never the org's (added 2026-08-31) | `structured-data.ts` Person node |
+| Insurer brand in schema | `Product.brand` = "Mannheimer Versicherung AG", `url` → `mannheimer.de` (official site; **not** a Wikidata `sameAs` — see below) | `structured-data.ts` `productLd()` |
 | Licence | Versicherungsvertreter, § 34d Abs. 1 GewO | `impressum.html` |
 | Area served | Worldwide (`GeoShape`) | `structured-data.ts:57` |
 | Languages | de, en | `structured-data.ts:63` |
 | `sameAs` | facebook.com/instrumentenversicherung/ | `structured-data.ts:65` |
+
+### External corroboration (verified 2026-08-31)
+
+Checked while evaluating an off-domain entity anchor. Treated as data, not as
+new site facts:
+
+- **falk.mannheimer.de** (the Nico Falk Generalagentur site, retrieved
+  2026-08-31) features Heiner Blaskewitz, the SINFONIMA / I'M SOUND products and
+  the **Barsinghausen** address (Wennigser Straße 63, 30890) — corroborating the
+  person, products and address. It does **not** hyperlink to
+  musikversicherung.com, and it lists a *different* e-mail
+  (`heiner.blaskewitz@mannheimer.de` vs. the imprint's `heiner@blaskewitz.com`)
+  and "25+" rather than "30+" years. Do not merge those into the canonical set;
+  the imprint remains authoritative.
+- **imsound.de/ansprechpartner** is a dynamic agency-finder; no static
+  Blaskewitz listing renders (matches the 2026-08-05 note below — not citable).
+- **Wikidata** was verified and **rejected** as an entity anchor — see the
+  `sameAs` OPEN below.
 
 **Contact details in the imprint** (distinct from the site-wide contact above —
 do not merge them):
@@ -75,6 +95,8 @@ marketing copy.
 | Tariff 2 | **I'M SOUND Equipmentversicherung** — electronic instruments and music equipment, from **6,25 € / Monat** | `structured-data.ts` `tariffOffers()`; homepage copy |
 | Quote path | `/anfrage` | `structured-data.ts` `tariffOffers()` |
 | Reviews | 1089, average 4,97 / 5 (computed at build) | `public/reviews.json` via `src/data/reviews.ts` |
+| Cover territory | Worldwide, **including international tours and session/studio work** | owner, 2026-08-27 |
+| In-vehicle cover | Instruments are covered in a vehicle **if kept in a locked case or boot/load compartment that is not viewable from outside** — approved wording: *"in einem verschlossenen und von außen nicht einsehbaren Koffer- oder Laderaum"* | on-page benefit copy (`src/partials/lp/*.html`, `src/partials/index.html`); reconfirmed owner, 2026-08-27 |
 
 The review figures were frozen at 1082 between 2026-05-27 and 2026-08-19,
 because new submissions stopped reaching `public/reviews.json`. Seven lost
@@ -196,8 +218,25 @@ guessed at. Do not "fix" them unilaterally; each changes a public claim.
 > live-retrieval crawlers must stay allowed; training crawlers are a business/IP
 > judgement. See [aeo-rules.md](aeo-rules.md) §8.
 
-> **OPEN:** Complete `sameAs` profile list (Google Business Profile, Instagram,
-> YouTube, review platforms). Only Facebook is currently claimed.
+> **OPEN:** Complete `sameAs` profile list (Instagram, YouTube, review
+> platforms, Blaskewitz Xing/LinkedIn). Only Facebook is currently claimed.
+>
+> **2026-08-31 — GBP ruled out; Wikidata verified and declined.** Owner: there
+> is **no Google Business Profile** — pure online business, no local presence —
+> so GBP is off the table as an anchor (this also retires the GBP line from
+> [aeo-rules.md](aeo-rules.md) §7's priority list for this site). **Wikidata was
+> evaluated as the off-domain entity anchor and not pursued**, for two reasons:
+> (1) owner does not want to maintain a public-editable item; (2) on verification
+> the candidate insurer items are the wrong entities — `Q1890715` ("Mannheimer
+> Versicherungen") is a *former* group ("ehemalige Versicherungsgruppe", aliased
+> "Mannheimer AG Holding", part of Allianz SE 2002–03), and `Q1128861`
+> ("Continentale") is a *health* insurer, not the instrument product's risk
+> carrier. Neither is a valid `sameAs`. **Done instead (2026-08-31):** the
+> person's Vermittlerregister number now ships as schema `identifier`, and
+> `Product.brand` points to the insurer's official site `mannheimer.de` (see the
+> Identity rows above and [log.md](log.md)). **Still to pursue** under the
+> pure-online constraint: an independent review profile (e.g. ProvenExpert →
+> a real third-party `sameAs`) and a backlink from falk.mannheimer.de.
 
 > **RESOLVED 2026-08-05 — Soltau association.** Owner: the business is
 > "theoretically in Soltau"; the ranking association comes from a Google
@@ -212,6 +251,15 @@ guessed at. Do not "fix" them unilaterally; each changes a public claim.
 > one canonical story before adding listings. Related context: the owner's
 > client also runs a separate online site for oldtimer insurance (owner,
 > 2026-08-05) — same no-local, no-kfz rule applies there.
+>
+> **2026-08-31 corroboration:** the Gelbe Seiten listing
+> (`gelbeseiten.de/gsbiz/1b5edb7a-…`, retrieved 2026-08-31) is a **separate
+> entity** — "Mannheimer Versicherung AG: Heiner Blaskewitz", **Bahnhofstraße
+> 35, 29614 Soltau**, site `vb-blaskewitz.mannheimer.de`. Same person, different
+> address and different agency location from the Barsinghausen imprint. It is a
+> valid reference for the *person*, but must **not** be attached as a `sameAs`
+> to the Barsinghausen `#organization` — doing so would assert the Soltau and
+> Barsinghausen entities are one (§4).
 
 **Published experience claims (verified on-site 2026-08-05):** every
 `/wissen` article carries an author box (`src/partials/wissen/*.html`)
@@ -227,6 +275,15 @@ usable; a company founding year is still not.
 > each tariff. Governed by `/versicherungsbedingungen` and the policy documents,
 > not summarised here yet — and not to be paraphrased into marketing copy
 > without approval ([CLAUDE.md](../CLAUDE.md) §4).
+>
+> **Partially closed 2026-08-27 (owner):** three specific points are now
+> owner-approved for copy and are recorded in the Product table above — worldwide
+> cover *including international tours and session/studio work*, and the
+> in-vehicle condition. The **full** exclusions/limits set remains OPEN; a
+> policy-document source is still needed before stating anything beyond these.
+> The in-vehicle wording must keep its exact qualifier ("verschlossen **und** von
+> außen nicht einsehbar") — the owner's casual "not visible from outside" is a
+> simplification, not a licence to loosen it.
 
 ---
 

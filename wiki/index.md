@@ -20,6 +20,7 @@ only — chat is not memory.
 | [broken-assets.md](broken-assets.md) | Assets the site referenced but did not have, all three now fixed: the two `/faqs` Auslandsreisen PDFs (deleted by an automated Webflow re-export in 2025, 404 for a year, recovered from git history) and `mv-logo.jpg` (rendered from the repo's own wordmark). Plus the `prebuild` gate that now fails the build on a missing asset, and the shallow-clone trap that hides history. | Any asset move or deletion; any `prebuild` asset-check failure |
 | [keywords.md](keywords.md) | Target-query register per URL (assumed, pending GSC data) plus the two free routes to Search Console data. | Any new page or title/H1 change |
 | [recon-report.md](recon-report.md) | Readable recon summary: comparison table, common patterns, and the phased ranking plan with owner-decision markers. | Planning or prioritising ranking work |
+| [geo-audit-2026-08.md](geo-audit-2026-08.md) | GEO audit snapshot (2026-08-31): composite 68/100, category scores, verified-in-HTML checklist, the `/wissen` extractability gap, and the off-page/entity weakness. Client write-up is `GEO-AUDIT-REPORT.md` at repo root. | Prioritising GEO/AEO work; before re-running the audit |
 | [log.md](log.md) | Dated record of every wiki change. | — (append to it on every change) |
 
 ## How the pages relate

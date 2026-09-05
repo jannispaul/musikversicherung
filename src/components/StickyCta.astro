@@ -1,0 +1,19 @@
+---
+/**
+ * Sticky mobile CTA.
+ *
+ * A floating "Jetzt anfragen" button that slides up from the bottom-right on
+ * mobile once the page hero has scrolled out of view. It gives phone visitors a
+ * persistent conversion action after the inline hero button — and the many
+ * `.hide-mobile-landscape` section CTAs — are gone from the screen.
+ *
+ * The reveal logic lives in `src/scripts/sticky-cta.js`; it only activates on
+ * pages that actually have a `.section_home-header` hero (the homepage and the
+ * two marketing landing pages), so the button never shows on the form, contact
+ * or legal pages. Styling and breakpoints live in `global.css`.
+ */
+---
+
+<div class="sticky-cta" data-sticky-cta aria-hidden="true">
+  <a href="/anfrage" class="button w-button" tabindex="-1">Jetzt anfragen</a>
+</div>

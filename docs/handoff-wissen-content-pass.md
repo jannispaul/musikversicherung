@@ -14,9 +14,11 @@ review guide for that pass.
   **worktree** at `.claude/worktrees/wissen-article-structure-c37d83/` (not the
   main working dir — `git worktree list` shows both).
 - **Commits:** `5da82ab` (WIP: summary boxes, Klavier rewrite, I'M SOUND LP) and
-  `23dd869` (dates → footer + bundled the rest of the pass). The full narrative,
-  per article, is in [wiki/log.md](../wiki/log.md) under the four `2026-08-31`
-  entries plus `2026-09-04`.
+  `23dd869` (dates → footer + bundled the rest of the pass); `21fffda` added this
+  handoff. **2026-09-05:** `master` was then merged into the branch to reconcile
+  it (see item 3 below) — that merge commit sits on top. The full narrative, per
+  article, is in [wiki/log.md](../wiki/log.md) under the four `2026-08-31` entries,
+  `2026-09-04`, and the `2026-09-05` reconciliation entry.
 - **Rules that govern the review:** [wiki/aeo-rules.md](../wiki/aeo-rules.md) §1
   (extractable/answer-first), §3 (tables, no superlatives), §4 (schema =
   visible), §6 (dates); [wiki/on-page-rules.md](../wiki/on-page-rules.md) §1, §4,
@@ -85,12 +87,21 @@ and the three **price/comparison tables** (#1–#3), where prose became table ce
    `dateModified` in each `.astro`. **If the merge slips materially, bump both**
    to the real ship date (they must stay equal — aeo §4). To find them:
    `grep -rl "04.09.2026" src/partials/wissen/` and `grep -rl "2026-09-04" src/pages/wissen/`.
-3. **The branch's wiki is behind `master`.** `master` has newer wiki work (the
-   2026-08-31 GEO-audit entries, `wiki/geo-audit-2026-08.md`, the
-   `structured-data.ts` register-`identifier`/insurer-`url` change, committed on
-   `master` as `d85926d`). This branch does **not** have those. Reconcile at
-   merge — do not let the branch's older `wiki/` overwrite `master`'s. In
-   particular `structured-data.ts` differs; check both changes coexist.
+3. **RESOLVED 2026-09-05 — branch reconciled with `master`.** `master` had newer
+   work the branch lacked (2026-08-31 GEO-audit entries, `wiki/geo-audit-2026-08.md`,
+   `GEO-AUDIT-REPORT.md`, the `structured-data.ts` register-`identifier`/insurer-`url`
+   change `d85926d`, plus the sticky-CTA / cookie-settings / Reviews-component work).
+   `master` was merged into the branch; only two files conflicted
+   (`src/styles/global.css` and `wiki/log.md`), both non-overlapping appends,
+   resolved by keeping both sides. The other wiki pages auto-merged as a clean
+   union (no `master` content dropped). **Correction to the earlier caution:**
+   `structured-data.ts` was never touched on the branch, so there was nothing to
+   reconcile there — master's version applies wholesale. Build is green and the
+   served HTML was re-verified after the merge (summary boxes on all 11 spokes,
+   the three tables, both-date footer line, schema `dateModified`, and master's
+   sticky-CTA + schema `identifier` all present; superlatives clean). The
+   branch→`master` merge is now clean. Full record: [wiki/log.md](../wiki/log.md)
+   `2026-09-05`.
 4. **`5da82ab` also carries an "I'M SOUND LP" change** beyond `/wissen` — review
    it on its own terms; it is not covered by this checklist.
 5. **Superlative sweep (verified clean 2026-09-04):** the banned terms are gone —

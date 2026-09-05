@@ -428,3 +428,70 @@ h3 {
   margin-top: var(--space-large);
   opacity: 0.7;
 }
+
+/* --- Sticky mobile CTA ---------------------------------------------------- */
+/* A floating "Jetzt anfragen" button that slides up from the bottom-right on
+   mobile once the hero has scrolled away. `src/scripts/sticky-cta.js` adds
+   `.is-active` (only where a `.section_home-header` hero exists, and the media
+   query below only shows it on mobile) and toggles `.is-in` as the hero leaves
+   or re-enters the viewport. Anchored 10px from the bottom; the right edge
+   tracks the `.padding-global` site margin (2rem ≤767px, 1.25rem ≤479px). */
+.sticky-cta {
+  position: fixed;
+  right: 2rem;
+  bottom: 10px;
+  z-index: 500; /* above content, below the navbar (1000) and Cookiebot dialog */
+  display: none;
+  transform: translateY(150%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+.sticky-cta .button {
+  box-shadow: var(--shadow-medium);
+}
+.sticky-cta.is-in {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (max-width: 767px) {
+  .sticky-cta.is-active {
+    display: block;
+  }
+}
+@media (max-width: 479px) {
+  .sticky-cta {
+    right: 1.25rem;
+  }
+}
+/* Never float over the open mobile menu. */
+body:has(#menu-btn-input:checked) .sticky-cta {
+  display: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-cta {
+    transition: opacity var(--transition-base);
+    transform: none;
+  }
+}
+
+/* --- Cookiebot ------------------------------------------------------------ */
+/* Hide Cookiebot's persistent floating badge. Consent can be reopened from the
+   footer "Cookie-Einstellungen" button instead (src/scripts/cookie-settings.js
+   → Cookiebot.renew()). */
+#CookiebotWidget {
+  display: none !important;
+}
+
+/* Footer cookie-settings trigger: a <button> that reads as a footer link. */
+.footer_cookie-settings {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+}

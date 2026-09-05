@@ -85,6 +85,20 @@ export function organizationLd(): string {
         name: "Heiner Blaskewitz",
         // Exactly as the author box on every /wissen article renders it.
         jobTitle: "Versicherungsfachmann (BWV)",
+        // The public DIHK-Vermittlerregister number, as shown in /impressum and
+        // recorded in wiki/business-facts.md. An authoritative third-party
+        // record and this site's strongest off-domain corroboration
+        // (wiki/aeo-rules.md §7): it ties the named responsible person to a
+        // verifiable government registration. It is Blaskewitz's personal
+        // Versicherungsvertreter registration — deliberately on the Person, not
+        // the org, whose separate agency number (D-400E-GC1HR-86) belongs to a
+        // different legal entity and must not be conflated with this one.
+        identifier: {
+          "@type": "PropertyValue",
+          propertyID: "Vermittlerregister (DIHK)",
+          value: "D-34VM-MMPLD-10",
+          url: "https://www.vermittlerregister.info",
+        },
       },
       {
         "@type": "WebSite",
@@ -202,7 +216,17 @@ export function productLd({
     name: "SINFONIMA / I'M SOUND Instrumentenversicherung",
     description: "Deine Versicherung für Instrumente und Equipment.",
     image: SITE.defaultOgImage,
-    brand: { "@type": "Brand", name: "Mannheimer Versicherung AG" },
+    // Official site of the risk carrier, so the brand resolves to the real
+    // company. Deliberately NOT a `sameAs` to Wikidata Q1890715: that item is
+    // the *former* "Mannheimer Versicherungen" holding (aliased "Mannheimer AG
+    // Holding", briefly part of Allianz SE 2002–03), not the current Mannheimer
+    // Versicherung AG in the Continentale Verbund — linking it would conflate
+    // two entities (wiki/business-facts.md, wiki/aeo-rules.md §5).
+    brand: {
+      "@type": "Brand",
+      name: "Mannheimer Versicherung AG",
+      url: "https://www.mannheimer.de/",
+    },
     category: "Musikinstrumentenversicherung",
     aggregateRating: {
       "@type": "AggregateRating",

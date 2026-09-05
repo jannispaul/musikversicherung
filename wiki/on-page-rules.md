@@ -161,23 +161,34 @@ in depth and links back to its hub.
   `src/partials/faqs.html`.
 - **Conversion targets:** `/anfrage`, `/schaden-melden`, `/kontakt` — these
   receive links; they are not hubs and should not sprawl into content pages.
-- **Landing pages:** `src/pages/lp/` — `sinfonima` (`index,follow`),
-  `berufsmusiker` (`noindex,nofollow`).
+- **Landing pages:** `src/pages/lp/` — `sinfonima` and `berufsmusiker`, both
+  `index,follow`, but **`berufsmusiker` is cross-canonical to `sinfonima`**
+  (`<link rel="canonical" href=".../lp/sinfonima">`, set in its `seo` object).
+  The two pages are the same SINFONIMA product for different audiences; the
+  canonical consolidates ranking signals onto `sinfonima` while `berufsmusiker`
+  stays live and crawlable as a campaign/ad landing page with copy tailored to
+  professional musicians. History: `berufsmusiker` was `noindex,nofollow` until
+  2026-08-27, briefly self-canonical+indexed, then cross-canonicalised the same
+  day once it was clear the content couldn't be meaningfully differentiated
+  without paraphrasing regulated cover copy and there was no organic
+  "Berufsmusiker" demand ([keywords.md](keywords.md), [log.md](log.md)).
 
-**Noindex pages — three, not two** (verified 2026-08-04 against
-`astro.config.mjs` `NOINDEX_PATHS` and each page's `seo.robots`; the two agree):
+**Excluded from the sitemap — three** (verified 2026-08-27 against
+`astro.config.mjs` `SITEMAP_EXCLUDE_PATHS`; the robots meta is separate, set
+per-page via `seo.robots`):
 
-| Page | Directive |
-| --- | --- |
-| `/berufshaftpflicht` | `noindex` |
-| `/neue-bewertung` | `noindex,follow` |
-| `/lp/berufsmusiker` | `noindex,nofollow` |
+| Page | Why excluded | robots |
+| --- | --- | --- |
+| `/berufshaftpflicht` | noindex | `noindex` |
+| `/neue-bewertung` | noindex | `noindex,follow` |
+| `/lp/berufsmusiker` | cross-canonical to `/lp/sinfonima` | `index,follow` |
 
-All three are excluded from the generated sitemap. **[README.md](../README.md)
-§SEO still says "the two `noindex` pages" — the README is stale; the config is
-correct.** Keep `NOINDEX_PATHS` and the per-page `robots` values in sync: if
-they ever disagree, a page is either sitemapped-but-noindexed or
-indexable-but-missing, and both are silent bugs.
+A sitemap should list only canonical, indexable URLs — hence a noindex page and
+a cross-canonical page are both kept out, for different reasons. [README.md](../README.md)
+§SEO was corrected on 2026-08-27. Keep `SITEMAP_EXCLUDE_PATHS`, each page's
+`seo.robots`, and its `canonical` in sync: a mismatch yields a
+sitemapped-but-noindexed page, an indexable-but-unlisted page, or a canonical
+URL that points at a page excluded from the sitemap — all silent bugs.
 
 **Never link to a noindex page from an indexable one** without a deliberate
 reason.
@@ -221,7 +232,8 @@ Verified 2026-08-04 against the codebase:
   (`BaseHead.astro:26`). Pages set it explicitly; keep those absolute and
   self-referential.
 - `@astrojs/sitemap` generates `sitemap-index.xml`, referenced from
-  `public/robots.txt`, excluding the three `noindex` pages listed in §5.
+  `public/robots.txt`, excluding the three pages in `SITEMAP_EXCLUDE_PATHS`
+  (two noindex + one cross-canonical) — see §5.
 - `public/robots.txt` is currently `User-Agent: *` / `Allow: /` plus the sitemap
   reference — all crawlers, including AI crawlers, are allowed. Changing that is
   an owner decision: see [aeo-rules.md](aeo-rules.md) §8.

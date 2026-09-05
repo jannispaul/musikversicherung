@@ -76,6 +76,15 @@ wherever the tag is. It lives in the empty `w-embed` under "1. Cookies" in
 `src/partials/datenschutz.html` (not in `datenschutz.astro`, which put it at
 page-wrapper level, below the container).
 
+**7. Cookiebot floating widget is hidden; consent is reopened from the footer.**
+Cookiebot's persistent floating badge (`#CookiebotWidget`, bottom-left) is hidden
+site-wide via `#CookiebotWidget { display: none !important; }` in
+`src/styles/global.css`. Visitors reopen the consent dialog from the footer
+**"Cookie-Einstellungen"** button (`[data-cookie-settings]` in `Footer.astro`),
+wired in `src/scripts/cookie-settings.js` to call `Cookiebot.renew()`. Note the
+widget/banner does **not** render on `localhost` ("domain not authorized" warning),
+so this is only visible on the deployed domain.
+
 ## Consent model — and why "server-side" is NOT a consent bypass
 
 Consent under GDPR/ePrivacy (and §25 TTDSG) depends on **what data is processed

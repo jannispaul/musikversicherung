@@ -14,6 +14,39 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-09-05 — Reconciled `agent/wissen-article-structure-c37d83` with `master`
+
+**Changed:** merged `master` into the `/wissen` content-pass branch (worktree
+`.claude/worktrees/wissen-article-structure-c37d83`) to de-risk the eventual
+merge (handoff item 3). The branch was 3 ahead / 6 behind. Two conflicts, both
+non-overlapping appends, resolved by keeping **both** sides:
+
+- `src/styles/global.css` — the branch's rich-text `table` / `.wissen-summary` /
+  `.content_meta` rules kept alongside master's `.sticky-cta` / `#CookiebotWidget`
+  / `.footer_cookie-settings` rules (distinct selectors, no overlap).
+- `wiki/log.md` — the branch's 2026-09-04 + three 2026-08-31 `/wissen` entries
+  kept above master's two 2026-08-31 (schema corroboration, GEO audit) and four
+  2026-08-27 entries. Same-day cross-branch order grouped by source; intra-day
+  sequence across two branches is unknowable, so grouping is the honest call.
+
+`wiki/aeo-rules.md`, `wiki/business-facts.md` and `wiki/index.md` auto-merged
+cleanly — verified the result is a union (master's GEO-audit page row, entity-
+corroboration text and the branch's 2026-09-04 date ruling all present; no master
+content dropped, only branch supersessions of now-stale pre-branch statements).
+`src/data/structured-data.ts` was **never touched on the branch**, so master's
+register-`identifier` + insurer-`url` additions (commit `d85926d`) apply
+wholesale — nothing to reconcile there, contrary to the handoff's caution.
+
+**Why:** handoff item 3 — reconcile before the owner's read so the owner reviews
+the real merged result and the branch→master merge is clean. Done on the feature
+branch only; nothing pushed; reversible (`git reset --hard 21fffda`).
+
+**Source:** `git merge master` in the worktree; `npm run build` green; served-HTML
+checks in `dist/` this session — summary box on all 11 spokes, price/comparison
+tables, both-date footer line, schema `dateModified: 2026-09-04`, plus master's
+sticky-CTA and schema `identifier` D-34VM-MMPLD-10 all present; superlative sweep
+(`marktführer|günstigste|führend|billigste`) clean.
+
 ## 2026-09-04 — Wissen: dates moved to a footer line (published + updated); `dateModified` set on all 11
 
 **Changed (site, branch `agent/wissen-article-structure-c37d83`, NOT yet merged):**
@@ -208,6 +241,163 @@ same open point the 2026-08-24 Klavier WIP flagged (`aeo-rules.md` §4, §6).
 for the CSS change.
 
 ---
+
+## 2026-08-31 — Off-domain entity corroboration in schema (register `identifier` + insurer `url`)
+
+**Changed:** `src/data/structured-data.ts` — Person node gains an `identifier`
+(`PropertyValue`, the DIHK-Vermittlerregister number `D-34VM-MMPLD-10`, `url` →
+vermittlerregister.info); `Product.brand` gains `url` → `mannheimer.de`.
+[business-facts.md](business-facts.md): two Identity rows added, an "External
+corroboration" note, a Soltau/Gelbe-Seiten addendum, and the `sameAs` OPEN
+rewritten (GBP ruled out, Wikidata declined). [aeo-rules.md](aeo-rules.md) §7
+priority list updated to match. No new page → no [index.md](index.md) change.
+
+**Why:** owner asked for off-domain authority moves that avoid a public-editable
+Wikidata item and don't need a GBP (pure online business). Implemented the two
+verifiable, self-hosted signals from the audit's Brand-Authority gap: the
+official register number (aeo §7 #1) as machine-readable schema, and the insurer
+brand disambiguated to its official domain. Both verified in the built HTML via
+`grep`/JSON parse; `npm run build` passes.
+
+**Source:** register number and insurer name from
+[business-facts.md](business-facts.md) / `impressum.html` (nothing invented).
+Wikidata items verified live 2026-08-31 (`Special:EntityData/*.json`): `Q1890715`
+= *former* "Mannheimer Versicherungen" holding (Allianz SE 2002–03), `Q1128861`
+= Continentale *health* insurer — both wrong entities for a `sameAs`, so declined
+per §4 rather than wired. falk.mannheimer.de and the Gelbe Seiten Soltau listing
+retrieved 2026-08-31 (data only). Owner rulings (GBP N/A; no Wikidata upkeep),
+2026-08-31.
+
+## 2026-08-31 — GEO audit run; recon snapshot filed
+
+**Changed:** new page [geo-audit-2026-08.md](geo-audit-2026-08.md); linked from
+[index.md](index.md). Client-facing `GEO-AUDIT-REPORT.md` written at repo root
+(outside `wiki/`). No rules pages changed — the audit **confirmed** existing
+rules rather than revising them.
+
+**Why:** `/geo-audit` skill run. Composite 68/100 ("Fair"): on-page and technical
+are A-grade (schema 92, technical 85, E-E-A-T 82), pulled down by Brand Authority
+(22) — the site is near-invisible off-domain. Surfaced three actionable items
+(non-extractable `/wissen` leads; still-zero tables; no Bing/IndexNow) and three
+owner-decision OPENs (Wikidata-not-Wikipedia as the entity anchor; an independent
+review profile; answer-first rewrites needing approved cover wording).
+
+**Source:** live `curl`/`WebFetch` of the production site + two GEO research
+sub-agents (brand-mentions, platform-readiness), all 2026-08-31; cross-checked
+against served HTML. No business facts invented (CLAUDE.md §4). Note filed:
+`WebFetch` strips `<script>`/microdata, so schema must be verified with `curl`,
+not a markdown proxy.
+
+## 2026-08-27 — `/lp/berufsmusiker` cross-canonicalised to `/lp/sinfonima`
+
+**Changed:** `src/pages/lp/berufsmusiker.astro` (`canonical` → `.../lp/sinfonima`;
+robots stays `index,follow`); `astro.config.mjs` (`NOINDEX_PATHS` renamed
+`SITEMAP_EXCLUDE_PATHS`, `/lp/berufsmusiker` added); `src/partials/lp/berufsmusiker.html`
+(the professional section's 2nd paragraph now names international tours +
+session work + the in-vehicle condition). Wiki:
+[on-page-rules.md](on-page-rules.md) §5/§6 (cross-canonical, sitemap-exclusion
+table now three, constant renamed), [business-facts.md](business-facts.md) (new
+Product rows + partial close of the exclusions OPEN).
+
+**Why (supersedes the same-day "indexed" decision below):** asked whether to
+keep `berufsmusiker` as a distinct indexed page or canonicalise it, the owner
+deferred to a recommendation. Recommended **cross-canonical to `sinfonima`**
+because: no organic "Berufsmusiker" demand ([keywords.md](keywords.md)); the two
+pages are the same SINFONIMA product; and the differentiators the owner supplied
+are reassurance-framing of the *same* cover, not a distinct product — so a second
+indexed page would split signals rather than win new queries. The canonical
+consolidates onto `sinfonima`; `berufsmusiker` stays live/crawlable as a
+campaign LP. Reversible: flip the `canonical` back to self.
+
+**Owner-verified facts used (owner, 2026-08-27):** cover applies worldwide
+*including international tours and session/studio work*; instruments are covered
+in a vehicle if kept in a locked, not-externally-visible case/boot compartment.
+Recorded in [business-facts.md](business-facts.md). The in-vehicle sentence
+reuses the exact approved qualifier already on the page — the owner's casual
+"not visible from outside" was **not** used to loosen it. All other
+cover/price/claims copy remains verbatim.
+
+## 2026-08-27 — `/lp/berufsmusiker` content differentiated for Berufsmusiker
+
+**Changed:** [on-page-rules.md](on-page-rules.md) §5 (landing-pages line + noindex
+table now two, README noted as corrected) and §6 (two, not three);
+[keywords.md](keywords.md) (new OPEN: `/lp/imsound` is referenced as built but
+does not exist in the repo — the I'M SOUND cluster is unserved by a dedicated
+URL). Code: `src/pages/lp/berufsmusiker.astro` (title/description +
+og/twitter), `src/partials/lp/berufsmusiker.html` (hero paragraph + one new
+section).
+
+**Why:** `/lp/berufsmusiker` and `/lp/sinfonima` were byte-identical except the
+H1's last span, so indexing berufsmusiker (done earlier today) created a
+duplicate/thin-content risk and cannibalisation against `/lp/sinfonima` and the
+homepage. Differentiated berufsmusiker toward the professional-musician intent:
+new unique `<title>` (54 ch) and meta description (151 ch); a rewritten,
+liftable hero paragraph; and a new H2 section *"Warum brauchen Berufsmusiker
+eine spezielle Instrumentenversicherung?"* with two liftable paragraphs.
+
+**Constraint respected (CLAUDE.md §4):** every cover/price/claims sentence
+already on the page was left **verbatim** — the Hausrat comparison, the perils
+list, the benefit tiles, the FAQ answers. The new copy reuses only
+already-approved claims (weltweiter Schutz, ohne Selbstbeteiligung, "egal, wer
+den Schaden verursacht hat", Proberaum/Auftritte/Reisen, Zubehör, ab 4,69 €/Monat)
+plus audience framing that asserts no new cover fact. No new business or product
+fact was introduced. There is **no measured "Berufsmusiker" query demand** in GSC
+([keywords.md](keywords.md)), so this is cannibalisation-avoidance, not a demand
+play.
+
+**Still limited:** ~80% of the body is shared approved cover copy that may not be
+paraphrased, so the two pages remain substantially similar. Deeper divergence
+would need owner-supplied Berufsmusiker-specific approved wording, a verified
+professional-use angle (touring / equipment / higher sums), or a decision to
+canonicalise. Flagged to the owner, not resolved.
+
+**Source:** owner request, 2026-08-27.
+
+## 2026-08-27 — Product schema on both `/lp` pages; `/lp/berufsmusiker` indexed
+
+**Changed:** [aeo-rules.md](aeo-rules.md) — §4 `#product` scope row now names the
+two `/lp` landing pages; the offers rule notes they show both tariff figures in
+prose and pass `includeOffers`; §8 sitemap list dropped to two noindex paths
+(`/berufshaftpflicht`, `/neue-bewertung`) and records that `/lp/berufsmusiker`
+became indexable, retiring the stale "README says two" note; §5 fact-location
+table corrected (product names + prices now list both real landing pages, fixing
+a dangling `/lp/imsound` that is not a page). [README.md](../README.md) SEO
+section corrected to the right two noindex pages.
+
+**Why:** owner asked to (a) add the review/offer JSON-LD to `/lp/sinfonima` and
+`/lp/berufsmusiker` and (b) make `/lp/berufsmusiker` indexable. Both pages now
+display the live rating/count (after the `<Reviews>` fix earlier today) and both
+tariff prices, so `productLd({ includeOffers: true })` asserts only visible
+content — same shape as the homepage, staying in the product-snippet class (no
+merchant-listing fields). Indexing required flipping `robots` to `index,follow`
+**and** removing the path from `NOINDEX_PATHS` so the sitemap and the directive
+agree (§8). Verified in the build: both pages emit one `Product` node reusing
+`#product` with `aggregateRating` 4,97 / 1089 and the `AggregateOffer`
+(lowPrice 4.69, no shipping/return/availability); `/lp/berufsmusiker` now in
+`sitemap-0.xml`; both `index,follow`; all JSON-LD parses.
+
+**Source:** owner request, 2026-08-27; code in
+`src/pages/lp/{sinfonima,berufsmusiker}.astro`, `astro.config.mjs`.
+
+## 2026-08-27 — Reviews injection unified into one `<Reviews>` component
+
+**Changed:** [reviews-pipeline.md](reviews-pipeline.md) — the "Render" step now
+describes the shared `src/components/Reviews.astro` component and names all four
+pages that go through it (homepage + both `/lp` landing pages as a 15-card
+preview, `/reviews` as the full corpus).
+
+**Why:** the reviews section on `/lp/sinfonima` (and `/lp/berufsmusiker`) was
+broken — both landing pages rendered their partial raw, so the review cards
+never appeared and the average/count were frozen at the Webflow-baked
+placeholder `4,96 / 1058`. The build-time injection had been written inline and
+duplicated in `index.astro` and `reviews.astro` only, so the landing pages were
+missed when they were added. Extracted that logic into one component and pointed
+all four pages at it, so they can no longer drift. Verified on the dev server:
+`/lp/sinfonima` now renders 15 cards with real names/dates/stars at the live
+`4,97 / 1089`, no leftover placeholder.
+
+**Source:** owner request, 2026-08-27; code in `src/components/Reviews.astro`,
+`src/pages/{index,reviews}.astro`, `src/pages/lp/{sinfonima,berufsmusiker}.astro`.
 
 ## 2026-08-24 — Online conclusion is Germany-only (owner ruling)
 

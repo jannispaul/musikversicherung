@@ -1,7 +1,9 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Reviews from "../../components/Reviews.astro";
 import mainHtml from "../../partials/lp/sinfonima.html?raw";
 import pageCss from "../../partials/lp/sinfonima.css?raw";
+import { productLd } from "../../data/structured-data";
 
 const seo = {
   "title": "Versicherung für klassische Instrumente | Mannheimer Sinfonima",
@@ -16,13 +18,18 @@ const seo = {
   "twitterDescription": "Mit der Sinfonima Instrumentenversicherung sind deine Instrumente weltweit optimal geschützt – ob im Alltag, auf Reisen oder bei Konzerten.",
   "twitterImage": "https://musikversicherung.com/images/og-image.jpg",
   "twitterCard": "summary_large_image",
-  "robots": "index,follow"
+  "robots": "index,follow",
+  // Insurance offering as a Product. The page shows the live rating/count and
+  // the two tariff prices ("4,69 € im Monat" / "6,25 € monatlich"), so both the
+  // aggregateRating and the offers are backed by visible content, same as the
+  // homepage. Organization + WebSite come site-wide from BaseHead.
+  "jsonld": [productLd({ includeOffers: true })]
 };
 ---
 
 <Layout {...seo}>
   <style is:global is:inline set:html={pageCss} slot="head"></style>
-  <Fragment set:html={mainHtml} />
+  <Reviews html={mainHtml} limit={15} />
   <script>
       import "../../scripts/accordion.js";
   </script>

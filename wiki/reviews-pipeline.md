@@ -33,8 +33,13 @@ argument against competitors who show three testimonials
       workflow no longer exists here.
 3. **Rebuild.** The push to `master` triggers the Cloudflare Pages build.
 4. **Render.** `src/data/reviews.ts` imports `public/reviews.json` at build
-   time, computes count and average, and bakes the cards and the JSON-LD into
-   `/reviews` (`src/pages/reviews.astro`) and the homepage preview.
+   time and computes count and average. The `<Reviews>` component
+   (`src/components/Reviews.astro`) takes a page's raw partial HTML, substitutes
+   the cards, average and count into the reviews-section placeholder, and
+   renders it. **Every page that shows reviews goes through that one
+   component** — the homepage and both `/lp` landing pages as a 15-card preview
+   (`limit={15}`), `/reviews` as the full corpus (no `limit`). The JSON-LD is
+   emitted separately from each page's frontmatter via `structured-data.ts`.
 
 **The email is sent before the commit.** A notification mail therefore proves
 only that step 2a ran — never that the review landed.
