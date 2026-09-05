@@ -79,6 +79,13 @@ input[type="file"]:focus-visible {
   margin-left: auto !important;
 }
 
+/* Guard: keep a full-bleed child (e.g. .table-scroll) from creating
+   page-level horizontal scroll. `clip` leaves vertical flow untouched and,
+   unlike `hidden`, creates no scroll container. */
+.main-wrapper {
+  overflow-x: clip;
+}
+
 /* Line-clamp helpers */
 .text-style-3lines {
   display: -webkit-box;
@@ -266,16 +273,18 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* Headline / link word-breaking */
+/* Headline word-breaking */
 h1,
 h2,
 h3 {
   word-break: break-word;
   font-feature-settings: "ss03";
 }
-a:not(> *) {
-  word-break: break-all;
-}
+/* Note: a former `a:not(> *) { word-break: break-all }` rule was removed here —
+   `:not(> *)` is an invalid selector (a relative combinator can't sit inside
+   `:not()`), so every browser dropped the rule and it matched nothing. It only
+   surfaced when the CSS minifier switched to lightningcss, which errors on it
+   instead of silently discarding it. Removing it changes no rendering. */
 
 /* The home "Alle Bewertungen ansehen" CTA renders as the last child of the
    reviews section with no bottom padding below it (Webflow markup quirk) —
@@ -363,4 +372,59 @@ a:not(> *) {
 .text-rich-text th {
   background-color: var(--color-surface-light);
   font-weight: var(--font-weight-semibold);
+}
+/* Keep a wide table from blowing out the page width on small screens: the
+   table scrolls horizontally inside this wrapper instead of pushing the page. */
+.text-rich-text .table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Only the scroll container is full-bleed: `margin` breaks it out of the
+     centred article column to the viewport edges, while `padding-inline`
+     (= the column gutter) pulls the table back so its content still starts
+     aligned with the article text. The .main-wrapper `overflow-x: clip`
+     guard absorbs the 50vw scrollbar-width overshoot so this stays free of
+     page-level scroll. */
+  margin: var(--space-medium) calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+}
+.text-rich-text .table-scroll table {
+  margin: 0;
+  min-width: 32rem;
+}
+
+/* --- "Das Wichtigste in Kürze" summary box -------------------------------- */
+/* Answer-first recap at the top of a /wissen article. Reuses the site's
+   gradient-border card look (pair the element with .gradient-border-light);
+   this rule only adds the border width, radius, padding and label style. */
+.text-rich-text .wissen-summary {
+  border: 1px solid transparent;
+  border-radius: var(--radius-large);
+  padding: var(--space-medium);
+  margin: 0 0 var(--space-large);
+}
+.text-rich-text .wissen-summary_label {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-xsmall);
+}
+.text-rich-text .wissen-summary > :first-child {
+  margin-top: 0;
+}
+.text-rich-text .wissen-summary p,
+.text-rich-text .wissen-summary ul,
+.text-rich-text .wissen-summary > :last-child {
+  margin-bottom: 0;
+}
+.text-rich-text .wissen-summary ul {
+  margin-top: var(--space-xsmall);
+}
+
+/* Footer meta line at the end of a /wissen article: publication + last-updated
+   dates. Moved here from above the H1 (owner ruling 2026-09-04) so a genuinely
+   fresh "zuletzt aktualisiert" date sits with the author box rather than
+   greeting the reader with the original 2024 publication date. `.content_date`
+   (opacity .7) stays reserved for the old top slot; this dims itself. */
+.text-rich-text .content_meta {
+  margin-top: var(--space-large);
+  opacity: 0.7;
 }

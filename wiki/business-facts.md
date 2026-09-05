@@ -174,10 +174,12 @@ guessed at. Do not "fix" them unilaterally; each changes a public claim.
 > schema but no date is. Needed before any "seit …" claim.
 
 > **RESOLVED 2026-08-04 — publish dates.** Not open after all: every `/wissen`
-> page already displays a real publish date in a `.content_date` div above the
-> H1, ranging 02.06.2024–30.07.2024. The dates are established facts; they are
-> simply missing from `articleLd()`. Piping them into `datePublished` asserts
-> nothing new. See [aeo-rules.md](aeo-rules.md) §4 and §6.
+> page displays a real publish date, ranging 02.06.2024–30.07.2024. The dates
+> are established facts; they were simply missing from `articleLd()`. Piping
+> them into `datePublished` asserts nothing new. *(Position updated 2026-09-04:
+> the date moved from a `.content_date` div above the H1 to a footer
+> `.content_meta` line showing both "Veröffentlicht am …" and "zuletzt
+> aktualisiert am …".)* See [aeo-rules.md](aeo-rules.md) §4 and §6.
 
 > **RESOLVED 2026-08-20 — Named author for `/wissen` articles.** All eleven
 > articles credit `Person` Heiner Blaskewitz, through the shared

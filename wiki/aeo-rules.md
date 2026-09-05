@@ -138,11 +138,18 @@ are disproportionately likely to be asked of an answer engine, and models
 strongly prefer sources that read as balanced over sources that read as
 advertising.
 
-- **Comparisons belong in real tables.** The site has two natural comparison
-  topics — Hausrat vs. Instrumentenversicherung, Zeitwert vs. Neuwert — and
-  both are currently prose-only. There is **no `<table>` element anywhere in
-  `src/partials/wissen/`** (verified 2026-08-04). Adding proper tables to those
-  two pages is the single cheapest extractability win available.
+- **Comparisons belong in real tables.** The two natural comparison topics —
+  Hausrat vs. Instrumentenversicherung and Zeitwert vs. Neuwert — now each
+  carry a real `<table>`, as does the Kosten spoke (an eight-row price table)
+  and the Klavier spoke (comparison/price tables added 2026-08-31; the Klavier
+  price table came in the 2026-08-24 WIP pass). For years the corpus had **no
+  `<table>` at all** (verified 2026-08-04) — the single cheapest extractability
+  win, left unclaimed. Keep any new comparison in `<table>` markup with plain
+  headers and rows that mean something without the caption (§1); the shared
+  styling is the `.text-rich-text table` rules in `src/styles/global.css`. The
+  table cells reuse wording already published in the same article's prose — a
+  comparison table is a reformat, not a licence to author fresh cover wording
+  ([CLAUDE.md](../CLAUDE.md) §4).
 - **State what is not covered.** Exclusion clarity is high-value citable content
   *and* legally safer than a vague breadth claim. But exclusions are policy
   wording: reuse the approved text or ask. Never paraphrase an exclusion to make
@@ -272,11 +279,22 @@ shipping and return-policy fields.
 
 ### Dates — closed 2026-08-20
 
-`articleLd()` now emits `datePublished`, and `dateModified` where the content
-actually changed. Every value is the date the page itself renders in its
-`.content_date` div, so schema and visible text cannot drift apart.
+`articleLd()` emits `datePublished` and `dateModified`; every value is a date
+the page itself renders, so schema and visible text cannot drift apart.
 
-Two things worth keeping from doing it:
+**Updated 2026-09-04 (owner ruling).** The visible date moved out of the
+`.content_date` slot above the H1 into a footer `.content_meta` line at the end
+of the article body (directly above the "Über den Autor" box), and now shows
+**both** dates: *"Veröffentlicht am `<datePublished>` · zuletzt aktualisiert am
+`<dateModified>`"*. Because the content pass on branch
+`agent/wissen-article-structure-c37d83` materially rewrote all eleven spokes
+(answer-first leads, question H2s, comparison/price tables), every article now
+legitimately carries `dateModified: 2026-09-04` — a real modification, not a
+fabricated one (§6). Both dates are visible, so both are §4-safe to assert in
+schema. The `04.09.2026` value stands for "revised in that pass"; it should
+track the actual merge/ship date if that slips materially.
+
+Two things worth keeping from the original 2026-08-20 pass:
 
 - **Schema date and visible date move together, or not at all.** One article
   (`/wissen/sind-schaden-durch-familienangehorige-mitversichert`) had a
@@ -284,11 +302,14 @@ Two things worth keeping from doing it:
   Surfaced rather than averaged; **owner ruling 2026-08-20: the later date is
   the real one.** So 2024-06-22 now ships *and the page renders 22.06.2024* —
   correcting only the schema would have swapped one contradiction for another.
-- **`dateModified` equal to `datePublished` is left off.** It states nothing,
-  and omitting it asserts less. Only two articles carry one: the Klavier spoke
-  (2024-08-05) and `/wissen/was-deckt-eine-instrumentenversicherung-ab`
-  (2024-06-23), both carried over from the pre-Astro source. Never bump these
-  to look fresh.
+- **`dateModified` equal to `datePublished` is left off** — it states nothing,
+  and omitting it asserts less. This still governs any page that has not
+  genuinely changed since publication. Until the 2026-09-04 pass only two
+  articles carried a `dateModified` — the Klavier spoke (2024-08-05) and
+  `/wissen/was-deckt-eine-instrumentenversicherung-ab` (2024-06-23), both from
+  the pre-Astro source; the 2026-09-04 rewrite superseded both. **Never bump a
+  date to look fresh** — the 2026-09-04 values are honest *only* because the
+  bodies actually changed in that pass.
 
 ### Author on `/wissen/*` — settled 2026-08-20
 
@@ -366,8 +387,11 @@ reverse.
 prices. Never fake freshness; never let genuine staleness stand on a
 price-or-cover page.
 
-- **`datePublished` is the real first-publication date** — for `/wissen`, the
-  date already shown in `.content_date`. Schema date and visible date must match.
+- **`datePublished` is the real first-publication date** — for `/wissen`, shown
+  as "Veröffentlicht am …" in the footer `.content_meta` line (moved there from
+  above the H1 on 2026-09-04). Schema date and visible date must match — and
+  since that line also shows "zuletzt aktualisiert am …", the visible
+  `dateModified` must match schema too.
 - **`dateModified` moves only when the content materially changed.** Re-checking
   a fact and finding it unchanged is not a modification. Auto-bumping dates to
   look fresh is a fabrication under [CLAUDE.md](../CLAUDE.md) §4, and engines

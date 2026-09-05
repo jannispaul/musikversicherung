@@ -14,6 +14,201 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-09-04 — Wissen: dates moved to a footer line (published + updated); `dateModified` set on all 11
+
+**Changed (site, branch `agent/wissen-article-structure-c37d83`, NOT yet merged):**
+resolves the date open point the earlier passes deferred (aeo §4/§6). Owner
+ruling this session: show a *last-updated* date, keep the publish date, put both
+at the bottom.
+
+- **11 partials (`src/partials/wissen/*.html`):** removed the `.content_date`
+  div (and its spacer) from above the H1; added a footer `.content_meta` line as
+  the last child of the article body — *"Veröffentlicht am `<pub>` · zuletzt
+  aktualisiert am 04.09.2026"*. The H1 now leads the header block.
+- **11 pages (`src/pages/wissen/*.astro`):** every `articleLd()` now passes
+  `dateModified: "2026-09-04"` alongside its existing `datePublished`. The two
+  that already carried a 2024 `dateModified` (Klavier, was-deckt) were bumped to
+  the rewrite date.
+- **`src/styles/global.css`:** new `.text-rich-text .content_meta` rule
+  (`margin-top: var(--space-large)`, `opacity: .7`); 14px via `text-size-small`.
+- **[aeo-rules.md](aeo-rules.md) §4 (Dates) and §6:** updated to the new
+  structure — date now in the footer `.content_meta` line, both dates visible,
+  all 11 carrying an honest `dateModified`.
+
+**Why:** a 2024 publish date greeting every reader above the H1 read as stale.
+The last-updated date is honest *because* the 2026-08-31 pass materially rewrote
+all eleven bodies (summary boxes, question H2s, tables) — a genuine modification,
+not a fabricated freshness bump (§6, [CLAUDE.md](../CLAUDE.md) §4). Both dates are
+visible, so both stay §4-safe in schema. Git history could not supply the date
+(every partial's newest commit is the 2026-08-24 migration/pass, which would
+overstate freshness), so the value is hardcoded and should track the merge date.
+
+**Verified:** `npm run build` passes; shipped HTML carries the footer line and
+`"datePublished":"2024-07-15","dateModified":"2026-09-04"` in the Article JSON-LD;
+no `.content_date` remains; author `@id` still resolves. Browser preview
+confirmed the line renders dim, aligned with body text, directly above the
+"Über den Autor" box.
+
+**Source:** owner rulings this session (2026-09-04): last-updated over move-only;
+both dates shown; bottom placement. Publish dates are each article's existing
+`.content_date` value (unchanged). No business facts invented.
+
+## 2026-08-31 (3) — Wissen: "Das Wichtigste in Kürze" summary box on all 11 spokes
+
+**Changed (site, branch `agent/wissen-article-structure-c37d83`, NOT yet merged):**
+a summary box at the top of every `/wissen` article, owner-approved after a
+cost-page prototype. New component `.wissen-summary` in `src/styles/global.css`;
+it reuses the site's existing `gradient-border-light` card look, so it needs
+only border-width/radius/padding + a small label style. Two variants:
+
+- **Pattern A (framed lead)** — label + the article's existing answer-first
+  first paragraph, wrapped in the box — on the six prose spokes (was-deckt,
+  wie-funktioniert, warum-wichtig, sind-schaden, die-passende-police,
+  tipps-zur-auswahl) and, with a purpose-written one-sentence summary, on the
+  FAQ spoke.
+- **Pattern B (key facts)** — label + a short answer + 2–3 bullets — on the
+  three table spokes (Kosten, Hausrat, Zeitwert/Neuwert) and Klavier. The Kosten
+  and Klavier boxes end with a jump link to the page's price table
+  (`#beitragsbeispiele`, `#klavier-kosten`); the Hausrat and Zeitwert tables sit
+  directly below the box, so no jump link.
+
+All box copy is a verbatim reuse of the page's already-published answer/facts —
+no new claims (§4). Every page keeps exactly one H1; the box is the first
+element in the article body; `npm run build` passes.
+
+**Label styling note:** the label first shipped as an uppercase, letter-spaced
+"eyebrow" — but that treatment appears *nowhere else on the site* (the only
+`text-transform: uppercase` / `letter-spacing` outside vendor `webflow.css`).
+Per owner feedback it was changed to match the site's heading colour
+(`var(--color-text)`, `#333`) at `text-size-small`, semibold — consistent with
+the existing grey "Über den Autor" label idiom but with heading-level contrast
+against the box's light fill.
+
+**Why:** the audit's citability lever — make the answer-first lead visually
+prominent and scannable while pointing readers deeper (the jump links), without
+hiding the answer behind interaction (stays static HTML, extractable — aeo §1).
+
+**Owner sign-off still needed before merge:** same standing §4 caveat as the
+earlier two entries; this pass is presentation only and introduces no new facts.
+
+**Responsive tables (same session):** on small screens a wide table's
+min-content width pushed the whole page wider than the viewport. Each of the
+four tables (Kosten, Klavier, Hausrat, Zeitwert/Neuwert) is now wrapped in a
+`.table-scroll` div (`overflow-x: auto`, CSS in `src/styles/global.css`); the
+table scrolls horizontally inside that box instead of blowing out the page.
+Verified at 375px: page no longer overflows, table scrolls within its wrapper.
+Follow-up (owner request): only the **scroll container** is full-bleed, not the
+table itself. `.table-scroll` gets `margin-inline: calc(50% - 50vw)` (breaks the
+box out to the viewport edges) *plus* `padding-inline: calc(50vw - 50%)` (the
+column gutter, which pulls the table content back so it still starts aligned
+with the article text). So the scroll region/scrollbar span edge-to-edge while
+the table lines up with the body copy. To stop the `50vw` scrollbar-width
+overshoot from re-creating page scroll, `.main-wrapper` carries
+`overflow-x: clip` (leaves vertical flow untouched, creates no scroll
+container). Verified at 1200px (container [0,1200], table [216,984] = aligned
+with body text) and 375px (container [0,375], table starts at 20px = aligned,
+scrolls internally); no page overflow at either.
+
+---
+
+## 2026-08-31 (2) — Wissen: answer-first pass on the remaining seven spokes
+
+**Changed (wiki):**
+- [recon-report.md](recon-report.md) "Explicitly rejected" — recorded that the
+  rejected "Marktführer" superlative was found live on two `/wissen` pages and
+  removed.
+
+**Site changes (same session, branch `agent/wissen-article-structure-c37d83`,
+NOT yet merged):** the seven `/wissen` spokes not covered by the first pass all
+got answer-first leads and buyer-question H2s, reformatting already-published
+prose only (no new facts, qualifiers preserved):
+
+- `was-deckt-…`: lead lists the covered perils; the five noun H2s
+  (Diebstahl/Beschädigung/…) became one question H2 + a `<ul>` of self-describing
+  perils, keeping the "nicht bei allen Gesellschaften" Verlust qualifier.
+- `wie-funktioniert-…`: definition moved into the lead; the five process steps
+  became an `<ol>` (aeo §1 "ordered lists for genuine processes").
+- `warum-…-wichtig`: answer-first lead; three benefit sections reframed as
+  question H2s; heaviest marketing filler trimmed. Also fixed a duplicated-word
+  heading in the reviews strip ("Mehr zu Mehr zur …" → "Mehr zur …").
+- `sind-schaden-durch-familienangehorige-…`: the answer now leads; H2s made
+  questions; **removed the "Marktführer" superlative**; fixed typo "defintiv".
+- `die-haufigsten-fragen-…`: intro tightened; three descriptive internal links
+  added to the canonical spokes (Kosten, Was deckt, Familienangehörige) per
+  on-page §5.
+- `die-passende-police-…`: answer-first lead naming the two products up front;
+  noun H2s → questions; **removed the "Marktführer" superlative**.
+- `tipps-zur-auswahl-…`: lead summarises the five checks; tip labels → question
+  H2s; removed a dangling unlinked reference to a non-existent Auslandsreisen
+  article.
+
+Every H1, title, date, image and Article-schema `headline` left untouched, so
+`articleLd()` stays consistent. Exactly one H1 per page; `npm run build` passes.
+
+**Why:** the audit's citability lever — answer-first openings + question H2s
+across the `/wissen` corpus. Completes the sweep the first pass began.
+
+**Owner sign-off still needed before merge (CLAUDE.md §4):** same as the first
+pass — reformatted regulated copy, no new claims, but worth a human read. The
+two Marktführer removals in particular change a public claim (in the
+liability-reducing direction, and toward settled wiki policy) and are recorded
+in [recon-report.md](recon-report.md). Dates untouched (see the first entry).
+
+**Source:** the seven partials' pre-edit prose; the rejected-superlatives policy
+in [recon-report.md](recon-report.md) / [aeo-rules.md](aeo-rules.md) §3.
+
+---
+
+## 2026-08-31 — Wissen: answer-first leads + comparison/price tables (three spokes)
+
+**Changed (wiki):**
+- [aeo-rules.md](aeo-rules.md) §3 — retired the "no `<table>` anywhere in
+  `src/partials/wissen/`" fact; the two comparison tables and the Kosten price
+  table now exist, and the standing rule that table cells reuse already-published
+  prose is spelled out.
+- [recon-report.md](recon-report.md) Phase 1 item 5 — marked done 2026-08-31.
+
+**Site changes (same session, branch `agent/wissen-article-structure-c37d83`,
+NOT yet merged to master):**
+- `/wissen/was-kostet-…`: answer-first lead (leads with "ab 4,69 € im Monat …
+  bis 3.000 €", already published on the homepage and in this article's own
+  price list), three question H2s, and the eight price examples converted from a
+  `<p>` list into a real `<table>` (values verbatim). Sideways link added to the
+  Zeitwert/Neuwert spoke.
+- `/wissen/unterschiede-zwischen-hausrat--und-instrumentenversicherung`:
+  answer-first lead + a 5-row Hausrat-vs-Instrumentenversicherung comparison
+  `<table>`; noun-label H2s ("Hausratversicherung", "Instrumentenversicherung")
+  replaced with buyer questions; existing bullet detail kept, reordered under the
+  question H2s. Qualifiers ("in der Regel", "oftmals", "häufig") preserved.
+- `/wissen/zeitwert-oder-neuwert-versichern`: answer-first lead + a
+  Neuwert-vs-Zeitwert comparison `<table>`; the two noun H2s reworded to
+  questions; a dangling reference to a non-existent "Unterversicherung" article
+  removed. "immer zum Zeitwert" and the "40 %" example kept verbatim.
+- `src/styles/global.css`: removed the dead `a:not(> *)` rule that was failing
+  the production build (`npm run build`). Identical to the fix already on
+  master — `:not(> *)` is invalid, every browser dropped it, lightningcss now
+  errors instead of discarding it. No rendering change. The branch had reverted
+  master's fix; this re-applies it.
+
+**Why:** an audit found the /wissen articles weren't packaged for extraction —
+no answer-first openings, no question H2s, zero comparison tables (the exact §3
+gap). This pass fixes the three highest-leverage spokes.
+
+**Owner sign-off still needed before merge (CLAUDE.md §4):** every figure and
+cover statement is a verbatim / near-verbatim reuse of copy already on these
+pages or the homepage, and no qualifier was softened or strengthened — but this
+reframes a price page's opening and condenses category-comparison prose into
+table cells, so it should be reviewed as regulated communication before it ships
+to master. **Dates left untouched:** these bodies materially changed, so the
+`dateModified` / visible-`.content_date` handling is a separate owner call — the
+same open point the 2026-08-24 Klavier WIP flagged (`aeo-rules.md` §4, §6).
+
+**Source:** the three partials' pre-edit prose; the homepage tier statement
+([business-facts.md](business-facts.md), Product); master's global.css fix note
+for the CSS change.
+
+---
+
 ## 2026-08-24 — Online conclusion is Germany-only (owner ruling)
 
 **Changed:** [business-facts.md](business-facts.md) — new "Online conclusion —

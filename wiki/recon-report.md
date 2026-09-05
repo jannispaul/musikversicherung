@@ -95,6 +95,10 @@ account: [broken-assets.md](broken-assets.md).
    Hausrat spoke and Zeitwert/Neuwert spoke — already identified as the
    cheapest extractability win ([aeo-rules.md](aeo-rules.md) §3). Values only
    from approved sources; gaps left visible and asked, not filled.
+   **Done 2026-08-31** (branch `agent/wissen-article-structure-c37d83`, pending
+   owner sign-off + merge): all three tables shipped, plus answer-first leads
+   and question H2s on the same three spokes. Every value is a verbatim reuse of
+   already-published figures/wording; no new claim. See [log.md](log.md).
 6. **`datePublished` into `articleLd()`** from the visible `.content_date` —
    already-approved fix, asserts nothing new ([aeo-rules.md](aeo-rules.md) §4).
 7. **Phone sitewide** (footer at minimum, header ideally). **[owner]** —
@@ -232,6 +236,16 @@ Remaining Phase 2 queue: Hausrat/Kosten spoke upgrades, then instrument LPs
   us they'd require fabricating local facts ([CLAUDE.md](../CLAUDE.md) §4).
 - **"Marktführer"/superlative claims** (musik-versicherungen.de's H1) —
   unattributable and legally risky ([aeo-rules.md](aeo-rules.md) §3).
+  **Drift found and removed 2026-08-31:** two of our own `/wissen` pages carried
+  this exact claim about the Mannheimer ("seit vielen Jahren / seit Jahrzehnten
+  Marktführer im Bereich der Instrumentenversicherung") — on
+  `sind-schaden-durch-familienangehorige-mitversichert` and
+  `die-passende-police-…`. Both rephrased to drop the superlative while keeping
+  the verifiable substance; pending owner review + merge (branch
+  `agent/wissen-article-structure-c37d83`). If the owner has a source that
+  Mannheimer/SINFONIMA is the market leader, it belongs in
+  [business-facts.md](business-facts.md) first, then it could be reinstated as a
+  cited, attributed claim.
 
 ---
 
