@@ -484,7 +484,10 @@ body:has(#menu-btn-input:checked) .sticky-cta {
   display: none !important;
 }
 
-/* Footer cookie-settings trigger: a <button> that reads as a footer link. */
+/* Footer cookie-settings trigger: a <button> that reads as a footer link.
+   The anchor footer links get their underline from the base `a` rule
+   (webflow.css: `a{...text-decoration:underline}`); a <button> doesn't, so
+   set it explicitly to match the other links. */
 .footer_cookie-settings {
   cursor: pointer;
   border: 0;
@@ -494,4 +497,5 @@ body:has(#menu-btn-input:checked) .sticky-cta {
   font: inherit;
   font-size: 0.875rem;
   text-align: left;
+  text-decoration: underline;
 }

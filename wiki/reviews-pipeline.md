@@ -36,10 +36,21 @@ argument against competitors who show three testimonials
    time and computes count and average. The `<Reviews>` component
    (`src/components/Reviews.astro`) takes a page's raw partial HTML, substitutes
    the cards, average and count into the reviews-section placeholder, and
-   renders it. **Every page that shows reviews goes through that one
-   component** — the homepage and both `/lp` landing pages as a 15-card preview
-   (`limit={15}`), `/reviews` as the full corpus (no `limit`). The JSON-LD is
-   emitted separately from each page's frontmatter via `structured-data.ts`.
+   renders it. **Every page that shows reviews must go through that one
+   component** — the homepage and all three `/lp` landing pages (`sinfonima`,
+   `berufsmusiker`, `imsound`) as a 15-card preview (`limit={15}`), `/reviews`
+   as the full corpus (no `limit`). The JSON-LD is emitted separately from each
+   page's frontmatter via `structured-data.ts`.
+
+   > **Regression, fixed 2026-09-08.** `/lp/imsound` was rendering its partial
+   > with a plain `<Fragment set:html={mainHtml} />` instead of `<Reviews>`, so
+   > it shipped exactly the failure the component was built to prevent: an empty
+   > card list and the frozen `4,96 / 1058` placeholder baked into the partial.
+   > Fixed by routing it through `<Reviews html={mainHtml} limit={15} />` like
+   > its two siblings (`src/pages/lp/imsound.astro`). The lesson: adding an `/lp`
+   > page means wiring the shared `<Reviews>` component, not just `set:html` on
+   > the raw partial — the partial always contains a stale placeholder. Verified
+   > live: 4,97 / 1089, 15 real cards.
 
 **The email is sent before the commit.** A notification mail therefore proves
 only that step 2a ran — never that the review landed.

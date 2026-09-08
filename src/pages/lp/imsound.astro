@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Reviews from "../../components/Reviews.astro";
 import mainHtml from "../../partials/lp/imsound.html?raw";
 import pageCss from "../../partials/lp/imsound.css?raw";
 
@@ -29,7 +30,7 @@ const seo = {
 
 <Layout {...seo}>
   <style is:global is:inline set:html={pageCss} slot="head"></style>
-  <Fragment set:html={mainHtml} />
+  <Reviews html={mainHtml} limit={15} />
   <script>
       import "../../scripts/accordion.js";
   </script>

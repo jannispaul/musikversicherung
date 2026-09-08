@@ -14,6 +14,28 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-09-08 — `/lp/imsound` reviews regression + footer cookie-link underline
+
+**Changed:** [reviews-pipeline.md](reviews-pipeline.md) — corrected the Render
+step (there are three `/lp` pages, not "both"; wording now "must go through")
+and added a `> **Regression, fixed 2026-09-08**` note documenting that
+`/lp/imsound` was rendering its partial with a raw `<Fragment>` instead of the
+shared `<Reviews>` component, shipping the empty-card-list + frozen `4,96 / 1058`
+placeholder the component exists to prevent.
+
+**Why:** owner reported the reviews component broken on `/lp/imsound` and the
+footer "Cookie-Einstellungen" link missing its underline. Fixes:
+`src/pages/lp/imsound.astro` now uses `<Reviews html={mainHtml} limit={15} />`
+(verified live: 4,97 / 1089, 15 real cards); `.footer_cookie-settings` in
+`src/styles/global.css` got `text-decoration: underline` so the `<button>`
+matches the anchor `.footer_link` items (the underline comes from the base
+`a{…text-decoration:underline}` rule in `webflow.css`, which a `<button>` never
+inherited).
+
+**Source:** owner, 2026-09-08; code (`src/pages/lp/imsound.astro`,
+`src/components/Reviews.astro`, `src/styles/global.css:488`,
+`src/styles/webflow.css`), verified in the local dev preview.
+
 ## 2026-09-05 — `/wissen` content pass shipped to production (owner sign-off)
 
 **Changed:** owner reviewed the pass in dev mode and signed off; branch
