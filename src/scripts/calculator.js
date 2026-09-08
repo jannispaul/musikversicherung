@@ -100,6 +100,15 @@ function initCalculator() {
     // flow choice either, or the choice would never appear on step 2.
     const residency = residencySelect?.value;
     const residencyBlocksOnline = Boolean(residency) && residency !== "Deutschland";
+    // DE and AT are the only insurable residences (owner ruling 2026-09-08).
+    // "Anderes Land" stays in the select so the applicant is told why they can't
+    // continue; selecting it makes the required Wohnsitz field invalid via
+    // setCustomValidity, which the multi-step engine already treats as a hard
+    // block on "Weiter"/submit (validateStep -> reportValidity).
+    const residencyIneligible = residency === "Anderes Land";
+    residencySelect?.setCustomValidity(
+      residencyIneligible ? "Ein Versicherungsschutz ist nur für Personen mit Wohnsitz in Deutschland oder Österreich möglich." : ""
+    );
     enteredCode = discountCodeInput?.value;
     const codes = ["jntpvoe21", "jntpvoewvu3135"]; // Obfuscated using obfuscateString function below: IMSOUND10,  IMSOUNDVUT2024 (need to be lowercase): https://www.dcode.fr/caesar-cipher
     // WHen deactivating codes make sure to delete logic further down
@@ -262,7 +271,7 @@ function initCalculator() {
     // Explain the downgrade, but only to users who would otherwise qualify for
     // the online flow — everyone else never saw it offered.
     if (residencyOnlineNote) {
-      residencyOnlineNote.style.display = insurance === "IM SOUND" && value <= 20000 && residencyBlocksOnline ? "block" : "none";
+      residencyOnlineNote.style.display = insurance === "IM SOUND" && value <= 20000 && residencyBlocksOnline && !residencyIneligible ? "block" : "none";
     }
 
     // Show online flow elements and hide request flow items

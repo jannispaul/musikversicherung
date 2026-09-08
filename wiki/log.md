@@ -14,6 +14,29 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-09-08 — Anfrage: residence restricted to DE/AT (cover gate)
+
+**Changed:** [business-facts.md](business-facts.md) — the "Online conclusion —
+residence eligibility" section gained a dated owner-ruling update (2026-09-08):
+DE/AT is now a cover-eligibility condition, not just an online gate; `Schweiz`
+removed and `Anderes Land` blocked. OPEN marker reworded (policy-document source
+still not on file; note now authorized in the form's own copy by owner
+instruction). Also updated `docs/anfrage-flows.md` (Wohnsitz value list +
+Residence-gate update block) and `docs/handoff-backend-wohnsitz-gate.md` (CH /
+other leads stop arriving; `Land` field removed).
+
+**Why:** owner asked to update the Anfrage `Wohnsitz` select — remove Switzerland
+and only serve Deutschland/Österreich. Owner confirmed (2026-09-08) it is a real
+cover restriction (block others) and chose Option A (keep `Anderes Land` as a
+visible option that blocks + explains). Implemented in `src/partials/anfrage.html`
+(select options + notice) and `src/scripts/calculator.js`
+(`setCustomValidity` hard block). Verified in dev: select shows only DE/AT/Anderes
+Land; `Anderes Land` → field invalid + note; `Österreich` → request note; no
+script errors.
+
+**Source:** owner, 2026-09-08 (via `AskUserQuestion` in-session). Policy-document
+source for DE/AT-only cover still outstanding — see the OPEN marker.
+
 ## 2026-09-08 — `/lp/imsound` reviews regression + footer cookie-link underline
 
 **Changed:** [reviews-pipeline.md](reviews-pipeline.md) — corrected the Render

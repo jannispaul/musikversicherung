@@ -141,10 +141,24 @@ This narrows, and does not contradict, the note in
 and that our own eligibility had to come from the product, not from assumption.
 The mechanics of the gate live in `docs/anfrage-flows.md`.
 
-> **OPEN:** what the *policy documents* say about residence eligibility is still
-> unverified. The rule above is the owner's instruction for the form, not a
-> quoted tariff condition. Do not restate it as a cover condition in site copy
-> beyond the form's own note until a policy source is on record.
+**Update (owner ruling, 2026-09-08): a residence in Germany or Austria is now a
+cover-eligibility condition, not merely an online-conclusion gate.** Switzerland
+and every other non-DE/AT residence are no longer accepted at all. `Schweiz` was
+removed from the `Wohnsitz` select; selecting `Anderes Land` blocks the form (the
+required field is made invalid via `setCustomValidity`, so "Weiter"/submit cannot
+proceed) and shows the note *„Ein Versicherungsschutz ist nur für Personen mit
+Wohnsitz in Deutschland oder Österreich möglich."* Austria stays a valid
+residence but still routes to the non-binding request flow — the *online*
+conclusion remains Germany-only. The owner directed stating this as a cover
+condition in the form's own note. Mechanics: `docs/anfrage-flows.md`; backend
+impact (CH / other leads stop arriving): `docs/handoff-backend-wohnsitz-gate.md`.
+
+> **OPEN:** the *policy-document* wording for residence eligibility is still not
+> on file. The DE/AT-only cover rule is the owner's instruction (2026-08-24 for
+> the online gate, 2026-09-08 for the cover restriction), not a quoted tariff
+> condition. It is now stated in the form's own note per that instruction; do
+> not extend it into other site copy until a policy source is on record. Ask the
+> owner for the tariff/policy source to close this.
 
 ## The town — Barsinghausen
 

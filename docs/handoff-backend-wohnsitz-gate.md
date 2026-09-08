@@ -5,6 +5,16 @@ reviewed** — that is what this page is for. Owner ruling and rationale:
 [wiki/business-facts.md](../wiki/business-facts.md#online-conclusion--residence-eligibility).
 Flow mechanics: [anfrage-flows.md](anfrage-flows.md).
 
+> **Update 2026-09-08 — non-DE/AT residences are now blocked at the form.**
+> `Schweiz` was removed from the `Wohnsitz` select and `Anderes Land` can no
+> longer be submitted (the form hard-blocks it). **Consequence for the backend:
+> Swiss and other-country leads stop arriving entirely** — previously they came
+> in as `request` leads. Only `Deutschland` (online or request) and `Österreich`
+> (request) reach the webhook now. The old free-text `Land` field was removed, so
+> it will no longer appear in any payload. Nothing downstream needs to *reject* a
+> non-DE/AT applicant (the form already prevents them); item 5 below is now moot
+> for CH / other. Items 1–4 still stand for the DE/AT leads that do arrive.
+
 Everything below concerns the `mv-anfrage` webhook
 (`https://automations.arise.so/webhooks/mv-anfrage`, the `automations` repo /
 Cloudflare Worker) and whatever Make scenario still writes the Airtable

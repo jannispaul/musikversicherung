@@ -37,7 +37,7 @@ coverage section, secure section, `Proberaum`, `Bewohnt`, `flow`). Nothing else 
 | --- | --- | --- |
 | `Versicherung` | `SINFONIMA` (acoustic) / `IM SOUND` (electronic) | Top-level branch |
 | `Gesamtwert` | number (€) | Price + online-eligibility threshold |
-| `Wohnsitz` | `Deutschland` / `Österreich` / `Schweiz` / `Anderes Land` | Online-eligibility gate — anything but `Deutschland` forces `request` |
+| `Wohnsitz` | `Deutschland` / `Österreich` / `Anderes Land` | Online-eligibility gate — anything but `Deutschland` forces `request`; `Anderes Land` is blocked entirely (see Residence gate) |
 | `Zahlung` | `Monatlich` / `Jaehrlich` | Pricing only |
 | `Deckung` | `Weltweit` / `Stationaer` | Pricing, only relevant > 20 000 € |
 | `flow` | `online` / `callback` | User's choice, only offered when eligible |
@@ -66,9 +66,21 @@ coverage section, secure section, `Proberaum`, `Bewohnt`, `flow`). Nothing else 
 
 ## Residence gate (added 2026-08-24)
 
+> **Update 2026-09-08 — residence is now also a cover gate.** DE/AT are the only
+> insurable residences (owner ruling 2026-09-08). `Schweiz` was removed from the
+> `Wohnsitz` select, and `Anderes Land` is now **blocked** rather than routed to
+> `request`: `calculatePrice()` in `calculator.js` calls
+> `residencySelect.setCustomValidity(…)` when `Wohnsitz === "Anderes Land"`, which
+> makes the required, visible select invalid — so the existing `validateStep()`
+> gate stops "Weiter"/submit and `reportValidity()` shows the bubble. A visible
+> note (`[data-name="residency-ineligible-note"]`, `data-condition="Anderes Land"`)
+> explains why. The old free-text `Land` input was removed. **Austria is
+> unchanged below** (valid residence, request flow). See
+> [wiki/business-facts.md](../wiki/business-facts.md#online-conclusion--residence-eligibility).
+
 **The binding online conclusion is offered for `Wohnsitz = Deutschland` only.**
-Austria, Switzerland and "Anderes Land" are routed into `request`. Owner ruling
-2026-08-24, recorded in
+Austria is routed into `request` (Switzerland and "Anderes Land" are no longer
+accepted — see the 2026-09-08 update above). Owner ruling 2026-08-24, recorded in
 [wiki/business-facts.md](../wiki/business-facts.md#online-conclusion--residence-eligibility).
 
 Implementation notes, because two of them are load-bearing:
