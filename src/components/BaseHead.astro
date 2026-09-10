@@ -157,7 +157,16 @@ const resolvedTwitterImage = twitterImage ?? resolvedOgImage;
         var key = String(name || "").toLowerCase();
         if (Object.prototype.hasOwnProperty.call(wanted, key)) payload[id] = wanted[key];
       });
-      if (Object.keys(payload).length) window.zaraz.consent.set(payload);
+      if (Object.keys(payload).length) {
+        window.zaraz.consent.set(payload);
+        // set() only records the choice; it does NOT replay events that Zaraz
+        // queued while consent was missing (the initial Pageview that GA4/Meta
+        // hang off). Zaraz's own modal flushes these automatically, but with a
+        // third-party CMP (Cookiebot) we must call sendQueuedEvents() ourselves,
+        // else gated tools fire only on the next page load, not on accept.
+        if (typeof window.zaraz.consent.sendQueuedEvents === "function")
+          window.zaraz.consent.sendQueuedEvents();
+      }
     }
     window.addEventListener("CookiebotOnConsentReady", syncConsentToZaraz);
     window.addEventListener("CookiebotOnAccept", syncConsentToZaraz);

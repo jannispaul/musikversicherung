@@ -85,6 +85,18 @@ wired in `src/scripts/cookie-settings.js` to call `Cookiebot.renew()`. Note the
 widget/banner does **not** render on `localhost` ("domain not authorized" warning),
 so this is only visible on the deployed domain.
 
+**8. Consent-on-accept must flush the queue — `sendQueuedEvents()`.** While
+consent is missing, Zaraz blocks and **queues** the Pageview-based events that GA4
+/ Meta hang off. `zaraz.consent.set()` only records the choice; it does **not**
+replay those queued events. Zaraz's own consent modal flushes them automatically,
+but a third-party CMP (Cookiebot) must do it via the API. So the bridge in
+`BaseHead.astro` calls `window.zaraz.consent.sendQueuedEvents()` right after
+`set(payload)`. Without it, gated tools fired only on the *next* page load (a fresh
+Pageview with consent already stored) — i.e. accepting the banner appeared to do
+nothing until a reload. Cloudflare docs:
+<https://developers.cloudflare.com/zaraz/consent-management/api/> (retrieved
+2026-09-09).
+
 ## Consent model — and why "server-side" is NOT a consent bypass
 
 Consent under GDPR/ePrivacy (and §25 TTDSG) depends on **what data is processed
