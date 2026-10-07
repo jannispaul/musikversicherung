@@ -6,9 +6,12 @@
 // earning 6.7k impressions — for close to a year. See wiki/broken-assets.md.
 //
 // A missing asset is a broken page, so this fails the build rather than
-// warning. Scope is deliberately narrow: absolute /assets/… and /images/…
-// paths, which is how every Webflow-migrated reference in src/ is written,
-// including the absolute https://…/images/… URLs in the inline.js schema.
+// warning. Scope is deliberately narrow: absolute /assets/…, /images/… and
+// /documents/… paths, which is how every Webflow-migrated reference in src/ is
+// written, including the absolute https://…/images/… URLs in the inline.js
+// schema. (/documents/ holds the three PDFs after their hash prefixes were
+// stripped — the files this gate was created to protect; see
+// wiki/broken-assets.md.)
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,14 +24,14 @@ const PUBLIC = join(ROOT, "public");
 // sits inside an absolute URL ("https://host/images/x.jpg"). The character
 // class stops at quotes, spaces, commas and parens, so srcset lists and
 // CSS url(...) wrappers split correctly.
-const ASSET_RE = /\/(?:assets|images)\/[A-Za-z0-9._/%-]+/g;
+const ASSET_RE = /\/(?:assets|images|documents)\/[A-Za-z0-9._/%-]+/g;
 
 // Some references are composed from a directory constant rather than written
 // out, e.g. BaseHead.astro's `const ASSET = "/assets/<site-id>"` used as
 // `${ASSET}/favicon.png`. Expanding those first is what keeps the favicon and
 // touch icon inside the check instead of silently unscanned.
 const PREFIX_DECL_RE =
-  /\bconst\s+([A-Za-z_$][\w$]*)\s*=\s*["'](\/(?:assets|images)\/[A-Za-z0-9._/%-]*)["']/g;
+  /\bconst\s+([A-Za-z_$][\w$]*)\s*=\s*["'](\/(?:assets|images|documents)\/[A-Za-z0-9._/%-]*)["']/g;
 
 function expandPrefixes(text) {
   let out = text;
@@ -67,7 +70,7 @@ for (const file of walk(SRC)) {
 // clean. Treat it as a failure so it cannot pass silently.
 if (refs.size === 0) {
   console.error(
-    "[prebuild] asset check found no /assets/ or /images/ references at all.\n" +
+    "[prebuild] asset check found no /assets/, /images/ or /documents/ references at all.\n" +
       "           That means this script is broken, not that src/ is clean.",
   );
   process.exit(1);

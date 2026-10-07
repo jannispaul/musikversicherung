@@ -14,6 +14,31 @@ a line here — see [CLAUDE.md](../CLAUDE.md) §2.
 
 ---
 
+## 2026-10-07 — PDFs moved to clean `/documents/` URLs; hashed paths 301 to them
+
+**Changed:** [broken-assets.md](broken-assets.md) — §1a rewritten: all three
+Webflow PDFs (`Tips-on-travelling-abroad.pdf`, `Empfehlungen-zu-Auslandsreisen.pdf`,
+`Beschwerdeverfahren.pdf`) `git mv`'d from `/assets/<site-id>/<hash>_<file>.pdf`
+to clean `/documents/<file>.pdf`; references repointed in `src/partials/faqs.html`
+and `src/data/site.ts`; `public/_redirects` now 301s each old hashed path to its
+clean `/documents/` URL; asset gate (§3) widened to scan `/documents/`. Also a
+dated CORRECTION on §1 (the 2026-08-20 `/assets/` restore did **not** repair the
+indexed URL — that URL is `/documents/…`). [index.md](index.md) — summary + trigger
+row updated.
+
+**Why:** owner reported `https://musikversicherung.com/documents/Tips-on-travelling-abroad.pdf`
+(the Google-indexed URL) returning 404, confirmed `/documents/…` is the indexed
+form, and asked to strip the hash prefixes from the filenames and redirect the
+old hashed URLs to the clean ones.
+
+**Source:** owner, 2026-10-07 (indexed-URL confirmation + instruction); live
+`curl -I` showing `/documents/…` 404 and `/assets/…<hash>` 200 (2026-10-07);
+Cloudflare Workers static-assets redirects docs (retrieved 2026-10-07) for
+`_redirects` support; `npm run build` for the dist/ verification (gate green at
+124 refs, three PDFs in `dist/documents/`, no hashed ref left in `dist`).
+
+---
+
 ## 2026-09-08 — Anfrage: residence restricted to DE/AT (cover gate)
 
 **Changed:** [business-facts.md](business-facts.md) — the "Online conclusion —

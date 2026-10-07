@@ -66,10 +66,17 @@ Both blobs survived in git history under their old `dist/assets/…` paths and
 were restored to `public/assets/63f2893134fa326a6838c84d/` on 2026-08-20,
 **byte-identical** (`git hash-object` matches the historical blob for both).
 The paths in `src/partials/faqs.html` were not touched — keeping them
-byte-identical repairs the FAQ answer and the indexed English URL together.
+byte-identical repairs the FAQ answer.
 
-Verified: `npm run build` passes, both PDFs ship in `dist/assets/…`, and every
-`.pdf` href in the built `dist/faqs.html` resolves against `dist/`.
+> **CORRECTION (2026-10-07):** this section originally claimed the restore also
+> repaired "the indexed English URL". It did not. The owner confirmed the
+> Google-indexed URL is the clean Webflow path `/documents/Tips-on-travelling-abroad.pdf`,
+> **not** the `/assets/<site-id>/<hash>_…` path restored here. The `/assets/…`
+> restore fixed the on-page FAQ links but left the indexed `/documents/…` URL
+> still 404. That is what §1a (2026-10-07) resolves.
+
+Verified: `npm run build` passes, both PDFs ship, and every `.pdf` href in the
+built `dist/faqs.html` resolves against `dist/`.
 
 The reusable recovery recipe is in §3.
 
@@ -95,6 +102,50 @@ Single occurrence site-wide; no other page carried the misspelling.
 > English-content question is already parked as *possible, lowest priority*
 > (owner ruling 2026-08-05, [recon-report.md](recon-report.md)). The restore is
 > the fix; this is a separate content decision.
+
+---
+
+## 1a. Moved the PDFs to clean `/documents/` URLs (fixed 2026-10-07)
+
+The §1 restore served the files only at their hashed Webflow-CDN paths
+(`/assets/63f2893134fa326a6838c84d/<hash>_<file>.pdf`). But the owner confirmed
+(2026-10-07) that the **Google-indexed** URL is the clean Webflow path
+`/documents/Tips-on-travelling-abroad.pdf` — which returned 404 live
+(`curl -I`, both English and German, 2026-10-07) because the site had never
+served a `/documents/` route. So the site's best-performing English asset (§1,
+6.7k impressions) was indexed at a URL that 404'd, while the file sat at a
+different, un-indexed path.
+
+### The fix — serve at the indexed URL, 301 the hashed URLs to it
+
+All **three** Webflow PDF assets were `git mv`'d out of
+`public/assets/63f2893134fa326a6838c84d/` to clean names under
+`public/documents/`, and every in-repo reference was repointed there:
+
+| File (now at `/documents/…`) | Referenced from | Old hashed path |
+| --- | --- | --- |
+| `Tips-on-travelling-abroad.pdf` | `src/partials/faqs.html` | `…/63f3cc4aa79e9b5ce26c5796_Tips-on-travelling-abroad.pdf` |
+| `Empfehlungen-zu-Auslandsreisen.pdf` | `src/partials/faqs.html` | `…/63f3cc4aa77037e28e189bdf_Empfehlungen-zu-Auslandsreisen.pdf` |
+| `Beschwerdeverfahren.pdf` | `src/data/site.ts` (footer "Beschwerden") | `…/63f3cc4977b313c8cedda15b_Beschwerdeverfahren.pdf` |
+
+The indexed `/documents/…` URLs now serve the files directly (200). `public/_redirects`
+(honoured by Cloudflare Workers static assets — same mechanism as
+`public/_headers`; confirmed against Cloudflare's Workers static-assets redirects
+docs, retrieved 2026-10-07) carries a **301 from each old hashed `/assets/…` URL
+to its clean `/documents/…` URL**, so any surviving external or scraped-era link
+to the hashed path lands on the canonical one. The binaries are moved, not
+duplicated.
+
+The `prebuild` asset gate (§3) was widened to scan `/documents/…` references too
+(`scripts/check-assets.mjs`), so these files — the ones it was created to protect
+— stay covered after the move.
+
+Verified: `npm run build` passes (asset gate green, 124 refs), all three PDFs
+ship in `dist/documents/`, `dist/faqs.html` and the footer link resolve against
+`/documents/…`, no hashed reference remains in `dist`, and `dist/_redirects`
+carries the three 301s. The live 301s and the `/documents/…` 200s take effect on
+the next `wrangler deploy` from `master`; **not** yet exercised against
+production at filing time.
 
 ---
 
@@ -153,10 +204,11 @@ wired into `npm run prebuild` (owner ruling, 2026-08-20).
 "prebuild": "node scripts/unshallow-git.mjs && node scripts/check-assets.mjs"
 ```
 
-Every `/assets/…` and `/images/…` reference in `src/` must resolve to a file in
-`public/`, or the build stops and names the missing path and the file that
-references it. On Cloudflare Pages that means a deploy that would have shipped
-a 404 fails loudly instead.
+Every `/assets/…`, `/images/…` and `/documents/…` reference in `src/` must
+resolve to a file in `public/`, or the build stops and names the missing path
+and the file that references it. (`/documents/…` was added 2026-10-07 when the
+three PDFs moved there — see §1a.) On Cloudflare that means a deploy that would
+have shipped a 404 fails loudly instead.
 
 What it deliberately handles:
 

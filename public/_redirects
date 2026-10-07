@@ -1,0 +1,13 @@
+# Cloudflare redirects, honoured by Workers static assets (copied to dist/ at
+# build, same mechanism as public/_headers).
+#
+# The three Webflow PDF assets now live at clean paths under /documents/, which
+# is where Webflow served them and what Google indexed (e.g. the English
+# "Tips on travelling abroad" guide). Their original scraped paths carried the
+# Webflow upload hash (/assets/<site-id>/<hash>_<file>.pdf); these 301s point any
+# surviving link to that hashed URL at the clean /documents/ URL that now serves
+# the file directly. See wiki/broken-assets.md.
+
+/assets/63f2893134fa326a6838c84d/63f3cc4aa79e9b5ce26c5796_Tips-on-travelling-abroad.pdf      /documents/Tips-on-travelling-abroad.pdf      301
+/assets/63f2893134fa326a6838c84d/63f3cc4aa77037e28e189bdf_Empfehlungen-zu-Auslandsreisen.pdf      /documents/Empfehlungen-zu-Auslandsreisen.pdf      301
+/assets/63f2893134fa326a6838c84d/63f3cc4977b313c8cedda15b_Beschwerdeverfahren.pdf      /documents/Beschwerdeverfahren.pdf      301

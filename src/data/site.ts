@@ -22,7 +22,7 @@ export const FOOTER_LINKS = [
   { href: "/datenschutz", label: "Datenschutz" },
   { href: "/versicherungsbedingungen", label: "Versicherungsbedingungen" },
   {
-    href: "/assets/63f2893134fa326a6838c84d/63f3cc4977b313c8cedda15b_Beschwerdeverfahren.pdf",
+    href: "/documents/Beschwerdeverfahren.pdf",
     label: "Beschwerden",
   },
 ] as const;
